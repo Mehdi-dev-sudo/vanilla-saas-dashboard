@@ -6,15 +6,20 @@
     Router.register('transactions', TransactionsPage);
     Router.register('settings', SettingsPage);
     Router.register('support', SupportPage);
+    Router.register('error', ErrorPage);
 
+    HistoryManager.init();
+    AuthManager.init();
     Router.init();
     SidebarManager.init();
     ThemeManager.init();
     ModalSystem.init();
+    CommandPalette.init();
+    ContextMenuManager.init();
 
     setupGlobalSearch();
     setupNotifications();
-    setupKeyboardShortcuts();
+    setupKeyboardNavigation();
 
     window.addEventListener('resize', Utils.debounce(function () {
       ChartEngine.resize();
@@ -22,42 +27,27 @@
   }
 
   function setupGlobalSearch() {
-    const searchInput = document.getElementById('globalSearch');
-    const originalPlaceholder = searchInput.placeholder;
+    var searchInput = document.getElementById('globalSearch');
+    var originalPlaceholder = searchInput.placeholder;
 
-    searchInput.addEventListener('focus', function () {
-      this.placeholder = 'Search users or transactions...';
-    });
-    searchInput.addEventListener('blur', function () {
-      this.placeholder = originalPlaceholder;
-    });
+    searchInput.addEventListener('focus', function () { this.placeholder = 'Search users or transactions...'; });
+    searchInput.addEventListener('blur', function () { this.placeholder = originalPlaceholder; });
 
     searchInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && this.value.trim()) {
-        const query = this.value.trim();
-        const route = Router.getCurrentRoute();
-        if (route === 'users') {
-          const searchInput = document.getElementById('userSearch');
-          if (searchInput) { searchInput.value = query; searchInput.dispatchEvent(new Event('input')); }
-        } else if (route === 'transactions') {
-          const txSearch = document.getElementById('transactionSearch');
-          if (txSearch) { txSearch.value = query; txSearch.dispatchEvent(new Event('input')); }
-        } else {
-          Router.navigate('users');
-          setTimeout(function () {
-            const searchInput = document.getElementById('userSearch');
-            if (searchInput) { searchInput.value = query; searchInput.dispatchEvent(new Event('input')); }
-          }, 100);
-        }
-        this.value = '';
-        this.blur();
+        var query = this.value.trim();
+        var route = Router.getCurrentRoute();
+        if (route === 'users') { var us = document.getElementById('userSearch'); if (us) { us.value = query; us.dispatchEvent(new Event('input')); } }
+        else if (route === 'transactions') { var ts = document.getElementById('transactionSearch'); if (ts) { ts.value = query; ts.dispatchEvent(new Event('input')); } }
+        else { Router.navigate('users'); setTimeout(function () { var us = document.getElementById('userSearch'); if (us) { us.value = query; us.dispatchEvent(new Event('input')); } }, 100); }
+        this.value = ''; this.blur();
       }
     });
   }
 
   function setupNotifications() {
-    const notifBtn = document.getElementById('notifBtn');
-    const badge = document.getElementById('notifBadge');
+    var notifBtn = document.getElementById('notifBtn');
+    var badge = document.getElementById('notifBadge');
 
     AppStore.subscribe('notifications', function (count) {
       badge.textContent = count;
@@ -70,11 +60,26 @@
     });
   }
 
-  function setupKeyboardShortcuts() {
+  function setupKeyboardNavigation() {
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        document.getElementById('globalSearch').focus();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        ToastSystem.success('Changes saved');
+        ActivityLog.add('edit', 'Quick save triggered', 'edit');
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        var openCmd = document.querySelector('.cmd-palette-overlay.open');
+        if (openCmd) return;
+        var openModal = document.getElementById('modalOverlay');
+        if (openModal && openModal.classList.contains('open')) {
+          ModalSystem.close();
+        }
       }
     });
   }
