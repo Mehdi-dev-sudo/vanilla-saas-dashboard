@@ -24,7 +24,19 @@
     setupNotifications();
     setupKeyboardNavigation();
 
-    window.addEventListener('resize', Utils.debounce(function () {
+    window.copyToClipboard = function (text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { ToastSystem.success('Copied: ' + text); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); ToastSystem.success('Copied: ' + text); } catch (e) { /* ignore */ }
+    document.body.removeChild(ta);
+  }
+};
+
+window.addEventListener('resize', Utils.debounce(function () {
       ChartEngine.resize();
     }, 250));
   }
