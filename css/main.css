@@ -586,6 +586,7 @@ img { max-width: 100%; display: block; }
 .table tbody tr { transition: background var(--transition-fast); }
 .table tbody tr:hover { background: var(--bg-body); }
 .table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:nth-child(even) { background: var(--bg-body); }
 
 /* Status Badges */
 .status-badge {
