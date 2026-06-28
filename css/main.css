@@ -466,6 +466,26 @@ img { max-width: 100%; display: block; }
 .empty-state__text { font-size: var(--font-md); font-weight: 600; color: var(--text-secondary); }
 .empty-state__hint { font-size: var(--font-sm); color: var(--text-tertiary); margin-top: var(--space-xs); }
 
+/* Developer Console */
+.dev-console { position: fixed; bottom: 0; right: 0; width: 380px; max-height: 60vh; background: #1a1b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg) var(--radius-lg) 0 0; z-index: 3000; box-shadow: 0 -8px 32px rgba(0,0,0,0.3); transform: translateY(calc(100% - 40px)); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; color: #e2e8f0; font-family: 'Inter', monospace; }
+.dev-console.open { transform: translateY(0); }
+.dev-console__header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: rgba(255,255,255,0.05); cursor: pointer; }
+.dev-console__header:hover { background: rgba(255,255,255,0.08); }
+.dev-console__title { font-size: var(--font-sm); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #94a3b8; }
+.dev-console__close { background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 0 4px; }
+.dev-console__close:hover { color: #fff; }
+.dev-console__body { padding: 16px; overflow-y: auto; max-height: calc(60vh - 40px); }
+.dev-console__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.dev-console__metric { background: rgba(255,255,255,0.05); border-radius: var(--radius-md); padding: 12px; text-align: center; }
+.dev-console__metric-value { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.dev-console__metric-label { font-size: var(--font-xs); color: #64748b; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.dev-console__details { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.dev-console__row { display: flex; justify-content: space-between; padding: 6px 0; font-size: var(--font-sm); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.dev-console__row span:first-child { color: #64748b; }
+.dev-console__row span:last-child { color: #e2e8f0; font-weight: 500; }
+.dev-console__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.dev-console__actions .btn { font-size: var(--font-xs); padding: 6px 12px; }
+
 /* ----- 6. Page Header / Actions ----- */
 .page-header {
   display: flex; align-items: flex-start; justify-content: space-between;

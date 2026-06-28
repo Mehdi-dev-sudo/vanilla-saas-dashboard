@@ -16,6 +16,7 @@
     ModalSystem.init();
     CommandPalette.init();
     ContextMenuManager.init();
+    DevConsole.init();
 
     initClock();
     initOnlineCounter();
