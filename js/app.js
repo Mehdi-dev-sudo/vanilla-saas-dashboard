@@ -19,6 +19,7 @@
 
     initClock();
     initOnlineCounter();
+    initLastUpdated();
     setupGlobalSearch();
     setupNotifications();
     setupKeyboardNavigation();
@@ -26,6 +27,18 @@
     window.addEventListener('resize', Utils.debounce(function () {
       ChartEngine.resize();
     }, 250));
+  }
+
+  function initLastUpdated() {
+    var el = document.getElementById('lastUpdated');
+    if (!el) return;
+    function update() {
+      var now = new Date();
+      var time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Updated ' + time;
+    }
+    update();
+    setInterval(update, 30000);
   }
 
   function initOnlineCounter() {
