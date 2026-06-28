@@ -204,7 +204,7 @@ const UsersPage = (function () {
     let html = '';
     html += '<button class="pagination__btn" id="prevPage" ' + (result.page <= 1 ? 'disabled' : '') + '>' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>' +
-    '</button>';
+    '</button><span class="pagination__info">Page ' + result.page + ' of ' + result.totalPages + '</span>';
 
     for (let i = 1; i <= result.totalPages; i++) {
       html += '<button class="pagination__btn' + (i === result.page ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
