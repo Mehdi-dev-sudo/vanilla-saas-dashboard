@@ -24,15 +24,31 @@
     setupNotifications();
     setupKeyboardNavigation();
 
-    window.copyToClipboard = function (text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function () { ToastSystem.success('Copied: ' + text); });
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); ToastSystem.success('Copied: ' + text); } catch (e) { /* ignore */ }
-    document.body.removeChild(ta);
+    window.addEventListener('resize', Utils.debounce(function () {
+      ChartEngine.resize();
+    }, 250));
+
+    initApiData();
+  }
+
+  function initApiData() {
+    var statusEl = document.getElementById('apiStatus');
+    if (!statusEl) return;
+
+    Promise.all([
+      ApiClient.fetchUsers().then(function (users) {
+        AppStore.getState('users').length <= 10 && AppStore.setState('users', users);
+      }).catch(function () { /* fallback to mock */ }),
+      ApiClient.fetchTransactions().then(function (tx) {
+        AppStore.getState('transactions').length <= 10 && AppStore.setState('transactions', tx);
+      }).catch(function () { /* fallback to mock */ })
+    ]).then(function () {
+      statusEl.textContent = 'API ✓';
+      statusEl.className = 'header__api-status header__api-status--online';
+    }).catch(function () {
+      statusEl.textContent = 'Mock';
+      statusEl.className = 'header__api-status header__api-status--offline';
+    });
   }
 };
 

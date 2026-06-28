@@ -374,6 +374,9 @@ img { max-width: 100%; display: block; }
 .header__online .online-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-success); display: inline-block; animation: pulse-dot 2s ease-in-out infinite; }
 .header__last-updated { font-size: var(--font-xs); color: var(--text-tertiary); display: flex; align-items: center; gap: 2px; padding: 0 var(--space-sm); white-space: nowrap; }
 .header__save-indicator { font-size: var(--font-xs); color: var(--clr-success); display: flex; align-items: center; gap: 4px; padding: 0 var(--space-sm); font-weight: 500; animation: pulse-text 1.5s ease-in-out infinite; }
+.header__api-status { font-size: var(--font-xs); padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 600; letter-spacing: 0.02em; }
+.header__api-status--online { background: var(--clr-success-light); color: var(--clr-success); }
+.header__api-status--offline { background: var(--clr-warning-light); color: var(--clr-warning); }
 @keyframes pulse-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
