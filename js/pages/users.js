@@ -158,7 +158,7 @@ const UsersPage = (function () {
     const pagination = document.getElementById('usersPagination');
 
     if (result.items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:40px;color:var(--text-secondary)">No users found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><p class="empty-state__text">No users found</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
     } else {
       tbody.innerHTML = result.items.map(u => {
         const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2);

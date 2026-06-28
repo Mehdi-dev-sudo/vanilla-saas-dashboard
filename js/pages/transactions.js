@@ -112,7 +112,7 @@ const TransactionsPage = (function () {
     const pagination = document.getElementById('transactionsPagination');
 
     if (result.items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:40px;color:var(--text-secondary)">No transactions found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions found</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
     } else {
       tbody.innerHTML = result.items.map(t =>
         '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
