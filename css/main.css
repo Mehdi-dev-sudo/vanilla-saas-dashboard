@@ -717,6 +717,14 @@ img { max-width: 100%; display: block; }
   to { transform: translateX(100%); opacity: 0; }
 }
 
+.toast { overflow: hidden; }
+.toast__progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; }
+.toast__progress-bar { height: 100%; width: 100%; opacity: 0.25; }
+.toast--success .toast__progress-bar { background: var(--clr-success); }
+.toast--error .toast__progress-bar { background: var(--clr-danger); }
+.toast--warning .toast__progress-bar { background: var(--clr-warning); }
+.toast--info .toast__progress-bar { background: var(--clr-info); }
+
 .toast__icon { width: 20px; height: 20px; flex-shrink: 0; }
 .toast__message { flex: 1; font-size: var(--font-base); font-weight: 500; }
 .toast__close {
