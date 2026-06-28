@@ -87,10 +87,19 @@ const AuthManager = (function () {
   }
 
   function logout() {
+    if (typeof ModalSystem !== 'undefined') {
+      ModalSystem.confirm('Sign Out', 'Are you sure you want to sign out?', 'Sign Out', 'Cancel', function () {
+        doLogout();
+      });
+    } else {
+      doLogout();
+    }
+  }
+
+  function doLogout() {
     if (typeof ActivityLog !== 'undefined') {
       ActivityLog.add('auth', 'User logged out', 'auth');
     }
-    var username = currentUser ? currentUser.username : 'unknown';
     sessionStorage.removeItem(SESSION_KEY);
     isAuthenticated = false;
     currentUser = null;
