@@ -1,31 +1,23 @@
 ---
-name: Bug Report
-about: Create a report to help us improve
-title: '[BUG] '
+name: Bug report
+about: Create a report to help improve the dashboard
+title: ''
 labels: bug
 assignees: ''
 ---
 
-**Describe the Bug**
-A clear and concise description of what the bug is.
+**Describe the bug**
+A clear description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Steps to reproduce the behavior.
 
-**Expected Behavior**
-A clear and concise description of what you expected to happen.
+**Expected behavior**
+What you expected to happen.
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+If applicable, add screenshots.
 
-**Desktop (please complete the following information):**
-- OS: [e.g. Windows, macOS, Linux]
-- Browser: [e.g. Chrome, Firefox, Safari]
-- Version: [e.g. 120]
-
-**Additional Context**
-Add any other context about the problem here.
+**Environment**
+- Browser: [e.g. Chrome 120]
+- OS: [e.g. Windows 11]

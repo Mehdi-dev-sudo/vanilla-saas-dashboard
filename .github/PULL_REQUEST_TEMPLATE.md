@@ -1,23 +1,14 @@
 ## Description
+What does this PR do?
 
-Please include a summary of the changes and the related issue.
-
-Fixes #(issue)
-
-## Type of Change
-
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+## Type of change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
 - [ ] Documentation update
 
-## How Has This Been Tested?
-
-Please describe the tests that you ran to verify your changes.
-
-## Checklist:
-
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my code
-- [ ] My changes generate no new warnings
-- [ ] I have tested my changes in Chrome, Firefox, and Safari
+## Checklist
+- [ ] Tested in Chrome and Firefox
+- [ ] No console errors
+- [ ] Accessible (keyboard nav, aria labels)
+- [ ] Follows existing code style

@@ -1,19 +1,19 @@
 ---
-name: Feature Request
-about: Suggest an idea for this project
-title: '[FEATURE] '
+name: Feature request
+about: Suggest an idea for the dashboard
+title: ''
 labels: enhancement
 assignees: ''
 ---
 
 **Is your feature request related to a problem?**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+A clear description of the problem.
 
-**Describe the Solution You'd Like**
-A clear and concise description of what you want to happen.
+**Describe the solution you'd like**
+What you want to happen.
 
-**Describe Alternatives You've Considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Describe alternatives you've considered**
+Any alternative solutions you've thought of.
 
-**Additional Context**
-Add any other context or screenshots about the feature request here.
+**Additional context**
+Add any other context or screenshots.
