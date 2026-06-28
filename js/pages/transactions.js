@@ -2,6 +2,7 @@ const TransactionsPage = (function () {
   let currentPage = 1;
   let currentSearch = '';
   let currentStatus = 'all';
+  let currentMethod = 'all';
   let sortBy = 'date';
   let sortDir = 'desc';
   const perPage = 5;
@@ -35,6 +36,14 @@ const TransactionsPage = (function () {
               <option value="failed">Failed</option>
               <option value="refunded">Refunded</option>
             </select>
+            <select class="form-select" id="transactionMethodFilter" aria-label="Filter by method">
+              <option value="all">All Methods</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Wire Transfer">Wire Transfer</option>
+              <option value="ACH">ACH</option>
+            </select>
           </div>
           <div class="users-toolbar__right">
             <span class="pagination__info" id="transactionTotalInfo">0 transactions</span>
@@ -66,6 +75,7 @@ const TransactionsPage = (function () {
     currentPage = 1;
     currentSearch = '';
     currentStatus = 'all';
+    currentMethod = 'all';
     sortBy = 'date';
     sortDir = 'desc';
 
@@ -79,6 +89,12 @@ const TransactionsPage = (function () {
 
     document.getElementById('transactionStatusFilter').addEventListener('change', function () {
       currentStatus = this.value;
+      currentPage = 1;
+      renderTransactions();
+    });
+
+    document.getElementById('transactionMethodFilter').addEventListener('change', function () {
+      currentMethod = this.value;
       currentPage = 1;
       renderTransactions();
     });
@@ -106,7 +122,7 @@ const TransactionsPage = (function () {
   }
 
   function renderTransactions() {
-    const result = AppStore.getFilteredTransactions(currentSearch, currentStatus, sortBy, sortDir, currentPage, perPage);
+    const result = AppStore.getFilteredTransactions(currentSearch, currentStatus, sortBy, sortDir, currentPage, perPage, currentMethod);
     const tbody = document.getElementById('transactionsTableBody');
     const totalInfo = document.getElementById('transactionTotalInfo');
     const pagination = document.getElementById('transactionsPagination');

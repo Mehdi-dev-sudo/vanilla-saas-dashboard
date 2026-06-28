@@ -183,7 +183,7 @@ const AppStore = (function () {
   }
 
   // Transactions
-  function getFilteredTransactions(search, status, sortBy, sortDir, page, perPage) {
+  function getFilteredTransactions(search, status, sortBy, sortDir, page, perPage, method) {
     let filtered = [...state.transactions];
     if (search) {
       const s = search.toLowerCase();
@@ -194,6 +194,7 @@ const AppStore = (function () {
       );
     }
     if (status && status !== 'all') filtered = filtered.filter(t => t.status === status);
+    if (method && method !== 'all') filtered = filtered.filter(t => t.method === method);
 
     if (sortBy) {
       filtered.sort((a, b) => {
