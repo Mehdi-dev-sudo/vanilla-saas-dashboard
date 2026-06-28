@@ -1,10 +1,26 @@
 const Router = (function () {
-  let currentRoute = null;
-  let currentCleanup = null;
-  let previousRoute = null;
-  const routes = {};
-  const contentEl = document.getElementById('appContent');
-  const loaderEl = document.getElementById('pageLoader');
+  var currentRoute = null;
+  var currentCleanup = null;
+  var previousRoute = null;
+  var routes = {};
+  var contentEl = document.getElementById('appContent');
+  var loaderEl = document.getElementById('pageLoader');
+
+  var routeMeta = {
+    dashboard: { title: 'Dashboard', icon: 'grid', parent: null },
+    analytics: { title: 'Analytics', icon: 'bar-chart-2', parent: 'Dashboard' },
+    users: { title: 'Users', icon: 'users', parent: 'Management' },
+    transactions: { title: 'Transactions', icon: 'credit-card', parent: 'Management' },
+    settings: { title: 'Settings', icon: 'settings', parent: null },
+    support: { title: 'Support', icon: 'help-circle', parent: null },
+    error: { title: 'Error', icon: 'alert-triangle', parent: null }
+  };
+
+  function renderBreadcrumbs(route) {
+    var m = routeMeta[route];
+    if (!m || !m.parent) return '';
+    return '<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#dashboard" class="breadcrumbs__link">Home</a><span class="breadcrumbs__sep">/</span><span class="breadcrumbs__current">' + m.title + '</span></nav>';
+  }
 
   function register(name, handler) {
     routes[name] = handler;
@@ -44,7 +60,7 @@ const Router = (function () {
 
       var handler = routes[name];
       if (handler && typeof handler.render === 'function') {
-        contentEl.innerHTML = handler.render();
+        contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
         hideLoader();
         if (typeof handler.init === 'function') {
           currentCleanup = handler.init();
@@ -110,16 +126,8 @@ const Router = (function () {
   }
 
   function updatePageMeta(route) {
-    var titles = {
-      dashboard: 'Dashboard',
-      analytics: 'Analytics',
-      users: 'Users',
-      transactions: 'Transactions',
-      settings: 'Settings',
-      support: 'Support',
-      error: 'Error'
-    };
-    document.title = (titles[route] || 'Dashboard') + ' — SaaS Dashboard';
+    var m = routeMeta[route] || routeMeta.dashboard;
+    document.title = m.title + ' — SaaS Dashboard';
   }
 
   function init() {
