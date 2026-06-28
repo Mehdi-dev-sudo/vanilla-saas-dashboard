@@ -17,6 +17,7 @@
     CommandPalette.init();
     ContextMenuManager.init();
 
+    initClock();
     setupGlobalSearch();
     setupNotifications();
     setupKeyboardNavigation();
@@ -24,6 +25,18 @@
     window.addEventListener('resize', Utils.debounce(function () {
       ChartEngine.resize();
     }, 250));
+  }
+
+  function initClock() {
+    var clockEl = document.getElementById('headerClock');
+    if (!clockEl) return;
+    function updateClock() {
+      var now = new Date();
+      var opts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      clockEl.textContent = now.toLocaleTimeString('en-US', opts);
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
   }
 
   function setupGlobalSearch() {

@@ -337,6 +337,8 @@ img { max-width: 100%; display: block; }
 
 .header__right { display: flex; align-items: center; gap: var(--space-sm); }
 
+.header__clock { font-size: var(--font-sm); font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; padding: 0 var(--space-sm); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 .header__icon-btn {
   display: flex; align-items: center; justify-content: center;
   width: 38px; height: 38px; border-radius: var(--radius-md);
