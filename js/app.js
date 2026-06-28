@@ -84,18 +84,64 @@
     });
   }
 
+  function getMockNotifications() {
+    return [
+      { id: 'n1', text: 'New user Sarah Lee signed up', time: '2 min ago', type: 'user', unread: true },
+      { id: 'n2', text: 'Payment of $12,000 from Acme Corp received', time: '15 min ago', type: 'payment', unread: true },
+      { id: 'n3', text: 'Server CPU threshold exceeded on node-3', time: '1 hour ago', type: 'alert', unread: true },
+      { id: 'n4', text: 'Weekly report is ready for export', time: '3 hours ago', type: 'report', unread: false },
+      { id: 'n5', text: 'Backup completed successfully', time: '5 hours ago', type: 'system', unread: false }
+    ];
+  }
+
+  function renderNotifDropdown() {
+    var list = document.getElementById('notifList');
+    if (!list) return;
+    var notifs = getMockNotifications();
+    var unreadCount = notifs.filter(function (n) { return n.unread; }).length;
+    list.innerHTML = notifs.map(function (n) {
+      return '<div class="notif-dropdown__item' + (n.unread ? ' notif-dropdown__item--unread' : '') + '">' +
+        '<div class="notif-dropdown__item-icon notif-dropdown__item-icon--' + n.type + '"></div>' +
+        '<div class="notif-dropdown__item-content">' +
+          '<div class="notif-dropdown__item-text">' + n.text + '</div>' +
+          '<div class="notif-dropdown__item-time">' + n.time + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    var badge = document.getElementById('notifBadge');
+    if (badge) { badge.textContent = unreadCount; badge.style.display = unreadCount > 0 ? 'flex' : 'none'; }
+  }
+
   function setupNotifications() {
     var notifBtn = document.getElementById('notifBtn');
+    var dropdown = document.getElementById('notifDropdown');
     var badge = document.getElementById('notifBadge');
+
+    if (!notifBtn || !dropdown) return;
+
+    renderNotifDropdown();
+
+    notifBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      dropdown.classList.toggle('open');
+    });
+
+    document.getElementById('markAllRead').addEventListener('click', function () {
+      AppStore.clearNotifications();
+      dropdown.querySelectorAll('.notif-dropdown__item--unread').forEach(function (el) { el.classList.remove('notif-dropdown__item--unread'); });
+      badge.style.display = 'none';
+      ToastSystem.info('All notifications marked as read');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!dropdown.contains(e.target) && e.target !== notifBtn) {
+        dropdown.classList.remove('open');
+      }
+    });
 
     AppStore.subscribe('notifications', function (count) {
       badge.textContent = count;
       badge.style.display = count > 0 ? 'flex' : 'none';
-    });
-
-    notifBtn.addEventListener('click', function () {
-      AppStore.clearNotifications();
-      ToastSystem.info('No new notifications');
     });
   }
 
