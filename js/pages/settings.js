@@ -61,13 +61,13 @@ const SettingsPage = (function () {
         <div class="settings-row">
           <div class="settings-row__info">
             <div class="settings-row__label">Name</div>
-            <div class="settings-row__desc" id="settingsUserName">${AuthManager.isLoggedIn ? AuthManager.getUser().name : 'Ali Rezaei'}</div>
+            <div class="settings-row__desc" id="settingsUserName">${AuthManager.isLoggedIn && AuthManager.getUser() ? AuthManager.getUser().name : '—'}</div>
           </div>
         </div>
         <div class="settings-row">
           <div class="settings-row__info">
             <div class="settings-row__label">Email</div>
-            <div class="settings-row__desc" id="settingsUserEmail">${AuthManager.isLoggedIn ? AuthManager.getUser().email : 'ali@example.com'}</div>
+            <div class="settings-row__desc" id="settingsUserEmail">${AuthManager.isLoggedIn && AuthManager.getUser() ? AuthManager.getUser().email : '—'}</div>
           </div>
         </div>
         <div class="settings-row">
