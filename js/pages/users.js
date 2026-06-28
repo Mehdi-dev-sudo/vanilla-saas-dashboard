@@ -46,9 +46,15 @@ const UsersPage = (function () {
         </div>
         <div class="card__body card__body--no-padding">
           <div class="table-wrapper">
+            <div class="batch-actions" id="batchActions" style="display:none">
+              <span id="selectedCount">0 selected</span>
+              <button class="btn btn--sm btn--danger" id="batchDeleteBtn">Delete Selected</button>
+              <button class="btn btn--sm btn--secondary" id="batchExportBtn">Export Selected</button>
+            </div>
             <table class="table">
               <thead>
                 <tr>
+                  <th style="width:40px"><input type="checkbox" id="selectAllUsers" aria-label="Select all"></th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
@@ -95,8 +101,54 @@ const UsersPage = (function () {
     });
 
     document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
+    setupMultiSelect();
 
     return function cleanup() {};
+  }
+
+  function setupMultiSelect() {
+    var selectAll = document.getElementById('selectAllUsers');
+    var batchActions = document.getElementById('batchActions');
+    var selectedCount = document.getElementById('selectedCount');
+
+    selectAll.addEventListener('change', function () {
+      document.querySelectorAll('.user-checkbox').forEach(function (cb) { cb.checked = selectAll.checked; });
+      updateBatchVisibility();
+    });
+
+    document.getElementById('batchDeleteBtn').addEventListener('click', function () {
+      var selected = getSelectedUsers();
+      if (selected.length === 0) return;
+      ModalSystem.confirm('Delete Users', 'Are you sure you want to delete ' + selected.length + ' selected user(s)?', 'Delete', 'Cancel', function () {
+        selected.forEach(function (id) { AppStore.deleteUser(id); });
+        ToastSystem.success(selected.length + ' user(s) deleted');
+        renderUsers();
+      });
+    });
+
+    document.getElementById('batchExportBtn').addEventListener('click', function () {
+      var selected = getSelectedUsers();
+      if (selected.length === 0) return;
+      ToastSystem.success(selected.length + ' user(s) exported');
+    });
+  }
+
+  function getSelectedUsers() {
+    var ids = [];
+    document.querySelectorAll('.user-checkbox:checked').forEach(function (cb) { ids.push(cb.dataset.id); });
+    return ids;
+  }
+
+  function updateBatchVisibility() {
+    var batchActions = document.getElementById('batchActions');
+    var selectedCount = document.getElementById('selectedCount');
+    var count = getSelectedUsers().length;
+    if (count > 0) {
+      batchActions.style.display = 'flex';
+      selectedCount.textContent = count + ' selected';
+    } else {
+      batchActions.style.display = 'none';
+    }
   }
 
   function renderUsers() {
@@ -110,7 +162,8 @@ const UsersPage = (function () {
     } else {
       tbody.innerHTML = result.items.map(u => {
         const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2);
-        return '<tr>' +
+        return '<tr data-context="user" data-id="' + u.id + '" data-email="' + Utils.escapeHtml(u.email) + '">' +
+          '<td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td>' +
           '<td><div class="flex items-center gap-sm"><span class="user-avatar-sm">' + initials + '</span> <strong>' + Utils.escapeHtml(u.name) + '</strong></div></td>' +
           '<td>' + Utils.escapeHtml(u.email) + '</td>' +
           '<td>' + u.role + '</td>' +
@@ -136,6 +189,9 @@ const UsersPage = (function () {
     });
     tbody.querySelectorAll('.delete-user-btn').forEach(btn => {
       btn.addEventListener('click', function () { confirmDeleteUser(this.dataset.id); });
+    });
+    tbody.querySelectorAll('.user-checkbox').forEach(cb => {
+      cb.addEventListener('change', function () { updateBatchVisibility(); });
     });
   }
 

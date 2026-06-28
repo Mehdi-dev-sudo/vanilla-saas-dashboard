@@ -114,7 +114,7 @@ const TransactionsPage = (function () {
       tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:40px;color:var(--text-secondary)">No transactions found</td></tr>';
     } else {
       tbody.innerHTML = result.items.map(t =>
-        '<tr>' +
+        '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
           '<td><strong>' + t.invoice + '</strong></td>' +
           '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
           '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
