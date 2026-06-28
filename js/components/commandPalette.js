@@ -12,13 +12,14 @@ const CommandPalette = (function () {
     '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette">' +
       '<div class="cmd-palette__input-wrapper">' +
         '<svg class="cmd-palette__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
-        '<input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type a command..." autocomplete="off" spellcheck="false">' +
+        '<input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false">' +
         '<span class="cmd-palette__hint">ESC to close</span>' +
       '</div>' +
       '<div class="cmd-palette__results" id="cmdResults"></div>' +
       '<div class="cmd-palette__footer">' +
         '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 12 15 20 7"/></svg> Navigate</span>' +
         '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select</span>' +
+        '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> > Actions</span>' +
         '<span>ESC Cancel</span>' +
       '</div>' +
     '</div>';
@@ -52,21 +53,30 @@ const CommandPalette = (function () {
   function buildCommands() {
     commands = [
       // Navigation
-      { id: 'nav-dashboard', category: 'Navigation', label: 'Go to Dashboard', icon: 'grid', action: function () { Router.navigate('dashboard'); close(); } },
-      { id: 'nav-analytics', category: 'Navigation', label: 'Go to Analytics', icon: 'bar-chart', action: function () { Router.navigate('analytics'); close(); } },
-      { id: 'nav-users', category: 'Navigation', label: 'Go to Users', icon: 'users', action: function () { Router.navigate('users'); close(); } },
-      { id: 'nav-transactions', category: 'Navigation', label: 'Go to Transactions', icon: 'credit-card', action: function () { Router.navigate('transactions'); close(); } },
-      { id: 'nav-settings', category: 'Navigation', label: 'Go to Settings', icon: 'settings', action: function () { Router.navigate('settings'); close(); } },
-      { id: 'nav-support', category: 'Navigation', label: 'Go to Support', icon: 'help-circle', action: function () { Router.navigate('support'); close(); } },
+      { id: 'nav-dashboard', category: 'Navigation', label: 'Go to Dashboard', keywords: 'gd home', icon: 'grid', action: function () { Router.navigate('dashboard'); close(); } },
+      { id: 'nav-analytics', category: 'Navigation', label: 'Go to Analytics', keywords: 'ga', icon: 'bar-chart', action: function () { Router.navigate('analytics'); close(); } },
+      { id: 'nav-users', category: 'Navigation', label: 'Go to Users', keywords: 'gu', icon: 'users', action: function () { Router.navigate('users'); close(); } },
+      { id: 'nav-transactions', category: 'Navigation', label: 'Go to Transactions', keywords: 'gt', icon: 'credit-card', action: function () { Router.navigate('transactions'); close(); } },
+      { id: 'nav-settings', category: 'Navigation', label: 'Go to Settings', keywords: 'gs', icon: 'settings', action: function () { Router.navigate('settings'); close(); } },
+      { id: 'nav-support', category: 'Navigation', label: 'Go to Support', keywords: 'gsh', icon: 'help-circle', action: function () { Router.navigate('support'); close(); } },
 
       // Actions
-      { id: 'act-adduser', category: 'Actions', label: 'Add New User', icon: 'user-plus', action: function () { close(); Router.navigate('users'); setTimeout(function () { document.getElementById('addUserBtn') && document.getElementById('addUserBtn').click(); }, 150); } },
-      { id: 'act-export', category: 'Actions', label: 'Export Transactions CSV', icon: 'download', action: function () { close(); var txs = AppStore.getState('transactions'); AppStore.exportTransactionsCSV(txs); ToastSystem.success('CSV exported'); } },
-      { id: 'act-theme', category: 'Actions', label: 'Toggle Theme', icon: 'sun', action: function () { close(); ThemeManager.toggle(); ToastSystem.info('Theme: ' + ThemeManager.getCurrent()); } },
-      { id: 'act-undo', category: 'Actions', label: 'Undo (Ctrl+Z)', icon: 'rotate-ccw', action: function () { close(); setTimeout(function () { HistoryManager.undo(); }, 100); } },
-      { id: 'act-redo', category: 'Actions', label: 'Redo (Ctrl+Shift+Z)', icon: 'rotate-cw', action: function () { close(); setTimeout(function () { HistoryManager.redo(); }, 100); } },
-      { id: 'act-settings', category: 'Actions', label: 'Open Quick Settings', icon: 'sliders', action: function () { close(); Router.navigate('settings'); } },
-      { id: 'act-logout', category: 'Actions', label: 'Logout', icon: 'log-out', action: function () { close(); setTimeout(function () { AuthManager.logout(); }, 100); } },
+      { id: 'act-adduser', category: 'Actions', label: 'Create User', keywords: 'new user add', icon: 'user-plus', action: function () { close(); Router.navigate('users'); setTimeout(function () { var btn = document.getElementById('addUserBtn'); if (btn) btn.click(); }, 150); } },
+      { id: 'act-deleteuser', category: 'Actions', label: 'Delete User', keywords: 'remove', icon: 'trash-2', action: function () { close(); Router.navigate('users'); ToastSystem.info('Select a user to delete'); } },
+      { id: 'act-export', category: 'Actions', label: 'Export CSV', keywords: 'download transactions', icon: 'download', action: function () { close(); var txs = AppStore.getState('transactions'); if (txs.length) { AppStore.exportTransactionsCSV(txs); ToastSystem.success('CSV exported'); } else { ToastSystem.error('No transactions to export'); } } },
+      { id: 'act-theme', category: 'Actions', label: 'Toggle Theme', keywords: 'dark light mode', icon: 'sun', action: function () { close(); ThemeManager.toggle(); ToastSystem.info('Theme: ' + ThemeManager.getCurrent()); } },
+      { id: 'act-undo', category: 'Actions', label: 'Undo', keywords: 'ctrl z', icon: 'rotate-ccw', action: function () { close(); setTimeout(function () { HistoryManager.undo(); }, 100); } },
+      { id: 'act-redo', category: 'Actions', label: 'Redo', keywords: 'ctrl shift z', icon: 'rotate-cw', action: function () { close(); setTimeout(function () { HistoryManager.redo(); }, 100); } },
+      { id: 'act-keys', category: 'Actions', label: 'Keyboard Shortcuts', keywords: 'help keys shortcuts', icon: 'keyboard', action: function () { close(); setTimeout(function () { if (window.showKeyboardHelp) window.showKeyboardHelp(); }, 100); } },
+      { id: 'act-reload', category: 'Actions', label: 'Reload Data', keywords: 'refresh reset api', icon: 'refresh-cw', action: function () { close(); ApiClient.clearCache(); ToastSystem.success('Cache cleared. Reloading...'); setTimeout(function () { window.location.reload(); }, 500); } },
+      { id: 'act-logout', category: 'Actions', label: 'Logout', keywords: 'sign out exit', icon: 'log-out', action: function () { close(); setTimeout(function () { AuthManager.logout(); }, 100); } },
+
+      // Pages
+      { id: 'pg-dashboard', category: 'Pages', label: 'Dashboard', keywords: 'home', icon: 'grid', action: function () { Router.navigate('dashboard'); close(); } },
+      { id: 'pg-analytics', category: 'Pages', label: 'Analytics', keywords: 'stats', icon: 'bar-chart', action: function () { Router.navigate('analytics'); close(); } },
+      { id: 'pg-users', category: 'Pages', label: 'Users', keywords: 'people team', icon: 'users', action: function () { Router.navigate('users'); close(); } },
+      { id: 'pg-transactions', category: 'Pages', label: 'Transactions', keywords: 'payments billing', icon: 'credit-card', action: function () { Router.navigate('transactions'); close(); } },
+      { id: 'pg-settings', category: 'Pages', label: 'Settings', keywords: 'preferences config', icon: 'settings', action: function () { Router.navigate('settings'); close(); } },
 
       // Recent (from history)
     ];
@@ -106,21 +116,56 @@ const CommandPalette = (function () {
   }
 
   function filterCommands() {
-    const query = input.value.toLowerCase().trim();
+    var query = input.value.toLowerCase().trim();
+
+    if (query === '>' || query === '> ') {
+      filteredCommands = commands.filter(function (c) { return c.category === 'Actions'; });
+      selectedIndex = 0;
+      renderResults();
+      return;
+    }
+
+    if (query.startsWith('>')) {
+      var actionQuery = query.slice(1).trim();
+      filteredCommands = commands.filter(function (c) {
+        return c.category === 'Actions' && (
+          c.label.toLowerCase().includes(actionQuery) ||
+          (c.keywords && c.keywords.includes(actionQuery))
+        );
+      });
+
+      if (actionQuery) {
+        filteredCommands.sort(function (a, b) {
+          var aIdx = a.label.toLowerCase().indexOf(actionQuery);
+          var bIdx = b.label.toLowerCase().indexOf(actionQuery);
+          if (aIdx === -1 && bIdx === -1) return 0;
+          if (aIdx === -1) return 1;
+          if (bIdx === -1) return -1;
+          return aIdx - bIdx;
+        });
+      }
+      selectedIndex = 0;
+      renderResults();
+      return;
+    }
+
     if (query) {
       filteredCommands = commands.filter(function (c) {
-        return c.label.toLowerCase().includes(query) || c.category.toLowerCase().includes(query);
+        var matchLabel = c.label.toLowerCase().includes(query);
+        var matchCategory = c.category.toLowerCase().includes(query);
+        var matchKeywords = c.keywords && c.keywords.includes(query);
+        return matchLabel || matchCategory || matchKeywords;
       });
       filteredCommands.sort(function (a, b) {
-        const aIdx = a.label.toLowerCase().indexOf(query);
-        const bIdx = b.label.toLowerCase().indexOf(query);
+        var aIdx = a.label.toLowerCase().indexOf(query);
+        var bIdx = b.label.toLowerCase().indexOf(query);
         if (aIdx === -1 && bIdx === -1) return 0;
         if (aIdx === -1) return 1;
         if (bIdx === -1) return -1;
         return aIdx - bIdx;
       });
     } else {
-      filteredCommands = commands;
+      filteredCommands = commands.slice(0, 20);
     }
     selectedIndex = 0;
     renderResults();
@@ -227,6 +272,9 @@ const CommandPalette = (function () {
       'credit-card': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
       'settings': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06"/></svg>',
       'help-circle': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      'trash-2': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+      'keyboard': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M6 16h12"/></svg>',
+      'refresh-cw': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
       'user-plus': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',
       'download': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
       'sun': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>',
