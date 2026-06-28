@@ -292,5 +292,18 @@ const ChartEngine = (function () {
     AnalyticsPage.reinitCharts();
   }
 
-  return { init, drawLineChart, drawBarChart, drawDonutChart, resize };
+  function downloadChart(canvasId, filename) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) { ToastSystem.error('Chart not found'); return; }
+    var link = document.createElement('a');
+    link.download = filename || 'chart.png';
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    if (typeof ActivityLog !== 'undefined') ActivityLog.add('export', 'Downloaded chart: ' + filename, 'export');
+    ToastSystem.success('Chart downloaded');
+  }
+
+  return { init, drawLineChart, drawBarChart, drawDonutChart, resize, downloadChart };
 })();

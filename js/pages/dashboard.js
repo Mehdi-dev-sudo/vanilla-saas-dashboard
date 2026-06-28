@@ -129,6 +129,7 @@ const DashboardPage = (function () {
               <h3 class="card__title">Revenue Overview</h3>
               <span class="card__subtitle">Monthly revenue for the past 12 months</span>
             </div>
+            <button class="btn btn--ghost btn--sm" onclick="ChartEngine.downloadChart('dashRevenueChart','revenue_overview.png')" data-tooltip="Download chart">Download</button>
           </div>
           <div class="card__body">
             <canvas id="dashRevenueChart" height="280"></canvas>
@@ -140,6 +141,7 @@ const DashboardPage = (function () {
               <h3 class="card__title">User Growth</h3>
               <span class="card__subtitle">New users acquired per month</span>
             </div>
+            <button class="btn btn--ghost btn--sm" onclick="ChartEngine.downloadChart('dashUserChart','user_growth.png')" data-tooltip="Download chart">Download</button>
           </div>
           <div class="card__body">
             <canvas id="dashUserChart" height="280"></canvas>
