@@ -1,0 +1,19 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# HTML
+*.html text diff=html
+
+# JavaScript
+*.js text
+
+# CSS
+*.css text
+
+# Markdown
+*.md text
+
+# Binary
+*.png binary
+*.jpg binary
+*.ico binary
