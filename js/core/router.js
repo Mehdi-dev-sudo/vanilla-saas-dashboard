@@ -49,6 +49,7 @@ const Router = (function () {
     previousRoute = currentRoute;
     currentRoute = name;
     if (name !== 'login') location.hash = name;
+    contentEl.scrollTop = 0;
 
     showLoader();
 
