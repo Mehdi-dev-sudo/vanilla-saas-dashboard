@@ -18,6 +18,7 @@
     ContextMenuManager.init();
 
     initClock();
+    initOnlineCounter();
     setupGlobalSearch();
     setupNotifications();
     setupKeyboardNavigation();
@@ -25,6 +26,18 @@
     window.addEventListener('resize', Utils.debounce(function () {
       ChartEngine.resize();
     }, 250));
+  }
+
+  function initOnlineCounter() {
+    var el = document.getElementById('headerOnline');
+    if (!el) return;
+    function updateOnline() {
+      var base = AppStore ? AppStore.getState('users').filter(function(u) { return u.status === 'active'; }).length : 0;
+      var online = base + Math.round(Math.random() * 3);
+      el.innerHTML = '<span class="online-dot"></span> ' + online + ' online';
+    }
+    updateOnline();
+    setInterval(updateOnline, 8000);
   }
 
   function initClock() {

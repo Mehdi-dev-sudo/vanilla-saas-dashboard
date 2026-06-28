@@ -338,6 +338,9 @@ img { max-width: 100%; display: block; }
 .header__right { display: flex; align-items: center; gap: var(--space-sm); }
 
 .header__clock { font-size: var(--font-sm); font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; padding: 0 var(--space-sm); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.header__online { font-size: var(--font-xs); color: var(--clr-success); display: flex; align-items: center; gap: 4px; padding: 0 var(--space-sm); font-weight: 500; white-space: nowrap; }
+.header__online .online-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-success); display: inline-block; animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 .header__icon-btn {
   display: flex; align-items: center; justify-content: center;
