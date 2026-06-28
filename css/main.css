@@ -549,6 +549,7 @@ img { max-width: 100%; display: block; }
   font-size: var(--font-xs); font-weight: 600; color: var(--text-tertiary);
   text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
   cursor: pointer; user-select: none; transition: color var(--transition-fast);
+  position: sticky; top: 0; background: var(--bg-card); z-index: 2;
 }
 .table th:hover { color: var(--text-primary); }
 .table th .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.3; }
