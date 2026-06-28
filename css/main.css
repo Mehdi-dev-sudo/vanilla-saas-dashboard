@@ -139,6 +139,10 @@ html { transition: background var(--transition-base), color var(--transition-bas
 :focus:not(:focus-visible) { outline: none; }
 ::selection { background: var(--clr-primary-light); color: var(--clr-primary); }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
 @media print {
   .sidebar, .header, .toast-container, .header__notif-wrapper { display: none !important; }
   .content { padding: 0 !important; overflow: visible !important; }
