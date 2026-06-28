@@ -1,0 +1,269 @@
+const UsersPage = (function () {
+  let currentPage = 1;
+  let currentSearch = '';
+  let currentStatus = 'all';
+  let currentRole = 'all';
+  const perPage = 5;
+
+  function render() {
+    return `
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Users</h1>
+          <p class="page-header__subtitle">Manage your team members and their permissions</p>
+        </div>
+        <div class="page-header__actions">
+          <button class="btn btn--primary" id="addUserBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add User
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="users-toolbar">
+          <div class="users-toolbar__left">
+            <div class="search-input">
+              <svg class="search-input__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="search-input__field" id="userSearch" placeholder="Search users..." aria-label="Search users">
+            </div>
+            <select class="form-select" id="userStatusFilter" aria-label="Filter by status">
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="suspended">Suspended</option>
+            </select>
+            <select class="form-select" id="userRoleFilter" aria-label="Filter by role">
+              <option value="all">All Roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Editor">Editor</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </div>
+          <div class="users-toolbar__right">
+            <span class="pagination__info" id="userTotalInfo">0 users</span>
+          </div>
+        </div>
+        <div class="card__body card__body--no-padding">
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Plan</th>
+                  <th>Status</th>
+                  <th>Revenue</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pagination" id="usersPagination"></div>
+      </div>
+    `;
+  }
+
+  function init() {
+    currentPage = 1;
+    currentSearch = '';
+    currentStatus = 'all';
+    currentRole = 'all';
+
+    renderUsers();
+
+    const searchInput = document.getElementById('userSearch');
+    searchInput.addEventListener('input', Utils.debounce(function () {
+      currentSearch = this.value;
+      currentPage = 1;
+      renderUsers();
+    }, 300));
+
+    document.getElementById('userStatusFilter').addEventListener('change', function () {
+      currentStatus = this.value;
+      currentPage = 1;
+      renderUsers();
+    });
+
+    document.getElementById('userRoleFilter').addEventListener('change', function () {
+      currentRole = this.value;
+      currentPage = 1;
+      renderUsers();
+    });
+
+    document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
+
+    return function cleanup() {};
+  }
+
+  function renderUsers() {
+    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage);
+    const tbody = document.getElementById('usersTableBody');
+    const totalInfo = document.getElementById('userTotalInfo');
+    const pagination = document.getElementById('usersPagination');
+
+    if (result.items.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:40px;color:var(--text-secondary)">No users found</td></tr>';
+    } else {
+      tbody.innerHTML = result.items.map(u => {
+        const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+        return '<tr>' +
+          '<td><div class="flex items-center gap-sm"><span class="user-avatar-sm">' + initials + '</span> <strong>' + Utils.escapeHtml(u.name) + '</strong></div></td>' +
+          '<td>' + Utils.escapeHtml(u.email) + '</td>' +
+          '<td>' + u.role + '</td>' +
+          '<td>' + u.plan + '</td>' +
+          '<td><span class="status-badge status-badge--' + u.status + '">' + u.status.charAt(0).toUpperCase() + u.status.slice(1) + '</span></td>' +
+          '<td><strong>' + Utils.formatCurrency(u.revenue) + '</strong></td>' +
+          '<td>' +
+            '<div class="flex gap-sm">' +
+              '<button class="btn btn--sm btn--ghost edit-user-btn" data-id="' + u.id + '">Edit</button>' +
+              '<button class="btn btn--sm btn--ghost delete-user-btn" data-id="' + u.id + '" style="color:var(--clr-danger)">Delete</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    totalInfo.textContent = result.total + ' users';
+
+    renderPagination(pagination, result);
+
+    tbody.querySelectorAll('.edit-user-btn').forEach(btn => {
+      btn.addEventListener('click', function () { showEditUserModal(this.dataset.id); });
+    });
+    tbody.querySelectorAll('.delete-user-btn').forEach(btn => {
+      btn.addEventListener('click', function () { confirmDeleteUser(this.dataset.id); });
+    });
+  }
+
+  function renderPagination(container, result) {
+    if (result.totalPages <= 1) {
+      container.innerHTML = '';
+      return;
+    }
+
+    let html = '';
+    html += '<button class="pagination__btn" id="prevPage" ' + (result.page <= 1 ? 'disabled' : '') + '>' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>' +
+    '</button>';
+
+    for (let i = 1; i <= result.totalPages; i++) {
+      html += '<button class="pagination__btn' + (i === result.page ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+    }
+
+    html += '<button class="pagination__btn" id="nextPage" ' + (result.page >= result.totalPages ? 'disabled' : '') + '>' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' +
+    '</button>';
+
+    container.innerHTML = html;
+
+    container.querySelectorAll('[data-page]').forEach(btn => {
+      btn.addEventListener('click', function () {
+        currentPage = parseInt(this.dataset.page);
+        renderUsers();
+      });
+    });
+
+    document.getElementById('prevPage').addEventListener('click', function () {
+      if (currentPage > 1) { currentPage--; renderUsers(); }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', function () {
+      if (currentPage < result.totalPages) { currentPage++; renderUsers(); }
+    });
+  }
+
+  function showAddUserModal() {
+    const html =
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label" for="uName">Full Name <span class="form-label__required">*</span></label><input type="text" class="form-input" id="uName" name="name" required></div>' +
+        '<div class="form-group"><label class="form-label" for="uEmail">Email <span class="form-label__required">*</span></label><input type="email" class="form-input" id="uEmail" name="email" required></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label" for="uRole">Role</label><select class="form-select" id="uRole" name="role"><option>Admin</option><option selected>Editor</option><option>Viewer</option></select></div>' +
+        '<div class="form-group"><label class="form-label" for="uPlan">Plan</label><select class="form-select" id="uPlan" name="plan"><option>Free</option><option selected>Pro</option><option>Enterprise</option></select></div>' +
+      '</div>';
+
+    ModalSystem.form('Add New User', html, 'Add User', function (data) {
+      const errors = [];
+      if (!data.name || data.name.trim() === '') errors.push('Name is required');
+      if (!data.email || data.email.trim() === '') errors.push('Email is required');
+      if (data.email && !data.email.includes('@')) errors.push('Invalid email format');
+
+      if (errors.length > 0) {
+        ToastSystem.error(errors.join('<br>'));
+        return;
+      }
+
+      AppStore.addUser({
+        name: data.name.trim(),
+        email: data.email.trim(),
+        role: data.role || 'Editor',
+        plan: data.plan || 'Pro',
+        status: 'active',
+        joined: new Date().toISOString().slice(0, 10),
+        revenue: 0
+      });
+
+      ToastSystem.success('User "' + data.name.trim() + '" added successfully');
+      renderUsers();
+    });
+  }
+
+  function showEditUserModal(id) {
+    const user = AppStore.getUser(id);
+    if (!user) return;
+
+    const html =
+      '<input type="hidden" name="id" value="' + id + '">' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label" for="uEditName">Full Name</label><input type="text" class="form-input" id="uEditName" name="name" value="' + Utils.escapeHtml(user.name) + '" required></div>' +
+        '<div class="form-group"><label class="form-label" for="uEditEmail">Email</label><input type="email" class="form-input" id="uEditEmail" name="email" value="' + Utils.escapeHtml(user.email) + '" required></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div class="form-group"><label class="form-label" for="uEditRole">Role</label><select class="form-select" id="uEditRole" name="role">' +
+          '<option' + (user.role === 'Admin' ? ' selected' : '') + '>Admin</option>' +
+          '<option' + (user.role === 'Editor' ? ' selected' : '') + '>Editor</option>' +
+          '<option' + (user.role === 'Viewer' ? ' selected' : '') + '>Viewer</option>' +
+        '</select></div>' +
+        '<div class="form-group"><label class="form-label" for="uEditStatus">Status</label><select class="form-select" id="uEditStatus" name="status">' +
+          '<option value="active"' + (user.status === 'active' ? ' selected' : '') + '>Active</option>' +
+          '<option value="inactive"' + (user.status === 'inactive' ? ' selected' : '') + '>Inactive</option>' +
+          '<option value="suspended"' + (user.status === 'suspended' ? ' selected' : '') + '>Suspended</option>' +
+        '</select></div>' +
+      '</div>';
+
+    ModalSystem.form('Edit User', html, 'Save Changes', function (data) {
+      AppStore.updateUser(id, {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        status: data.status
+      });
+      ToastSystem.success('User "' + data.name + '" updated successfully');
+      renderUsers();
+    });
+  }
+
+  function confirmDeleteUser(id) {
+    const user = AppStore.getUser(id);
+    if (!user) return;
+
+    ModalSystem.confirm(
+      'Delete User',
+      'Are you sure you want to delete <strong>' + Utils.escapeHtml(user.name) + '</strong>? This action cannot be undone.',
+      'Delete',
+      'Cancel',
+      function () {
+        AppStore.deleteUser(id);
+        ToastSystem.success('User deleted successfully');
+        renderUsers();
+      }
+    );
+  }
+
+  return { render, init };
+})();
