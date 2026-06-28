@@ -126,7 +126,10 @@ const TransactionsPage = (function () {
       ).join('');
     }
 
-    totalInfo.textContent = result.total + ' transactions';
+    totalInfo.textContent = result.total + ' transaction' + (result.total !== 1 ? 's' : '');
+    if (currentSearch && result.total > 0) {
+      totalInfo.textContent = result.total + ' result' + (result.total !== 1 ? 's' : '') + ' for "' + currentSearch + '"';
+    }
 
     document.querySelectorAll('#transactionTable th[data-sort]').forEach(th => {
       th.classList.remove('sort-asc', 'sort-desc');

@@ -180,7 +180,10 @@ const UsersPage = (function () {
       }).join('');
     }
 
-    totalInfo.textContent = result.total + ' users';
+    totalInfo.textContent = result.total + ' user' + (result.total !== 1 ? 's' : '');
+    if (currentSearch && result.total > 0) {
+      totalInfo.textContent = result.total + ' result' + (result.total !== 1 ? 's' : '') + ' for "' + currentSearch + '"';
+    }
 
     renderPagination(pagination, result);
 
