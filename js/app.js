@@ -158,8 +158,8 @@ window.addEventListener('resize', Utils.debounce(function () {
   }
 
   function showKeyboardHelp() {
-    ModalSystem.show(
-      '<div class="modal__header"><h2 class="modal__title">Keyboard Shortcuts</h2></div>' +
+    ModalSystem.open(
+      '<div class="modal__header"><h2 class="modal__title">Keyboard Shortcuts <button class="modal__close" data-modal-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></h2></div>' +
       '<div class="modal__body" style="max-height:400px;overflow-y:auto">' +
         '<div class="shortcut-group"><div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>K</kbd></span><span>Command palette</span></div>' +
         '<div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>S</kbd></span><span>Quick save</span></div>' +
