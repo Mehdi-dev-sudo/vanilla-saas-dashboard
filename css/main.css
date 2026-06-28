@@ -431,6 +431,12 @@ img { max-width: 100%; display: block; }
 .breadcrumbs__sep { color: var(--text-tertiary); user-select: none; }
 .breadcrumbs__current { color: var(--text-secondary); font-weight: 500; }
 
+/* Keyboard Shortcuts */
+.shortcut-group { display: flex; flex-direction: column; gap: var(--space-sm); }
+.shortcut-row { display: flex; align-items: center; justify-content: space-between; padding: var(--space-sm) 0; gap: var(--space-lg); }
+.shortcut-row span { font-size: var(--font-sm); color: var(--text-secondary); }
+.shortcut-keys kbd { display: inline-block; padding: 2px 8px; font-size: var(--font-xs); font-family: inherit; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-sm); box-shadow: 0 1px 0 var(--border-color); }
+
 /* ----- 6. Page Header / Actions ----- */
 .page-header {
   display: flex; align-items: flex-start; justify-content: space-between;

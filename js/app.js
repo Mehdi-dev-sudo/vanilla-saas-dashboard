@@ -145,8 +145,32 @@
     });
   }
 
+  function showKeyboardHelp() {
+    ModalSystem.show(
+      '<div class="modal__header"><h2 class="modal__title">Keyboard Shortcuts</h2></div>' +
+      '<div class="modal__body" style="max-height:400px;overflow-y:auto">' +
+        '<div class="shortcut-group"><div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>K</kbd></span><span>Command palette</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>S</kbd></span><span>Quick save</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>Z</kbd></span><span>Undo</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></span><span>Redo</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd>+<kbd>/</kbd></span><span>Keyboard shortcuts</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>Escape</kbd></span><span>Close modal / palette</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>G</kbd>+<kbd>D</kbd></span><span>Go to Dashboard</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>G</kbd>+<kbd>U</kbd></span><span>Go to Users</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>G</kbd>+<kbd>T</kbd></span><span>Go to Transactions</span></div>' +
+        '<div class="shortcut-row"><span class="shortcut-keys"><kbd>G</kbd>+<kbd>S</kbd></span><span>Go to Settings</span></div>' +
+        '</div>' +
+      '</div>',
+      function () {}
+    );
+  }
+
   function setupKeyboardNavigation() {
     document.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === '/' ) {
+        e.preventDefault();
+        showKeyboardHelp();
+      }
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
       }
