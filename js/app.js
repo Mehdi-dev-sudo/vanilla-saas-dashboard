@@ -89,7 +89,18 @@ window.addEventListener('resize', Utils.debounce(function () {
 
   function setupGlobalSearch() {
     var searchInput = document.getElementById('globalSearch');
+    var searchClear = document.getElementById('searchClear');
     var originalPlaceholder = searchInput.placeholder;
+
+    searchInput.addEventListener('input', function () {
+      searchClear.style.display = this.value ? 'flex' : 'none';
+    });
+
+    searchClear.addEventListener('click', function () {
+      searchInput.value = '';
+      searchInput.focus();
+      searchClear.style.display = 'none';
+    });
 
     searchInput.addEventListener('focus', function () { this.placeholder = 'Search users or transactions...'; });
     searchInput.addEventListener('blur', function () { this.placeholder = originalPlaceholder; });
