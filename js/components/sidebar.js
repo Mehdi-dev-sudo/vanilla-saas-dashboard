@@ -5,6 +5,9 @@ const SidebarManager = (function () {
   const menuToggle = document.getElementById('menuToggle');
 
   function init() {
+    if (localStorage.getItem('sidebar_collapsed') === 'true') {
+      sidebar.classList.add('collapsed');
+    }
     collapseBtn.addEventListener('click', toggleCollapse);
     menuToggle.addEventListener('click', openMobile);
     overlay.addEventListener('click', closeMobile);
@@ -31,7 +34,8 @@ const SidebarManager = (function () {
 
   function toggleCollapse() {
     sidebar.classList.toggle('collapsed');
-    setTimeout(() => {
+    localStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
+    setTimeout(function () {
       window.dispatchEvent(new Event('resize'));
     }, 350);
   }
