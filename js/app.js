@@ -177,6 +177,8 @@ window.addEventListener('resize', Utils.debounce(function () {
     );
   }
 
+  var gotoBuffer = '';
+
   function setupKeyboardNavigation() {
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === '/' ) {
@@ -190,6 +192,15 @@ window.addEventListener('resize', Utils.debounce(function () {
         e.preventDefault();
         ToastSystem.success('Changes saved');
         ActivityLog.add('edit', 'Quick save triggered', 'edit');
+      }
+
+      if (!(e.ctrlKey || e.metaKey) && e.key.length === 1) {
+        gotoBuffer += e.key.toLowerCase();
+        if (gotoBuffer.length > 4) gotoBuffer = gotoBuffer.slice(-4);
+        if (gotoBuffer === 'gd') { Router.navigate('dashboard'); gotoBuffer = ''; }
+        if (gotoBuffer === 'gu') { Router.navigate('users'); gotoBuffer = ''; }
+        if (gotoBuffer === 'gt') { Router.navigate('transactions'); gotoBuffer = ''; }
+        if (gotoBuffer === 'gs') { Router.navigate('settings'); gotoBuffer = ''; }
       }
     });
 
