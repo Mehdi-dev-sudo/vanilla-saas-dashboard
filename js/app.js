@@ -41,6 +41,16 @@ window.addEventListener('resize', Utils.debounce(function () {
     }, 250));
   }
 
+  var saveIndicatorTimer = null;
+
+  window.showSaveIndicator = function () {
+    var el = document.getElementById('saveIndicator');
+    if (!el) return;
+    el.style.display = 'flex';
+    if (saveIndicatorTimer) clearTimeout(saveIndicatorTimer);
+    saveIndicatorTimer = setTimeout(function () { el.style.display = 'none'; }, 2000);
+  };
+
   function initLastUpdated() {
     var el = document.getElementById('lastUpdated');
     if (!el) return;
