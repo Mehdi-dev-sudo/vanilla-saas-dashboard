@@ -280,7 +280,7 @@ img { max-width: 100%; display: block; }
   color: var(--text-sidebar); font-size: var(--font-base); font-weight: 500;
   transition: all var(--transition-fast); white-space: nowrap; position: relative; height: 42px;
 }
-.sidebar__item:hover { background: var(--bg-sidebar-hover); color: var(--text-sidebar-active); }
+.sidebar__item:hover { background: var(--bg-sidebar-hover); color: var(--text-sidebar-active); transform: translateX(3px); }
 .sidebar__item.active { background: var(--bg-sidebar-active); color: var(--text-sidebar-active); }
 .sidebar__item.active::before {
   content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%);
