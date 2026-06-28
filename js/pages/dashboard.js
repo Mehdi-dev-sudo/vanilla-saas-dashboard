@@ -314,6 +314,7 @@ const DashboardPage = (function () {
     var stats = AppStore.getDashboardStats();
     animateStats(stats);
     drawCharts();
+    startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();
 
@@ -322,7 +323,7 @@ const DashboardPage = (function () {
       ActivityLog.add('export', 'Exported dashboard view', 'export');
     });
 
-    return function cleanup() { cancelAnimationFrames(); };
+    return function cleanup() { cancelAnimationFrames(); stopRealtimeUpdates(); };
   }
 
   function animateStats(stats) {
@@ -332,10 +333,52 @@ const DashboardPage = (function () {
     Utils.animatePercent(document.getElementById('statChurn'), 0, stats.churn.value, 1200);
   }
 
+  var realtimeInterval = null;
+
+  function generateRealtimeData() {
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var base = Date.now() / 10000;
+    return months.map(function (m, i) {
+      var sinShift = Math.sin(i * 0.8 + base);
+      return { month: m, value: Math.max(5000, 18000 + i * 1400 + Math.round(sinShift * 3000 + 1000)) };
+    });
+  }
+
+  function generateRealtimeUserData() {
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var base = Date.now() / 12000;
+    return months.map(function (m, i) {
+      return { month: m, value: Math.max(50, 110 + i * 18 + Math.round(Math.sin(i * 1.3 + base) * 30 + 15)) };
+    });
+  }
+
+  function startRealtimeUpdates() {
+    if (realtimeInterval) clearInterval(realtimeInterval);
+    realtimeInterval = setInterval(function () {
+      var revChart = document.getElementById('dashRevenueChart');
+      var userChart = document.getElementById('dashUserChart');
+      if (!revChart || !userChart) return;
+      var revenueData = generateRealtimeData();
+      var userData = generateRealtimeUserData();
+      ChartEngine.drawLineChart('dashRevenueChart', revenueData, { height: 280, prefix: '$', divisor: 1000, suffix: 'k', animate: true });
+      ChartEngine.drawBarChart('dashUserChart', userData, { height: 280, animate: true });
+    }, 5000);
+  }
+
+  function stopRealtimeUpdates() {
+    if (realtimeInterval) { clearInterval(realtimeInterval); realtimeInterval = null; }
+  }
+
   function drawCharts() {
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var revenueData = months.map(function (m, i) { return { month: m, value: 18000 + i * 1400 + Math.round(Math.sin(i) * 2000) }; });
-    var userData = months.map(function (m, i) { return { month: m, value: 110 + i * 18 + Math.round(Math.sin(i * 1.3) * 25) }; });
+    var base = Date.now() / 10000;
+    var revenueData = months.map(function (m, i) {
+      var sinShift = Math.sin(i * 0.8 + base);
+      return { month: m, value: Math.max(5000, 18000 + i * 1400 + Math.round(sinShift * 3000 + 1000)) };
+    });
+    var userData = months.map(function (m, i) {
+      return { month: m, value: Math.max(50, 110 + i * 18 + Math.round(Math.sin(i * 1.3 + base) * 30 + 15)) };
+    });
     var trafficData = [
       { label: 'Organic', value: 42, color: '#6366f1' },
       { label: 'Social', value: 26, color: '#10b981' },
