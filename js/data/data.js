@@ -218,11 +218,13 @@ const AppStore = (function () {
 
   // Stats
   function getDashboardStats() {
-    const totalRevenue = state.transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.amount, 0);
-    const activeUsers = state.users.filter(u => u.status === 'active').length;
-    const subscribers = state.users.filter(u => u.plan !== 'Free').length;
-    const churned = state.users.filter(u => u.status === 'inactive' || u.status === 'suspended').length;
-    const churnRate = state.users.length > 0 ? (churned / state.users.length) * 100 : 0;
+    var tx = state.transactions || [];
+    var us = state.users || [];
+    var totalRevenue = tx.filter(function (t) { return t && t.status === 'completed'; }).reduce(function (s, t) { return s + (t.amount || 0); }, 0);
+    var activeUsers = us.filter(function (u) { return u && u.status === 'active'; }).length;
+    var subscribers = us.filter(function (u) { return u && u.plan !== 'Free'; }).length;
+    var churned = us.filter(function (u) { return u && (u.status === 'inactive' || u.status === 'suspended'); }).length;
+    var churnRate = us.length > 0 ? (churned / us.length) * 100 : 0;
 
     return {
       revenue: { value: totalRevenue, change: 12.5, isUp: true },
