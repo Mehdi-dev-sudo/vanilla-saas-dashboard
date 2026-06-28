@@ -629,7 +629,7 @@ img { max-width: 100%; display: block; }
   transition: border-color var(--transition-fast), background var(--transition-base);
 }
 .form-input:hover { border-color: var(--text-tertiary); }
-.form-input:focus { border-color: var(--clr-primary); background: var(--bg-card); outline: none; }
+.form-input:focus { border-color: var(--clr-primary); background: var(--bg-card); outline: none; transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast); }
 .form-input--error { border-color: var(--clr-danger); }
 .form-input--error:focus { border-color: var(--clr-danger); }
 .form-error { font-size: var(--font-sm); color: var(--clr-danger); }

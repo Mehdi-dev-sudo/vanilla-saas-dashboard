@@ -248,10 +248,16 @@ const UsersPage = (function () {
       '</div>';
 
     ModalSystem.form('Add New User', html, 'Add User', function (data) {
-      const errors = [];
-      if (!data.name || data.name.trim() === '') errors.push('Name is required');
-      if (!data.email || data.email.trim() === '') errors.push('Email is required');
-      if (data.email && !data.email.includes('@')) errors.push('Invalid email format');
+      var errors = [];
+      var nameInput = document.getElementById('uName');
+      var emailInput = document.getElementById('uEmail');
+
+      nameInput.classList.remove('form-input--error');
+      emailInput.classList.remove('form-input--error');
+
+      if (!data.name || data.name.trim() === '') { errors.push('Name is required'); if (nameInput) nameInput.classList.add('form-input--error'); }
+      if (!data.email || data.email.trim() === '') { errors.push('Email is required'); if (emailInput) emailInput.classList.add('form-input--error'); }
+      if (data.email && !data.email.includes('@')) { errors.push('Invalid email format'); if (emailInput) emailInput.classList.add('form-input--error'); }
 
       if (errors.length > 0) {
         ToastSystem.error(errors.join('<br>'));
