@@ -1095,7 +1095,9 @@ img { max-width: 100%; display: block; }
   min-height: 100vh; padding: var(--space-xl);
   background: var(--bg-body);
 }
+@keyframes authEnter { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 .auth-card {
+  animation: authEnter 0.4s ease-out;
   background: var(--bg-card); border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg); border: 1px solid var(--border-color);
   width: 400px; max-width: 100%; padding: var(--space-4xl);
