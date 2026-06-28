@@ -601,7 +601,7 @@ img { max-width: 100%; display: block; }
 }
 .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
 .status-badge--completed { background: var(--clr-success-light); color: var(--clr-success); }
-.status-badge--completed::before { background: var(--clr-success); }
+.status-badge--completed::before { background: var(--clr-success); animation: pulse-dot 2s ease-in-out infinite; }
 .status-badge--pending { background: var(--clr-warning-light); color: var(--clr-warning); }
 .status-badge--pending::before { background: var(--clr-warning); }
 .status-badge--failed { background: var(--clr-danger-light); color: var(--clr-danger); }
