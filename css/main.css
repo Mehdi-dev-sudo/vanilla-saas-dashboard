@@ -548,6 +548,8 @@ img { max-width: 100%; display: block; }
 .status-badge--inactive::before { background: var(--text-tertiary); }
 .status-badge--suspended { background: var(--clr-danger-light); color: var(--clr-danger); }
 .status-badge--suspended::before { background: var(--clr-danger); }
+.status-badge--refunded { background: var(--clr-info-light); color: var(--clr-info); }
+.status-badge--refunded::before { background: var(--clr-info); }
 
 /* ----- 12. Forms ----- */
 .form-group { display: flex; flex-direction: column; gap: var(--space-sm); }
