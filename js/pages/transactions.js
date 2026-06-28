@@ -33,6 +33,7 @@ const TransactionsPage = (function () {
               <option value="completed">Completed</option>
               <option value="pending">Pending</option>
               <option value="failed">Failed</option>
+              <option value="refunded">Refunded</option>
             </select>
           </div>
           <div class="users-toolbar__right">
