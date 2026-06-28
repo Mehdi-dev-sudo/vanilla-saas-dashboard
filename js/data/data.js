@@ -98,26 +98,35 @@ const AppStore = (function () {
 
   // User CRUD
   function addUser(user) {
+    if (typeof HistoryManager !== 'undefined' && HistoryManager.pushSnapshot) HistoryManager.pushSnapshot();
     user.id = Utils.generateId();
     state.users.push(user);
     saveState();
     notify('users');
+    if (typeof ActivityLog !== 'undefined') ActivityLog.add('create', 'User "' + user.name + '" created', 'user');
     return user;
   }
 
   function updateUser(id, updates) {
     const idx = state.users.findIndex(u => u.id === id);
     if (idx === -1) return null;
+    if (typeof HistoryManager !== 'undefined' && HistoryManager.pushSnapshot) HistoryManager.pushSnapshot();
+    const oldName = state.users[idx].name;
     state.users[idx] = { ...state.users[idx], ...updates };
     saveState();
     notify('users');
+    if (typeof ActivityLog !== 'undefined') ActivityLog.add('edit', 'User "' + (updates.name || oldName) + '" updated', 'edit');
     return state.users[idx];
   }
 
   function deleteUser(id) {
+    const user = state.users.find(u => u.id === id);
+    if (!user) return;
+    if (typeof HistoryManager !== 'undefined' && HistoryManager.pushSnapshot) HistoryManager.pushSnapshot();
     state.users = state.users.filter(u => u.id !== id);
     saveState();
     notify('users');
+    if (typeof ActivityLog !== 'undefined') ActivityLog.add('delete', 'User "' + user.name + '" deleted', 'delete');
   }
 
   function getUser(id) {
@@ -230,6 +239,7 @@ const AppStore = (function () {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    if (typeof ActivityLog !== 'undefined') ActivityLog.add('export', 'Exported ' + transactions.length + ' transactions as CSV', 'export');
   }
 
   return {

@@ -27,7 +27,9 @@ const ThemeManager = (function () {
 
   function toggle() {
     const current = getCurrent();
-    setTheme(current === 'light' ? 'dark' : 'light');
+    const next = current === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    if (typeof ActivityLog !== 'undefined') ActivityLog.add('theme', 'Theme changed to ' + next, 'theme');
   }
 
   return { init, getCurrent, setTheme, toggle };
