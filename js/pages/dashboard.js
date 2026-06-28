@@ -1,46 +1,69 @@
 const DashboardPage = (function () {
-  let chartInstances = [];
+  var widgetOrder = [];
+  var hiddenWidgets = [];
 
   function render() {
-    const stats = AppStore.getDashboardStats();
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const revenueData = months.map((m, i) => ({ month: m, value: 18000 + i * 1400 + Math.round(Math.sin(i) * 2000) }));
-    const userData = months.map((m, i) => ({ month: m, value: 110 + i * 18 + Math.round(Math.sin(i * 1.3) * 25) }));
-    const trafficData = [
-      { label: 'Organic', value: 42, color: '#6366f1' },
-      { label: 'Social', value: 26, color: '#10b981' },
-      { label: 'Direct', value: 18, color: '#f59e0b' },
-      { label: 'Referral', value: 10, color: '#8b5cf6' },
-      { label: 'Email', value: 4, color: '#ef4444' }
+    var settings = AppStore.getState('settings');
+    var savedOrder = loadWidgetOrder();
+
+    var widgets = [
+      { id: 'stats', title: 'Key Metrics', render: renderStatsSection, default: true },
+      { id: 'charts', title: 'Charts', render: renderChartsSection, default: true },
+      { id: 'transactions', title: 'Recent Transactions', render: renderTransactionsSection, default: true },
+      { id: 'traffic', title: 'Traffic Sources', render: renderTrafficSection, default: true },
+      { id: 'shortcuts', title: 'Quick Actions', render: renderQuickActions, default: settings.showQuickActions !== false },
+      { id: 'activity', title: 'Recent Activity', render: renderActivitySection, default: settings.showActivityLog !== false },
+      { id: 'recentUsers', title: 'Recent Users', render: renderRecentUsers, default: true }
     ];
-    const transactions = AppStore.getState('transactions').slice(0, 5);
-    const activities = [
-      { type: 'user', text: 'New user registered: <strong>Sarah Lee</strong>', time: new Date(Date.now() - 5 * 60000).toISOString() },
-      { type: 'payment', text: 'Payment received: <strong>$2,400</strong> from TechCorp', time: new Date(Date.now() - 2 * 3600000).toISOString() },
-      { type: 'subscription', text: 'New subscription: <strong>Premium Plan</strong> - David Kim', time: new Date(Date.now() - 5 * 3600000).toISOString() },
-      { type: 'ticket', text: 'Support ticket closed: <strong>#TK-1024</strong>', time: new Date(Date.now() - 24 * 3600000).toISOString() },
-      { type: 'deploy', text: 'Server deployment completed: <strong>v2.4.1</strong>', time: new Date(Date.now() - 36 * 3600000).toISOString() }
-    ];
+
+    widgetOrder = savedOrder.length === widgets.length ? savedOrder : widgets.map(function (w) { return w.id; });
+    hiddenWidgets = getHiddenWidgets();
 
     return `
       <div class="page-header">
         <div>
           <h1 class="page-header__title">Dashboard</h1>
-          <p class="page-header__subtitle">Welcome back, Ali! Here's what's happening today.</p>
+          <p class="page-header__subtitle">Welcome back${AuthManager.isLoggedIn ? ', ' + AuthManager.getUser().name : ''}! Here's what's happening today.</p>
         </div>
         <div class="page-header__actions">
-          <button class="btn btn--secondary" id="exportDashboardBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            Export
+          <button class="btn btn--ghost btn--sm" id="widgetConfigBtn" title="Configure widgets">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Widgets
           </button>
-          <button class="btn btn--primary" id="newReportBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            New Report
+          <button class="btn btn--secondary btn--sm" id="exportDashboardBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Export
           </button>
         </div>
       </div>
 
-      <div class="stats">
+      <div class="widget-config" id="widgetConfig" style="display:none">
+        <div class="widget-config__header">
+          <span class="widget-config__title">Configure Widgets</span>
+          <button class="modal__close" id="widgetConfigClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="widget-config__list">
+          ${widgets.map(function (w) {
+            var isHidden = hiddenWidgets.indexOf(w.id) !== -1;
+            return '<label class="widget-config__item"><input type="checkbox" ' + (!isHidden ? 'checked' : '') + ' data-widget="' + w.id + '"><span>' + w.title + '</span></label>';
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="dashboard-widgets" id="dashboardWidgets">
+        ${widgetOrder.map(function (id) {
+          var widget = widgets.find(function (w) { return w.id === id; });
+          if (!widget || hiddenWidgets.indexOf(id) !== -1) return '';
+          return '<div class="widget" data-widget-id="' + id + '">' + widget.render() + '</div>';
+        }).join('')}
+      </div>
+    `;
+  }
+
+  function renderStatsSection() {
+    var stats = AppStore.getDashboardStats();
+    return `
+      <div class="stats" id="statsContainer">
         <div class="stat-card stat-card--primary">
           <div class="stat-card__icon stat-card__icon--primary">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -56,7 +79,7 @@ const DashboardPage = (function () {
         </div>
         <div class="stat-card stat-card--success">
           <div class="stat-card__icon stat-card__icon--success">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
           </div>
           <div class="stat-card__info">
             <span class="stat-card__label">Active Users</span>
@@ -94,8 +117,12 @@ const DashboardPage = (function () {
           </div>
         </div>
       </div>
+    `;
+  }
 
-      <div class="charts-grid">
+  function renderChartsSection() {
+    return `
+      <div class="charts-grid" style="margin-top:0">
         <div class="card chart-card">
           <div class="card__header">
             <div>
@@ -104,7 +131,7 @@ const DashboardPage = (function () {
             </div>
           </div>
           <div class="card__body">
-            <canvas id="dashRevenueChart" height="300"></canvas>
+            <canvas id="dashRevenueChart" height="280"></canvas>
           </div>
         </div>
         <div class="card chart-card">
@@ -115,99 +142,184 @@ const DashboardPage = (function () {
             </div>
           </div>
           <div class="card__body">
-            <canvas id="dashUserChart" height="300"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottom-section">
-        <div class="card">
-          <div class="card__header">
-            <div>
-              <h3 class="card__title">Recent Transactions</h3>
-              <span class="card__subtitle">Latest payment activities</span>
-            </div>
-            <a class="card__link" onclick="Router.navigate('transactions')">View All</a>
-          </div>
-          <div class="card__body card__body--no-padding">
-            <div class="table-wrapper">
-              <table class="table">
-                <thead>
-                  <tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr>
-                </thead>
-                <tbody>
-                  ${transactions.map(t =>
-                    `<tr>
-                      <td><strong>${t.invoice}</strong></td>
-                      <td>${Utils.escapeHtml(t.customer)}</td>
-                      <td><strong>${Utils.formatCurrency(t.amount)}</strong></td>
-                      <td><span class="status-badge status-badge--${t.status}">${t.status.charAt(0).toUpperCase() + t.status.slice(1)}</span></td>
-                      <td>${Utils.formatShortDate(t.date)}</td>
-                    </tr>`
-                  ).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card__header">
-            <div>
-              <h3 class="card__title">Traffic Sources</h3>
-              <span class="card__subtitle">Where your visitors come from</span>
-            </div>
-          </div>
-          <div class="card__body card__body--center">
-            <canvas id="dashTrafficChart" width="200" height="200"></canvas>
-            <div class="traffic-legend" id="dashTrafficLegend"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card__header">
-          <div>
-            <h3 class="card__title">Recent Activity</h3>
-            <span class="card__subtitle">Latest events and updates</span>
-          </div>
-        </div>
-        <div class="card__body">
-          <div class="activity-feed">
-            ${activities.map(a => `
-              <div class="activity-item">
-                <div class="activity-item__icon activity-item__icon--${a.type}">
-                  ${({user:'👤',payment:'💳',subscription:'⭐',ticket:'🎫',deploy:'🚀'})[a.type] || '📌'}
-                </div>
-                <div class="activity-item__content">
-                  <div class="activity-item__text">${a.text}</div>
-                  <div class="activity-item__time">${Utils.timeAgo(a.time)}</div>
-                </div>
-              </div>
-            `).join('')}
+            <canvas id="dashUserChart" height="280"></canvas>
           </div>
         </div>
       </div>
     `;
   }
 
-  function init() {
-    const stats = AppStore.getDashboardStats();
-    animateStats(stats);
+  function renderTransactionsSection() {
+    var transactions = AppStore.getState('transactions').slice(0, 5);
+    return `
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Recent Transactions</h3>
+            <span class="card__subtitle">Latest payment activities</span>
+          </div>
+          <a class="card__link" onclick="Router.navigate('transactions')">View All</a>
+        </div>
+        <div class="card__body card__body--no-padding">
+          <div class="table-wrapper">
+            <table class="table">
+              <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody>
+                ${transactions.map(function (t) {
+                  return '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
+                    '<td><strong>' + t.invoice + '</strong></td>' +
+                    '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
+                    '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
+                    '<td><span class="status-badge status-badge--' + t.status + '">' + t.status.charAt(0).toUpperCase() + t.status.slice(1) + '</span></td>' +
+                    '<td>' + Utils.formatShortDate(t.date) + '</td>' +
+                  '</tr>';
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
+  function renderTrafficSection() {
+    return `
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Traffic Sources</h3>
+            <span class="card__subtitle">Where your visitors come from</span>
+          </div>
+        </div>
+        <div class="card__body card__body--center">
+          <canvas id="dashTrafficChart" width="180" height="180"></canvas>
+          <div class="traffic-legend" id="dashTrafficLegend"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderQuickActions() {
+    return `
+      <div class="card quick-actions-card">
+        <div class="card__header"><h3 class="card__title">Quick Actions</h3><span class="card__subtitle">Common tasks</span></div>
+        <div class="card__body">
+          <div class="quick-actions">
+            <button class="quick-action" onclick="Router.navigate('users');setTimeout(function(){document.getElementById('addUserBtn')&&document.getElementById('addUserBtn').click()},200)">
+              <span class="quick-action__icon quick-action__icon--primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </span>
+              <span class="quick-action__label">Add User</span>
+            </button>
+            <button class="quick-action" onclick="AppStore.exportTransactionsCSV(AppStore.getState('transactions'));ToastSystem.success('CSV exported')">
+              <span class="quick-action__icon quick-action__icon--success">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </span>
+              <span class="quick-action__label">Export CSV</span>
+            </button>
+            <button class="quick-action" onclick="ThemeManager.toggle();ToastSystem.info('Theme:'+ThemeManager.getCurrent())">
+              <span class="quick-action__icon quick-action__icon--warning">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+              </span>
+              <span class="quick-action__label">Toggle Theme</span>
+            </button>
+            <button class="quick-action" onclick="CommandPalette.open()">
+              <span class="quick-action__icon quick-action__icon--info">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <span class="quick-action__label">Quick Search</span>
+            </button>
+            <button class="quick-action" onclick="Router.navigate('settings')">
+              <span class="quick-action__icon quick-action__icon--primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06"/></svg>
+              </span>
+              <span class="quick-action__label">Settings</span>
+            </button>
+            <button class="quick-action" onclick="HistoryManager.undo()">
+              <span class="quick-action__icon quick-action__icon--danger">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              </span>
+              <span class="quick-action__label">Undo</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderActivitySection() {
+    var activities = ActivityLog.getRecent(5);
+    var iconMap = { user: 'user-plus', delete: 'trash-2', edit: 'edit-3', export: 'download', theme: 'sun', create: 'user-plus', undo: 'rotate-ccw', redo: 'rotate-cw', auth: 'log-in', info: 'info' };
+    return `
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Recent Activity</h3>
+            <span class="card__subtitle">Latest actions and events</span>
+          </div>
+          <button class="card__link" onclick="ActivityLog.clear();DashboardPage.refresh()">Clear</button>
+        </div>
+        <div class="card__body">
+          <div class="activity-feed">
+            ${activities.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--text-tertiary);font-size:var(--font-sm)">No recent activity</div>' :
+              activities.map(function (a) {
+                return '<div class="activity-item">' +
+                  '<div class="activity-item__icon activity-item__icon--' + a.type + '">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                  '</div>' +
+                  '<div class="activity-item__content">' +
+                    '<div class="activity-item__text"><strong>' + a.action + '</strong> ' + a.detail + '</div>' +
+                    '<div class="activity-item__time">' + ActivityLog.formatDate(a.timestamp) + '</div>' +
+                  '</div>' +
+                '</div>';
+              }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRecentUsers() {
+    var users = AppStore.getState('users').slice(0, 5);
+    return `
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Recent Users</h3>
+            <span class="card__subtitle">Latest team members</span>
+          </div>
+          <a class="card__link" onclick="Router.navigate('users')">View All</a>
+        </div>
+        <div class="card__body" style="padding-top:var(--space-sm)">
+          ${users.map(function (u) {
+            var initials = u.name.split(' ').map(function (n) { return n[0]; }).join('').slice(0, 2);
+            return '<div class="activity-item">' +
+              '<div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px">' + initials + '</div>' +
+              '<div class="activity-item__content">' +
+                '<div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div>' +
+                '<div class="activity-item__time">' + u.role + ' - ' + u.plan + ' Plan</div>' +
+              '</div>' +
+              '<span class="status-badge status-badge--' + u.status + '">' + u.status.charAt(0).toUpperCase() + u.status.slice(1) + '</span>' +
+            '</div>';
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function init() {
+    var stats = AppStore.getDashboardStats();
+    animateStats(stats);
     drawCharts();
+    setupWidgetConfig();
+    setupDragReorder();
 
     document.getElementById('exportDashboardBtn').addEventListener('click', function () {
-      ToastSystem.success('Dashboard data exported successfully');
+      ToastSystem.success('Dashboard exported successfully');
+      ActivityLog.add('export', 'Exported dashboard view', 'export');
     });
 
-    document.getElementById('newReportBtn').addEventListener('click', function () {
-      ToastSystem.info('Report generation started. You will be notified when ready.');
-    });
-
-    return function cleanup() {
-      chartInstances.forEach(id => cancelAnimationFrame(id));
-      chartInstances = [];
-    };
+    return function cleanup() { cancelAnimationFrames(); };
   }
 
   function animateStats(stats) {
@@ -218,10 +330,10 @@ const DashboardPage = (function () {
   }
 
   function drawCharts() {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const revenueData = months.map((m, i) => ({ month: m, value: 18000 + i * 1400 + Math.round(Math.sin(i) * 2000) }));
-    const userData = months.map((m, i) => ({ month: m, value: 110 + i * 18 + Math.round(Math.sin(i * 1.3) * 25) }));
-    const trafficData = [
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var revenueData = months.map(function (m, i) { return { month: m, value: 18000 + i * 1400 + Math.round(Math.sin(i) * 2000) }; });
+    var userData = months.map(function (m, i) { return { month: m, value: 110 + i * 18 + Math.round(Math.sin(i * 1.3) * 25) }; });
+    var trafficData = [
       { label: 'Organic', value: 42, color: '#6366f1' },
       { label: 'Social', value: 26, color: '#10b981' },
       { label: 'Direct', value: 18, color: '#f59e0b' },
@@ -229,41 +341,101 @@ const DashboardPage = (function () {
       { label: 'Email', value: 4, color: '#ef4444' }
     ];
 
-    ChartEngine.drawLineChart('dashRevenueChart', revenueData, { height: 300, prefix: '$', divisor: 1000, suffix: 'k' });
-    ChartEngine.drawBarChart('dashUserChart', userData, { height: 300 });
-
-    ChartEngine.drawDonutChart('dashTrafficChart', trafficData, {
-      size: 200,
-      renderLegend: function (data) {
-        const el = document.getElementById('dashTrafficLegend');
-        if (el) {
-          el.innerHTML = data.map(d =>
-            '<div class="legend-item">' +
-              '<span class="legend-item__dot" style="background:' + d.color + '"></span>' +
-              d.label +
-              '<span class="legend-item__value">' + d.value + '%</span>' +
-            '</div>'
-          ).join('');
-        }
-      }
-    });
-  }
-
-  function reinitCharts() {
-    const canvas = document.getElementById('dashRevenueChart');
-    if (canvas) ChartEngine.drawLineChart('dashRevenueChart', [], { height: 300, prefix: '$', divisor: 1000, suffix: 'k' });
-    if (document.getElementById('dashUserChart')) ChartEngine.drawBarChart('dashUserChart', [], { height: 300 });
+    if (document.getElementById('dashRevenueChart')) ChartEngine.drawLineChart('dashRevenueChart', revenueData, { height: 280, prefix: '$', divisor: 1000, suffix: 'k' });
+    if (document.getElementById('dashUserChart')) ChartEngine.drawBarChart('dashUserChart', userData, { height: 280 });
     if (document.getElementById('dashTrafficChart')) {
-      const trafficData = [
-        { label: 'Organic', value: 42, color: '#6366f1' },
-        { label: 'Social', value: 26, color: '#10b981' },
-        { label: 'Direct', value: 18, color: '#f59e0b' },
-        { label: 'Referral', value: 10, color: '#8b5cf6' },
-        { label: 'Email', value: 4, color: '#ef4444' }
-      ];
-      ChartEngine.drawDonutChart('dashTrafficChart', trafficData, { size: 200 });
+      ChartEngine.drawDonutChart('dashTrafficChart', trafficData, {
+        size: 180,
+        renderLegend: function (data) {
+          var el = document.getElementById('dashTrafficLegend');
+          if (el) el.innerHTML = data.map(function (d) { return '<div class="legend-item"><span class="legend-item__dot" style="background:' + d.color + '"></span>' + d.label + '<span class="legend-item__value">' + d.value + '%</span></div>'; }).join('');
+        }
+      });
     }
   }
 
-  return { render, init, reinitCharts };
+  function setupWidgetConfig() {
+    var configBtn = document.getElementById('widgetConfigBtn');
+    var config = document.getElementById('widgetConfig');
+    var closeBtn = document.getElementById('widgetConfigClose');
+    if (!configBtn || !config || !closeBtn) return;
+
+    configBtn.addEventListener('click', function () { config.style.display = config.style.display === 'none' ? 'block' : 'none'; });
+    closeBtn.addEventListener('click', function () { config.style.display = 'none'; });
+
+    config.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var id = this.dataset.widget;
+        var hide = !this.checked;
+        if (hide) { if (hiddenWidgets.indexOf(id) === -1) hiddenWidgets.push(id); }
+        else { hiddenWidgets = hiddenWidgets.filter(function (h) { return h !== id; }); }
+        saveHiddenWidgets();
+        var widget = document.querySelector('[data-widget-id="' + id + '"]');
+        if (widget) widget.style.display = hide ? 'none' : '';
+      });
+    });
+  }
+
+  function setupDragReorder() {
+    var container = document.getElementById('dashboardWidgets');
+    if (!container) return;
+    var items = container.querySelectorAll('.widget');
+    items.forEach(function (item) {
+      item.setAttribute('draggable', 'true');
+      item.addEventListener('dragstart', function (e) {
+        e.dataTransfer.setData('text/plain', this.dataset.widgetId);
+        this.classList.add('dragging');
+      });
+      item.addEventListener('dragend', function () { this.classList.remove('dragging'); });
+      item.addEventListener('dragover', function (e) { e.preventDefault(); });
+      item.addEventListener('drop', function (e) {
+        e.preventDefault();
+        var id = e.dataTransfer.getData('text/plain');
+        var fromIdx = widgetOrder.indexOf(id);
+        var toIdx = widgetOrder.indexOf(this.dataset.widgetId);
+        if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
+          widgetOrder.splice(fromIdx, 1);
+          widgetOrder.splice(toIdx, 0, id);
+          saveWidgetOrder();
+          refresh();
+        }
+      });
+    });
+  }
+
+  function loadWidgetOrder() {
+    try { return JSON.parse(localStorage.getItem('saas_widget_order')) || []; }
+    catch (e) { return []; }
+  }
+
+  function saveWidgetOrder() {
+    try { localStorage.setItem('saas_widget_order', JSON.stringify(widgetOrder)); }
+    catch (e) { /* ignore */ }
+  }
+
+  function getHiddenWidgets() {
+    try { return JSON.parse(localStorage.getItem('saas_hidden_widgets')) || []; }
+    catch (e) { return []; }
+  }
+
+  function saveHiddenWidgets() {
+    try { localStorage.setItem('saas_hidden_widgets', JSON.stringify(hiddenWidgets)); }
+    catch (e) { /* ignore */ }
+  }
+
+  var animFrameIds = [];
+  function cancelAnimationFrames() {
+    animFrameIds.forEach(function (id) { cancelAnimationFrame(id); });
+    animFrameIds = [];
+  }
+
+  function refresh() {
+    reinitCharts();
+  }
+
+  function reinitCharts() {
+    if (document.getElementById('dashRevenueChart')) drawCharts();
+  }
+
+  return { render: render, init: init, refresh: refresh, reinitCharts: reinitCharts };
 })();
