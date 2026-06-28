@@ -254,6 +254,10 @@ window.addEventListener('resize', Utils.debounce(function () {
     });
   }
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* SW registration requires HTTPS */ });
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
