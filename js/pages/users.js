@@ -162,9 +162,10 @@ const UsersPage = (function () {
     } else {
       tbody.innerHTML = result.items.map(u => {
         const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+        var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : '#6366f1';
         return '<tr data-context="user" data-id="' + u.id + '" data-email="' + Utils.escapeHtml(u.email) + '">' +
           '<td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td>' +
-          '<td><div class="flex items-center gap-sm"><span class="user-avatar-sm">' + initials + '</span> <strong>' + Utils.escapeHtml(u.name) + '</strong></div></td>' +
+          '<td><div class="flex items-center gap-sm"><span class="user-avatar-sm" style="background:' + avatarColor + '">' + initials + '</span> <strong>' + Utils.escapeHtml(u.name) + '</strong></div></td>' +
           '<td>' + Utils.escapeHtml(u.email) + '</td>' +
           '<td>' + u.role + '</td>' +
           '<td>' + u.plan + '</td>' +

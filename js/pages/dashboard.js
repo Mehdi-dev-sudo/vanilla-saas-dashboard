@@ -295,8 +295,9 @@ const DashboardPage = (function () {
         <div class="card__body" style="padding-top:var(--space-sm)">
           ${users.map(function (u) {
             var initials = u.name.split(' ').map(function (n) { return n[0]; }).join('').slice(0, 2);
+            var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : '#6366f1';
             return '<div class="activity-item">' +
-              '<div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px">' + initials + '</div>' +
+              '<div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div>' +
               '<div class="activity-item__content">' +
                 '<div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div>' +
                 '<div class="activity-item__time">' + u.role + ' - ' + u.plan + ' Plan</div>' +

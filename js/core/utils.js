@@ -50,6 +50,13 @@ const Utils = {
     return div.innerHTML;
   },
 
+  stringToColor(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) { hash = str.charCodeAt(i) + ((hash << 5) - hash); }
+    var colors = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6','#ec4899','#14b8a6','#f97316','#06b6d4'];
+    return colors[Math.abs(hash) % colors.length];
+  },
+
   generateId() {
     return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
   },

@@ -858,6 +858,7 @@ img { max-width: 100%; display: block; }
 .users-toolbar__right { display: flex; align-items: center; gap: var(--space-sm); }
 
 .user-avatar-sm {
+  background: var(--clr-primary);
   width: 28px; height: 28px; border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--clr-primary), var(--clr-secondary));
   display: inline-flex; align-items: center; justify-content: center;
