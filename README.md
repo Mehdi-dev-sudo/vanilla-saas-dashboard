@@ -4,9 +4,10 @@ A production-grade SaaS analytics dashboard built with **zero frameworks** — j
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/yourusername/saas-dashboard/graphs/commit-activity)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JS-f7df1e.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![No Dependencies](https://img.shields.io/badge/Dependencies-0-success.svg)](package.json)
+
+> **Built by [Mehdi](https://github.com/mehdi)** — Crafted with passion for product teams.
 
 ---
 
@@ -28,7 +29,20 @@ A production-grade SaaS analytics dashboard built with **zero frameworks** — j
 | 12 | **Custom Context Menu** — Right-click on table rows (Edit, Delete, Copy, Duplicate) | ✅ |
 | 13 | **Multi-Select** — Checkbox selection with batch delete and export | ✅ |
 | 14 | **Dashboard Shortcuts** — Quick actions, recent users, activity feed on dashboard | ✅ |
-| 15 | **Performance** — Virtual scroll for large datasets, debounced resize, skeleton loading | ✅ |
+| 15 | **Live Clock** — Real-time clock in header with auto-update | ✅ |
+| 16 | **Online Counter** — Live active user indicator with pulse animation | ✅ |
+| 17 | **Breadcrumbs** — Navigation breadcrumbs on sub-pages | ✅ |
+| 18 | **Notification Panel** — Dropdown notification center with mock alerts | ✅ |
+| 19 | **Chart Download** — Export charts as PNG images | ✅ |
+| 20 | **Keyboard Help** — Ctrl+/ shortcut reference modal | ✅ |
+| 21 | **Toast Progress** — Auto-dismiss toasts with countdown bar | ✅ |
+| 22 | **Page Transitions** — Smooth fade-in animation on route changes | ✅ |
+| 23 | **Tooltip System** — CSS-only tooltips via data-tooltip attribute | ✅ |
+| 24 | **Search Count** — Result count with query display in tables | ✅ |
+| 25 | **Copy to Clipboard** — Click invoice numbers to copy | ✅ |
+| 26 | **Print Styles** — Optimized print layout for reports | ✅ |
+| 27 | **Accessibility** — Focus-visible, aria labels, reduced motion | ✅ |
+| 28 | **Performance** — Virtual scroll, debounced resize, skeleton loading | ✅ |
 
 ---
 
@@ -67,7 +81,14 @@ saas-dashboard/
 │       ├── settings.js           # Settings with 12 customizable options
 │       ├── support.js            # FAQ accordion & contact form
 │       └── error.js              # 404/500/Network error pages
-└── .github/                      # Community templates
+├── .github/                      # Community templates
+├── CHANGELOG.md                  # Version history
+├── CONTRIBUTING.md               # Contribution guidelines
+├── SECURITY.md                   # Security policy
+├── CODE_OF_CONDUCT.md            # Community standards
+├── .editorconfig                 # Editor configuration
+├── .gitattributes                # Git attributes
+└── .gitignore                    # Git ignore rules
 ```
 
 ---
@@ -105,6 +126,7 @@ saas-dashboard/
 | Shortcut | Action |
 |----------|--------|
 | `Ctrl+K` | Open Command Palette |
+| `Ctrl+/` | Keyboard Shortcuts Help |
 | `Ctrl+Z` | Undo last action |
 | `Ctrl+Shift+Z` / `Ctrl+Y` | Redo last action |
 | `Ctrl+S` | Quick save |
@@ -112,6 +134,10 @@ saas-dashboard/
 | `Arrow Up/Down` | Navigate command palette results |
 | `Enter` | Select command palette item / Edit selected table row |
 | `Tab` | Auto-complete command palette |
+| `G` then `D` | Go to Dashboard |
+| `G` then `U` | Go to Users |
+| `G` then `T` | Go to Transactions |
+| `G` then `S` | Go to Settings |
 
 ---
 
@@ -124,6 +150,9 @@ saas-dashboard/
 - Focus management: command palette traps focus, Escape returns it
 - Screen reader: `aria-live` regions for dynamic content
 - Color contrast: all combinations meet WCAG AA standards in both themes
+- `:focus-visible` for keyboard-only focus indicators
+- `prefers-reduced-motion` support to disable animations
+- Print stylesheet for report-friendly output
 
 ---
 
@@ -175,28 +204,15 @@ Canvas `roundRect()` requires Chrome 99+, Firefox 112+, Safari 15.4+.
 
 ## Git History
 
-The project was built incrementally with **29 meaningful commits**:
+The project was built incrementally with **55+ meaningful commits** following conventional commit messages:
 
 ```
-29 commits showing progressive feature development:
-1.  chore: project setup & license
-2.  docs: documentation & community guidelines
-3.  feat: design system & base layout
-4.-7.  feat: core modules (utils, data, router, sidebar, theme)
-8.-10. feat: UI components (toast, modal, charts)
-11.-17. feat: all pages (dashboard, analytics, users, tx, settings, support)
-18. feat: undo/redo system
-19. feat: activity log
-20. feat: command palette
-21. feat: authentication
-22. feat: context menu
-23. feat: skeleton loader, virtual scroll, error pages
-24. feat: widget dashboard & quick actions
-25. feat: enhanced settings
-26. feat: multi-select & batch ops
-27. feat: core module updates
-28. style: complete CSS for all components
-29. feat: final integration & polish
+feat:     New features (command palette, charts, auth, etc.)
+fix:      Bug fixes and edge case handling
+docs:     Documentation and README updates
+refactor: Code improvements without behavior change
+style:    CSS and visual refinements
+chore:    Build and configuration changes
 ```
 
 ---
@@ -216,3 +232,9 @@ Key contribution areas:
 ## License
 
 This project is [MIT licensed](LICENSE). Use it for any purpose, personal or commercial.
+
+---
+
+## Author
+
+**Mehdi** — Crafted with care for product teams who appreciate clean, performant interfaces.
