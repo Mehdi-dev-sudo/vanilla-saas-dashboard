@@ -239,7 +239,7 @@
         ActivityLog.add('edit', 'Quick save triggered', 'edit');
       }
 
-      if (!(e.ctrlKey || e.metaKey) && e.key.length === 1) {
+      if (!(e.ctrlKey || e.metaKey) && e.key && e.key.length === 1) {
         gotoBuffer += e.key.toLowerCase();
         if (gotoBuffer.length > 4) gotoBuffer = gotoBuffer.slice(-4);
         if (gotoBuffer === 'gd') { Router.navigate('dashboard'); gotoBuffer = ''; }
