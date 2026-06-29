@@ -17,6 +17,7 @@
     CommandPalette.init();
     ContextMenuManager.init();
     DevConsole.init();
+    AnimationEngine.init();
 
     initClock();
     initOnlineCounter();
