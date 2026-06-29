@@ -1,24 +1,28 @@
 (function () {
   function init() {
-    Router.register('dashboard', DashboardPage);
-    Router.register('analytics', AnalyticsPage);
-    Router.register('users', UsersPage);
-    Router.register('transactions', TransactionsPage);
-    Router.register('settings', SettingsPage);
-    Router.register('support', SupportPage);
-    Router.register('error', ErrorPage);
+    try {
+      Router.register('dashboard', DashboardPage);
+      Router.register('analytics', AnalyticsPage);
+      Router.register('users', UsersPage);
+      Router.register('transactions', TransactionsPage);
+      Router.register('settings', SettingsPage);
+      Router.register('support', SupportPage);
+      Router.register('error', ErrorPage);
 
-    HistoryManager.init();
-    AuthManager.init();
+      HistoryManager.init();
+      AuthManager.init();
+      SidebarManager.init();
+      ThemeManager.init();
+      ModalSystem.init();
+      CommandPalette.init();
+      ContextMenuManager.init();
+      DevConsole.init();
+      AnimationEngine.init();
+      PluginSystem.init();
+    } catch (e) {
+      console.error('Init error:', e);
+    }
     Router.init();
-    SidebarManager.init();
-    ThemeManager.init();
-    ModalSystem.init();
-    CommandPalette.init();
-    ContextMenuManager.init();
-    DevConsole.init();
-    AnimationEngine.init();
-    PluginSystem.init();
 
     initClock();
     initOnlineCounter();
@@ -259,6 +263,12 @@ window.addEventListener('resize', Utils.debounce(function () {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function () { /* SW registration requires HTTPS */ });
   }
+
+  window.addEventListener('error', function (e) {
+    console.error('Global error:', e.error || e.message);
+    var loader = document.getElementById('pageLoader');
+    if (loader) loader.style.display = 'none';
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

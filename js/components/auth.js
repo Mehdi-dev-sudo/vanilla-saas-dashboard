@@ -11,10 +11,13 @@ const AuthManager = (function () {
     if (isAuthenticated) {
       updateUserDisplay();
     }
-    document.getElementById('sidebarLogoutBtn').addEventListener('click', function (e) {
-      e.preventDefault();
-      logout();
-    });
+    var logoutBtn = document.getElementById('sidebarLogoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        logout();
+      });
+    }
   }
 
   function checkSession() {

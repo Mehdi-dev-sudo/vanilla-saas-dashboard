@@ -134,6 +134,14 @@ const Router = (function () {
   function init() {
     window.addEventListener('hashchange', resolve);
     setTimeout(resolve, 50);
+
+    // Safety net: hide loader after 5s regardless of errors
+    setTimeout(function () {
+      if (loaderEl && loaderEl.style.display !== 'none') {
+        hideLoader();
+        console.warn('Router safety net: loader hidden after timeout');
+      }
+    }, 5000);
   }
 
   return {

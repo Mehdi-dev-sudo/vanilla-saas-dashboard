@@ -935,7 +935,7 @@ img { max-width: 100%; display: block; }
 
 /* ----- 23. Page Loader ----- */
 .page-loader {
-  display: flex; flex-direction: column; gap: var(--space-xl);
+  display: none; flex-direction: column; gap: var(--space-xl);
   padding: var(--space-xl); width: 100%;
 }
 .spinner {

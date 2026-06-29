@@ -218,31 +218,38 @@ const AppStore = (function () {
 
   // Stats
   function getDashboardStats() {
-    var tx = state.transactions || [];
-    var us = state.users || [];
-    var totalRevenue = tx.filter(function (t) { return t && t.status === 'completed'; }).reduce(function (s, t) { return s + (t.amount || 0); }, 0);
-    var activeUsers = us.filter(function (u) { return u && u.status === 'active'; }).length;
-    var subscribers = us.filter(function (u) { return u && u.plan !== 'Free'; }).length;
-    var churned = us.filter(function (u) { return u && (u.status === 'inactive' || u.status === 'suspended'); }).length;
-    var churnRate = us.length > 0 ? (churned / us.length) * 100 : 0;
+    try {
+      var tx = state.transactions || [];
+      var us = state.users || [];
+      var totalRevenue = tx.filter(function (t) { return t && t.status === 'completed'; }).reduce(function (s, t) { return s + (t.amount || 0); }, 0);
+      var activeUsers = us.filter(function (u) { return u && u.status === 'active'; }).length;
+      var subscribers = us.filter(function (u) { return u && u.plan !== 'Free'; }).length;
+      var churned = us.filter(function (u) { return u && (u.status === 'inactive' || u.status === 'suspended'); }).length;
+      var churnRate = us.length > 0 ? (churned / us.length) * 100 : 0;
 
-    return {
-      revenue: { value: totalRevenue, change: 12.5, isUp: true },
-      users: { value: activeUsers, change: 8.2, isUp: true },
-      subscribers: { value: subscribers, change: 3.1, isUp: true },
-      churn: { value: churnRate, change: 0.8, isUp: false }
-    };
+      return {
+        revenue: { value: totalRevenue, change: 12.5, isUp: true },
+        users: { value: activeUsers, change: 8.2, isUp: true },
+        subscribers: { value: subscribers, change: 3.1, isUp: true },
+        churn: { value: churnRate, change: 0.8, isUp: false }
+      };
+    } catch (e) {
+      return { revenue: { value: 0, change: 0, isUp: true }, users: { value: 0, change: 0, isUp: true }, subscribers: { value: 0, change: 0, isUp: true }, churn: { value: 0, change: 0, isUp: false } };
+    }
   }
 
   function getAnalyticsStats() {
-    const completed = state.transactions.filter(t => t.status === 'completed');
-    const totalRevenue = completed.reduce((s, t) => s + t.amount, 0);
-    const avgOrder = completed.length > 0 ? totalRevenue / completed.length : 0;
-    const conversion = 3.2;
-    const activeUsers = state.users.filter(u => u.status === 'active').length;
-    const totalUsers = state.users.length;
-
-    return { totalRevenue, avgOrder, conversion, activeUsers, totalUsers };
+    try {
+      const completed = (state.transactions || []).filter(t => t && t.status === 'completed');
+      const totalRevenue = completed.reduce((s, t) => s + (t.amount || 0), 0);
+      const avgOrder = completed.length > 0 ? totalRevenue / completed.length : 0;
+      const conversion = 3.2;
+      const activeUsers = (state.users || []).filter(u => u && u.status === 'active').length;
+      const totalUsers = (state.users || []).length;
+      return { totalRevenue, avgOrder, conversion, activeUsers, totalUsers };
+    } catch (e) {
+      return { totalRevenue: 0, avgOrder: 0, conversion: 0, activeUsers: 0, totalUsers: 0 };
+    }
   }
 
   function incrementNotifications() {
