@@ -30,6 +30,9 @@ const SettingsPage = (function () {
         ${renderSelect('density', 'Density', 'Controls the spacing in the interface', settings.density || 'comfortable', { comfortable: 'Comfortable', compact: 'Compact', cozy: 'Cozy' })}
         ${renderSelect('accentColor', 'Accent Color', 'Primary brand color', settings.accentColor || 'indigo', { indigo: 'Indigo', blue: 'Blue', green: 'Green', purple: 'Purple', orange: 'Orange', red: 'Red' })}
         ${renderToggle('animations', 'Animations', 'Enable UI animations and transitions', settings.animations !== false)}
+        ${renderToggle('reducedMotion', 'Reduced Motion', 'Minimize animations for accessibility', settings.reducedMotion)}
+        ${renderSelect('dateFormat', 'Date Format', 'Display format for dates', settings.dateFormat || 'MMM D, YYYY', { 'MMM D, YYYY': 'Mar 28, 2026', 'D MMM YYYY': '28 Mar 2026', 'MM/DD/YYYY': '03/28/2026', 'DD/MM/YYYY': '28/03/2026', 'YYYY-MM-DD': '2026-03-28' })}
+        ${renderSelect('currency', 'Currency', 'Currency symbol for revenue', settings.currency || 'USD', { USD: '$ (USD)', EUR: '\u20AC (EUR)', GBP: '\u00A3 (GBP)', JPY: '\u00A5 (JPY)' })}
       </div>
 
       <div class="settings-section" style="margin-top:var(--space-xl)">
@@ -48,6 +51,8 @@ const SettingsPage = (function () {
           <p class="settings-section__desc">Configure your dashboard layout</p>
         </div>
         ${renderToggle('compactView', 'Compact View', 'Use a more compact layout with less spacing', settings.compactView)}
+        ${renderSelect('defaultPage', 'Default Page', 'Landing page after login', settings.defaultPage || 'analytics', { analytics: 'Analytics', users: 'Users', transactions: 'Transactions' })}
+        ${renderToggle('sidebarCollapsed', 'Sidebar Collapsed', 'Start with sidebar collapsed by default', settings.sidebarCollapsed)}
         ${renderToggle('autoSave', 'Auto-Save', 'Automatically save changes as you work', settings.autoSave)}
         ${renderToggle('showActivityLog', 'Activity Log', 'Show recent activity on dashboard', settings.showActivityLog !== false)}
         ${renderToggle('showQuickActions', 'Quick Actions', 'Show quick action buttons on dashboard', settings.showQuickActions !== false)}
@@ -124,7 +129,9 @@ const SettingsPage = (function () {
         toggle.setAttribute('aria-checked', isActive);
         AppStore.updateState('settings', (function (o) { o[key] = isActive; return o; })({}));
         if (key === 'animations') document.documentElement.classList.toggle('no-animations', !isActive);
+        if (key === 'reducedMotion') document.documentElement.classList.toggle('reduced-motion', isActive);
         if (key === 'compactView') document.documentElement.classList.toggle('compact-view', isActive);
+        if (key === 'sidebarCollapsed') document.body.classList.toggle('sidebar-collapsed', isActive);
       }
       toggle.addEventListener('click', toggleActive);
       toggle.addEventListener('keydown', function (e) {
@@ -138,6 +145,12 @@ const SettingsPage = (function () {
         AppStore.updateState('settings', (function (o) { o[key] = this.value; return o; })({}));
         if (key === 'accentColor') applyAccentColor(this.value);
         if (key === 'density') applyDensity(this.value);
+        if (key === 'dateFormat' || key === 'currency') {
+          ActivityLog.add('edit', key.charAt(0).toUpperCase() + key.slice(1) + ' changed', 'edit');
+        }
+        if (key === 'defaultPage') {
+          Router.setDefaultPage && Router.setDefaultPage(this.value);
+        }
         ToastSystem.info(select.options[select.selectedIndex].text + ' applied');
       });
     });
@@ -161,6 +174,7 @@ const SettingsPage = (function () {
           twoFactorAuth: false, autoSave: true, compactView: false,
           currency: 'USD', timezone: 'UTC', language: 'en',
           density: 'comfortable', accentColor: 'indigo', animations: true,
+          reducedMotion: false, dateFormat: 'MMM D, YYYY', defaultPage: 'analytics', sidebarCollapsed: false,
           showActivityLog: true, showQuickActions: true
         });
         SettingsPage.init();
@@ -179,6 +193,8 @@ const SettingsPage = (function () {
     if (settings.density) applyDensity(settings.density);
     if (settings.animations === false) document.documentElement.classList.add('no-animations');
     if (settings.compactView) document.documentElement.classList.add('compact-view');
+    if (settings.reducedMotion) document.documentElement.classList.add('reduced-motion');
+    if (settings.sidebarCollapsed) { document.body.classList.add('sidebar-collapsed'); };
   }
 
   function applyAccentColor(color) {
