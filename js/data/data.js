@@ -92,7 +92,12 @@ const AppStore = (function () {
   }
 
   function getState(key) {
-    if (key) return state[key];
+    if (key) {
+      var val = state[key];
+      if (val === undefined && (key === 'users' || key === 'transactions')) return [];
+      if (val === undefined && key === 'settings') return {};
+      return val;
+    }
     return state;
   }
 

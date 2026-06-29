@@ -44,10 +44,10 @@
 
     Promise.all([
       ApiClient.fetchUsers().then(function (users) {
-        AppStore.getState('users').length <= 10 && AppStore.setState('users', users);
+        try { (AppStore.getState('users') || []).length <= 10 && AppStore.setState('users', users); } catch (e) { /* ignore */ }
       }).catch(function () { /* fallback to mock */ }),
       ApiClient.fetchTransactions().then(function (tx) {
-        AppStore.getState('transactions').length <= 10 && AppStore.setState('transactions', tx);
+        try { (AppStore.getState('transactions') || []).length <= 10 && AppStore.setState('transactions', tx); } catch (e) { /* ignore */ }
       }).catch(function () { /* fallback to mock */ })
     ]).then(function () {
       statusEl.textContent = 'API ✓';
@@ -57,12 +57,10 @@
       statusEl.className = 'header__api-status header__api-status--offline';
     });
   }
-};
 
-window.addEventListener('resize', Utils.debounce(function () {
-      ChartEngine.resize();
-    }, 250));
-  }
+  window.addEventListener('resize', Utils.debounce(function () {
+    ChartEngine.resize();
+  }, 250));
 
   var saveIndicatorTimer = null;
 
@@ -90,9 +88,12 @@ window.addEventListener('resize', Utils.debounce(function () {
     var el = document.getElementById('headerOnline');
     if (!el) return;
     function updateOnline() {
-      var base = AppStore ? AppStore.getState('users').filter(function(u) { return u.status === 'active'; }).length : 0;
-      var online = base + Math.round(Math.random() * 3);
-      el.innerHTML = '<span class="online-dot"></span> ' + online + ' online';
+      try {
+        var users = AppStore && AppStore.getState ? (AppStore.getState('users') || []) : [];
+        var base = users.filter(function(u) { return u && u.status === 'active'; }).length;
+        var online = base + Math.round(Math.random() * 3);
+        el.innerHTML = '<span class="online-dot"></span> ' + online + ' online';
+      } catch (e) { /* ignore online counter errors */ }
     }
     updateOnline();
     setInterval(updateOnline, 8000);
@@ -277,10 +278,12 @@ window.addEventListener('resize', Utils.debounce(function () {
     if (!dbg) {
       dbg = document.createElement('div');
       dbg.id = 'debugError';
-      dbg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1b2e;color:#ef4444;padding:8px 12px;font:12px monospace;z-index:9999;border-top:2px solid #ef4444;max-height:80px;overflow:auto';
+      dbg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1b2e;color:#ef4444;padding:8px 12px;font:11px monospace;z-index:9999;border-top:2px solid #ef4444;max-height:120px;overflow:auto;white-space:pre-wrap';
       document.body.appendChild(dbg);
     }
-    dbg.innerHTML = (dbg.innerHTML ? dbg.innerHTML + '<br>' : '') + 'Error: ' + (msg || (err && err.message) || 'unknown');
+    var stack = err && err.stack ? err.stack.split('\n').slice(0,3).join('\n') : (url ? 'at ' + url + ':' + line : '');
+    dbg.innerHTML = (dbg.innerHTML ? dbg.innerHTML + '\n---\n' : '') + 'Error: ' + (msg || (err && err.message) || 'unknown') + '\n' + stack;
+    dbg.scrollTop = dbg.scrollHeight;
     console.error(msg, url, line, col, err);
   };
 
