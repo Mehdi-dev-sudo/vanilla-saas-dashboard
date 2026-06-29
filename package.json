@@ -1,0 +1,14 @@
+{
+  "name": "saas-dashboard",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Production-grade SaaS analytics dashboard built with vanilla JavaScript",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^30.4.1"
+  }
+}
