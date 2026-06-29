@@ -270,6 +270,20 @@ window.addEventListener('resize', Utils.debounce(function () {
     if (loader) loader.style.display = 'none';
   });
 
+  // Debug overlay for errors (visible when live server running)
+  var _origOnError = window.onerror;
+  window.onerror = function (msg, url, line, col, err) {
+    var dbg = document.getElementById('debugError');
+    if (!dbg) {
+      dbg = document.createElement('div');
+      dbg.id = 'debugError';
+      dbg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1b2e;color:#ef4444;padding:8px 12px;font:12px monospace;z-index:9999;border-top:2px solid #ef4444;max-height:80px;overflow:auto';
+      document.body.appendChild(dbg);
+    }
+    dbg.innerHTML = (dbg.innerHTML ? dbg.innerHTML + '<br>' : '') + 'Error: ' + (msg || (err && err.message) || 'unknown');
+    console.error(msg, url, line, col, err);
+  };
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

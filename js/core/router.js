@@ -27,58 +27,69 @@ const Router = (function () {
   }
 
   function navigate(name) {
-    if (name === currentRoute) return;
+    try {
+      if (name === currentRoute) return;
 
-    if (name !== 'login' && typeof AuthManager !== 'undefined' && AuthManager.isLoggedIn && !AuthManager.isLoggedIn()) {
-      if (currentRoute !== 'login') {
-        previousRoute = name;
-      }
-      name = 'login';
-    }
-
-    if (!routes[name]) {
-      if (name === 'login') { /* login is handled specially */ }
-      else { name = 'error'; }
-    }
-
-    if (currentCleanup && typeof currentCleanup === 'function') {
-      currentCleanup();
-      currentCleanup = null;
-    }
-
-    previousRoute = currentRoute;
-    currentRoute = name;
-    if (name !== 'login') location.hash = name;
-    contentEl.scrollTop = 0;
-
-    showLoader();
-
-    requestAnimationFrame(function () {
-      if (name === 'login') {
-        renderLogin();
-        return;
-      }
-
-      var handler = routes[name];
-      if (handler && typeof handler.render === 'function') {
-        contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
-        hideLoader();
-        if (typeof handler.init === 'function') {
-          currentCleanup = handler.init();
+      if (name !== 'login' && typeof AuthManager !== 'undefined' && AuthManager.isLoggedIn && !AuthManager.isLoggedIn()) {
+        if (currentRoute !== 'login') {
+          previousRoute = name;
         }
-        updateSidebar(name);
-        updatePageMeta(name);
-      } else {
-        contentEl.innerHTML = ErrorPage.render('404');
-        hideLoader();
-        updateSidebar(null);
-        document.title = '404 — SaaS Dashboard';
+        name = 'login';
       }
-    });
+
+      if (!routes[name]) {
+        if (name === 'login') { /* login is handled specially */ }
+        else { name = 'error'; }
+      }
+
+      if (currentCleanup && typeof currentCleanup === 'function') {
+        currentCleanup();
+        currentCleanup = null;
+      }
+
+      previousRoute = currentRoute;
+      currentRoute = name;
+      if (name !== 'login') location.hash = name;
+      if (contentEl) contentEl.scrollTop = 0;
+
+      showLoader();
+
+      requestAnimationFrame(function () {
+        try {
+          if (name === 'login') {
+            renderLogin();
+            return;
+          }
+
+          var handler = routes[name];
+          if (handler && typeof handler.render === 'function') {
+            contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
+            hideLoader();
+            if (typeof handler.init === 'function') {
+              currentCleanup = handler.init();
+            }
+            updateSidebar(name);
+            updatePageMeta(name);
+          } else {
+            contentEl.innerHTML = ErrorPage.render('404');
+            hideLoader();
+            updateSidebar(null);
+            document.title = '404 — SaaS Dashboard';
+          }
+        } catch (e) {
+          console.error('Render error:', e);
+          if (contentEl) contentEl.innerHTML = '<div class="page-wrapper"><div class="empty-state"><div class="empty-state__icon">!</div><div class="empty-state__title">Something went wrong</div><div class="empty-state__desc">' + (e.message || 'Unknown error') + '</div><button class="btn btn--primary" onclick="location.reload()">Reload</button></div></div>';
+          hideLoader();
+        }
+      });
+    } catch (e) {
+      console.error('Navigate error:', e);
+      hideLoader();
+    }
   }
 
   function renderLogin() {
-    if (typeof AuthManager !== 'undefined' && AuthManager.getLoginPage) {
+    if (typeof AuthManager !== 'undefined' && AuthManager.getLoginPage && contentEl) {
       contentEl.innerHTML = AuthManager.getLoginPage();
       hideLoader();
       if (typeof AuthManager.initLoginPage === 'function') {

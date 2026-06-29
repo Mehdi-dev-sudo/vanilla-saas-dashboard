@@ -5,31 +5,33 @@ const SidebarManager = (function () {
   const menuToggle = document.getElementById('menuToggle');
 
   function init() {
-    if (localStorage.getItem('sidebar_collapsed') === 'true') {
-      sidebar.classList.add('collapsed');
-    }
-    collapseBtn.addEventListener('click', toggleCollapse);
-    menuToggle.addEventListener('click', openMobile);
-    overlay.addEventListener('click', closeMobile);
+    try {
+      if (localStorage.getItem('sidebar_collapsed') === 'true' && sidebar) {
+        sidebar.classList.add('collapsed');
+      }
+      if (collapseBtn) collapseBtn.addEventListener('click', toggleCollapse);
+      if (menuToggle) menuToggle.addEventListener('click', openMobile);
+      if (overlay) overlay.addEventListener('click', closeMobile);
 
-    document.querySelectorAll('.sidebar__logo').forEach(el => {
-      el.addEventListener('click', function (e) {
-        Router.navigate('dashboard');
-        if (window.innerWidth <= 1024) closeMobile();
+      document.querySelectorAll('.sidebar__logo').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          if (typeof Router !== 'undefined') Router.navigate('dashboard');
+          if (window.innerWidth <= 1024) closeMobile();
+        });
       });
-    });
 
-    window.addEventListener('resize', function () {
-      if (window.innerWidth > 1024 && sidebar.classList.contains('open')) {
-        closeMobile();
-      }
-    });
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 1024 && sidebar && sidebar.classList.contains('open')) {
+          closeMobile();
+        }
+      });
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-        closeMobile();
-      }
-    });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
+          closeMobile();
+        }
+      });
+    } catch (e) { console.error('Sidebar init error:', e); }
   }
 
   function toggleCollapse() {
