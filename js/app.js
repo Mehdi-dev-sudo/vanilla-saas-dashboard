@@ -18,6 +18,7 @@
     ContextMenuManager.init();
     DevConsole.init();
     AnimationEngine.init();
+    PluginSystem.init();
 
     initClock();
     initOnlineCounter();
