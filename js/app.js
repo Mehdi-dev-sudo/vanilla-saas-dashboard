@@ -224,6 +224,12 @@
 
   var gotoBuffer = '';
 
+  function isTyping() {
+    var tag = document.activeElement ? document.activeElement.tagName : '';
+    var type = document.activeElement ? document.activeElement.type : '';
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || type === 'search' || type === 'text' || type === 'email' || type === 'password';
+  }
+
   function setupKeyboardNavigation() {
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === '/' ) {
@@ -239,7 +245,7 @@
         ActivityLog.add('edit', 'Quick save triggered', 'edit');
       }
 
-      if (!(e.ctrlKey || e.metaKey) && e.key && e.key.length === 1) {
+      if (!(e.ctrlKey || e.metaKey) && e.key && e.key.length === 1 && !isTyping()) {
         gotoBuffer += e.key.toLowerCase();
         if (gotoBuffer.length > 4) gotoBuffer = gotoBuffer.slice(-4);
         if (gotoBuffer === 'gd') { Router.navigate('dashboard'); gotoBuffer = ''; }
