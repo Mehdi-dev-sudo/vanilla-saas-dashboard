@@ -74,7 +74,7 @@ const Router = (function () {
             contentEl.innerHTML = ErrorPage.render('404');
             hideLoader();
             updateSidebar(null);
-            document.title = '404 — SaaS Dashboard';
+            document.title = '404 — Vanilla SaaS Dashboard';
           }
         } catch (e) {
           console.error('Render error:', e);
@@ -96,7 +96,7 @@ const Router = (function () {
         currentCleanup = AuthManager.initLoginPage();
       }
       updateSidebar(null);
-      document.title = 'Sign In — SaaS Dashboard';
+      document.title = 'Sign In — Vanilla SaaS Dashboard';
       document.querySelector('.sidebar') && document.querySelector('.sidebar').classList.remove('open');
     }
   }
@@ -139,7 +139,7 @@ const Router = (function () {
 
   function updatePageMeta(route) {
     var m = routeMeta[route] || routeMeta.dashboard;
-    document.title = m.title + ' — SaaS Dashboard';
+    document.title = m.title + ' — Vanilla SaaS Dashboard';
   }
 
   function init() {
