@@ -1,5 +1,6 @@
 {
-  "name": "saas-dashboard",
+  "name": "vanilla-saas-dashboard",
+  "homepage": "https://mehdi-dev-sudo.github.io/vanilla-saas-dashboard",
   "version": "2.0.0",
   "private": true,
   "description": "Production-grade SaaS analytics dashboard built with vanilla JavaScript",

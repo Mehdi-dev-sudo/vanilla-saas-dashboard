@@ -1,5 +1,5 @@
 {
-  "name": "SaaS Dashboard",
+  "name": "Vanilla SaaS Dashboard",
   "short_name": "SaaSify",
   "description": "Production-grade SaaS analytics dashboard built with vanilla JavaScript",
   "start_url": "/",

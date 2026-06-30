@@ -1,4 +1,4 @@
-var CACHE_NAME = 'saas-dashboard-v2';
+var CACHE_NAME = 'vanilla-saas-dashboard-v2';
 var URLS_TO_CACHE = [
   './',
   './index.html',
