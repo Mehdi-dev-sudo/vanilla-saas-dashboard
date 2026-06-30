@@ -1,4 +1,4 @@
-# Contributing to SaaS Dashboard
+# Contributing to Vanilla SaaS Dashboard
 
 We love your input! We want to make contributing as easy and transparent as possible.
 

@@ -1,11 +1,14 @@
-# SaaS Dashboard
+# Vanilla SaaS Dashboard
 
-A production-grade analytics dashboard built with **vanilla JavaScript** using a modular architecture. Features include real-time API data, VS Code-inspired command palette, Canvas-based charts, undo/redo, PWA support, and comprehensive accessibility.
-
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://mehdi-dev-sudo.github.io/vanilla-saas-dashboard/)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
 [![Tests](https://img.shields.io/badge/Tests-34%20passing-success.svg)](__tests__/)
-[![Lighthouse](https://img.shields.io/badge/Lighthouse-100%20Accessibility-brightgreen.svg)]()
+
+A production-grade analytics dashboard built with **vanilla JavaScript** — no frameworks, no build tools. Features real API data, PWA support, Canvas charts, command palette, and comprehensive testing.
+
+---
+
+> **Live Demo:** [https://mehdi-dev-sudo.github.io/vanilla-saas-dashboard/](https://mehdi-dev-sudo.github.io/vanilla-saas-dashboard/)
 
 ---
 
@@ -58,7 +61,7 @@ A production-grade analytics dashboard built with **vanilla JavaScript** using a
 ## Architecture
 
 ```
-saas-dashboard/
+vanilla-saas-dashboard/
 ├── index.html                    # Single HTML entry with semantic markup
 ├── manifest.json                 # PWA manifest for installable app
 ├── sw.js                         # Service worker for offline caching
@@ -223,10 +226,10 @@ ApiClient.fetch(url)
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/saas-dashboard.git
+git clone https://github.com/Mehdi-dev-sudo/vanilla-saas-dashboard.git
 
 # Open in browser (no build step required)
-cd saas-dashboard
+cd vanilla-saas-dashboard
 start index.html
 
 # Run tests
@@ -302,4 +305,4 @@ This project is [MIT licensed](LICENSE). Use it for any purpose, personal or com
 
 ## Author
 
-**Mehdi** — Crafted with care for product teams who appreciate clean, performant interfaces.
+**Mehdi Khorshidi far** — Crafted with care for product teams who appreciate clean, performant interfaces.

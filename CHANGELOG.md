@@ -3,7 +3,7 @@
 ## [1.0.0] - 2026-06-28
 
 ### Added
-- Initial release of SaaS Dashboard
+- Initial release of Vanilla SaaS Dashboard
 - Command palette with fuzzy search (Ctrl+K)
 - Undo/redo system (Ctrl+Z / Ctrl+Shift+Z)
 - Keyboard navigation throughout the app
