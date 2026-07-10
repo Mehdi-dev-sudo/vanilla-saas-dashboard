@@ -62,11 +62,13 @@ const Utils = {
   },
 
   animateValue(el, start, end, duration) {
+    if (!el) return;
     duration = duration || 1000;
     const range = end - start;
     const startTime = performance.now();
 
     function update(currentTime) {
+      if (!el) return;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
@@ -80,12 +82,14 @@ const Utils = {
   },
 
   animatePercent(el, start, end, duration, suffix) {
+    if (!el) return;
     suffix = suffix || '%';
     duration = duration || 1000;
     const range = end - start;
     const startTime = performance.now();
 
     function update(currentTime) {
+      if (!el) return;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);

@@ -45,12 +45,14 @@ const SidebarManager = (function () {
   function openMobile() {
     sidebar.classList.add('open');
     overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
 
   function closeMobile() {
     sidebar.classList.remove('open');
     overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
 

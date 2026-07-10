@@ -31,14 +31,12 @@
     setupNotifications();
     setupKeyboardNavigation();
 
-    window.addEventListener('resize', Utils.debounce(function () {
-      ChartEngine.resize();
-    }, 250));
-
     initApiData();
   }
 
-  function initApiData() {
+  window.addEventListener('resize', Utils.debounce(function () {
+    ChartEngine.resize();
+  }, 250));
     var statusEl = document.getElementById('apiStatus');
     if (!statusEl) return;
 
@@ -62,6 +60,18 @@
     ChartEngine.resize();
   }, 250));
 
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      clearInterval(window.__clockInterval);
+      clearInterval(window.__onlineInterval);
+      clearInterval(window.__updatedInterval);
+    } else {
+      window.__clockInterval = setInterval(updateClock, 1000);
+      window.__onlineInterval = setInterval(updateOnline, 8000);
+      window.__updatedInterval = setInterval(updateLastUpdated, 30000);
+    }
+  });
+
   var saveIndicatorTimer = null;
 
   window.showSaveIndicator = function () {
@@ -72,43 +82,52 @@
     saveIndicatorTimer = setTimeout(function () { el.style.display = 'none'; }, 2000);
   };
 
+  function updateLastUpdated() {
+    var el = document.getElementById('lastUpdated');
+    if (!el) return;
+    var now = new Date();
+    var time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Updated ' + time;
+  }
+
   function initLastUpdated() {
     var el = document.getElementById('lastUpdated');
     if (!el) return;
-    function update() {
-      var now = new Date();
-      var time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Updated ' + time;
-    }
-    update();
-    setInterval(update, 30000);
+    updateLastUpdated();
+    window.__updatedInterval = setInterval(updateLastUpdated, 30000);
+  }
+
+  function updateOnline() {
+    var el = document.getElementById('headerOnline');
+    if (!el) return;
+    try {
+      var users = AppStore && AppStore.getState ? (AppStore.getState('users') || []) : [];
+      var base = users.filter(function(u) { return u && u.status === 'active'; }).length;
+      var online = base + Math.round(Math.random() * 3);
+      el.innerHTML = '<span class="online-dot"></span> ' + online + ' online';
+    } catch (e) { /* ignore online counter errors */ }
   }
 
   function initOnlineCounter() {
     var el = document.getElementById('headerOnline');
     if (!el) return;
-    function updateOnline() {
-      try {
-        var users = AppStore && AppStore.getState ? (AppStore.getState('users') || []) : [];
-        var base = users.filter(function(u) { return u && u.status === 'active'; }).length;
-        var online = base + Math.round(Math.random() * 3);
-        el.innerHTML = '<span class="online-dot"></span> ' + online + ' online';
-      } catch (e) { /* ignore online counter errors */ }
-    }
     updateOnline();
-    setInterval(updateOnline, 8000);
+    window.__onlineInterval = setInterval(updateOnline, 8000);
+  }
+
+  function updateClock() {
+    var clockEl = document.getElementById('headerClock');
+    if (!clockEl) return;
+    var now = new Date();
+    var opts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    clockEl.textContent = now.toLocaleTimeString('en-US', opts);
   }
 
   function initClock() {
     var clockEl = document.getElementById('headerClock');
     if (!clockEl) return;
-    function updateClock() {
-      var now = new Date();
-      var opts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      clockEl.textContent = now.toLocaleTimeString('en-US', opts);
-    }
     updateClock();
-    setInterval(updateClock, 1000);
+    window.__clockInterval = setInterval(updateClock, 1000);
   }
 
   function setupGlobalSearch() {
@@ -117,13 +136,13 @@
     var originalPlaceholder = searchInput.placeholder;
 
     searchInput.addEventListener('input', function () {
-      searchClear.style.display = this.value ? 'flex' : 'none';
+      searchClear.classList.toggle('is-hidden', !this.value);
     });
 
     searchClear.addEventListener('click', function () {
       searchInput.value = '';
       searchInput.focus();
-      searchClear.style.display = 'none';
+      searchClear.classList.add('is-hidden');
     });
 
     searchInput.addEventListener('focus', function () { this.placeholder = 'Search users or transactions...'; });
@@ -288,7 +307,11 @@
       document.body.appendChild(dbg);
     }
     var stack = err && err.stack ? err.stack.split('\n').slice(0,3).join('\n') : (url ? 'at ' + url + ':' + line : '');
-    dbg.innerHTML = (dbg.innerHTML ? dbg.innerHTML + '\n---\n' : '') + 'Error: ' + (msg || (err && err.message) || 'unknown') + '\n' + stack;
+    var MAX_ERRORS = 20;
+    while (dbg.children.length >= MAX_ERRORS) dbg.removeChild(dbg.firstChild);
+    var entry = document.createElement('div');
+    entry.textContent = 'Error: ' + (msg || (err && err.message) || 'unknown') + '\n' + stack;
+    dbg.appendChild(entry);
     dbg.scrollTop = dbg.scrollHeight;
     console.error(msg, url, line, col, err);
   };

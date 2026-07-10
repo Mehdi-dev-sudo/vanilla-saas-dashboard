@@ -1,5 +1,5 @@
-var CACHE_NAME = 'vanilla-saas-dashboard-v3';
-var URLS_TO_CACHE = [
+const CACHE_NAME = 'vanilla-saas-dashboard-v4';
+const URLS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
@@ -66,23 +66,37 @@ self.addEventListener('fetch', function (event) {
         caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, copy); });
         return response;
       }).catch(function () {
-        return caches.match(event.request);
+        return caches.match(event.request).then(function (cached) {
+          return cached || caches.match('./index.html');
+        });
       })
     );
+    return;
+  }
+
+  // For API/XHR requests, use network-only (never cache dynamic data)
+  if (requestUrl.pathname.includes('/api/')) {
+    event.respondWith(fetch(event.request).catch(function () {
+      return new Response(JSON.stringify({ error: 'offline' }), {
+        status: 503, headers: { 'Content-Type': 'application/json' }
+      });
+    }));
     return;
   }
 
   // For all other assets, use cache-first with network update
   event.respondWith(
     caches.match(event.request).then(function (cached) {
-      var fetchPromise = fetch(event.request).then(function (response) {
+      if (cached) return cached;
+      return fetch(event.request).then(function (response) {
         if (response && response.ok) {
           var copy = response.clone();
           caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, copy); });
         }
         return response;
-      }).catch(function () { return cached; });
-      return cached || fetchPromise;
+      }).catch(function () {
+        return caches.match('./index.html');
+      });
     })
   );
 });

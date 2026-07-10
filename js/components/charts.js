@@ -1,26 +1,30 @@
 const ChartEngine = (function () {
   let dpr = 1;
-  let animFrames = [];
+let animFrames = [];
+let cachedStyles = null;
 
-  function init() {
-    dpr = window.devicePixelRatio || 1;
-  }
+function init() {
+  dpr = window.devicePixelRatio || 1;
+  cachedStyles = null;
+}
 
-  function getCanvasStyles() {
-    const s = getComputedStyle(document.documentElement);
-    return {
-      primary: s.getPropertyValue('--clr-primary').trim() || '#6366f1',
-      secondary: s.getPropertyValue('--clr-secondary').trim() || '#8b5cf6',
-      grid: s.getPropertyValue('--chart-grid').trim() || '#e5e7eb',
-      text: s.getPropertyValue('--chart-text').trim() || '#9ca3af',
-      lineFill: s.getPropertyValue('--chart-line-fill').trim() || 'rgba(99,102,241,0.15)',
-      textPrimary: s.getPropertyValue('--text-primary').trim() || '#111827'
-    };
-  }
+function getCanvasStyles() {
+  if (cachedStyles) return cachedStyles;
+  const s = getComputedStyle(document.documentElement);
+  cachedStyles = {
+    primary: s.getPropertyValue('--clr-primary').trim() || '#6366f1',
+    secondary: s.getPropertyValue('--clr-secondary').trim() || '#8b5cf6',
+    grid: s.getPropertyValue('--chart-grid').trim() || '#e5e7eb',
+    text: s.getPropertyValue('--chart-text').trim() || '#9ca3af',
+    lineFill: s.getPropertyValue('--chart-line-fill').trim() || 'rgba(99,102,241,0.15)',
+    textPrimary: s.getPropertyValue('--text-primary').trim() || '#111827'
+  };
+  return cachedStyles;
+}
 
-  function setupCanvas(canvas, width, height) {
-    const rect = canvas.getBoundingClientRect();
-    const w = width || rect.width;
+function setupCanvas(canvas, width, height) {
+  const rect = canvas.getBoundingClientRect();
+  const w = width || rect.width;
     const h = height || rect.height;
     canvas.width = w * dpr;
     canvas.height = h * dpr;
@@ -271,6 +275,8 @@ const ChartEngine = (function () {
   function startAnimation(canvas, drawFrame) {
     const duration = 900;
     const startTime = performance.now();
+    animFrames.forEach(id => cancelAnimationFrame(id));
+    animFrames = [];
 
     function frame(time) {
       const elapsed = time - startTime;
@@ -288,6 +294,7 @@ const ChartEngine = (function () {
   function resize() {
     animFrames.forEach(id => cancelAnimationFrame(id));
     animFrames = [];
+    cachedStyles = null;
     DashboardPage.reinitCharts();
     AnalyticsPage.reinitCharts();
   }

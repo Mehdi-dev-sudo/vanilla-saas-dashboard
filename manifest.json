@@ -3,11 +3,21 @@
   "short_name": "SaaSify",
   "description": "Production-grade SaaS analytics dashboard built with vanilla JavaScript",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f0f2f5",
   "theme_color": "#6366f1",
   "orientation": "any",
   "icons": [
-    { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236366f1'/%3E%3Cpath d='M10 22V16L16 10L22 16V22H18V18H14V22H10Z' fill='white'/%3E%3C/svg%3E", "sizes": "32x32", "type": "image/svg+xml" }
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%236366f1'/%3E%3Cpath d='M60 132V96L96 60L132 96V132H108V108H84V132H60Z' fill='white'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%236366f1'/%3E%3Cpath d='M160 352V256L256 160L352 256V352H288V288H224V352H160Z' fill='white'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
   ]
 }

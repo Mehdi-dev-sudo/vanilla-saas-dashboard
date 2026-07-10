@@ -103,7 +103,9 @@ const UsersPage = (function () {
     document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
     setupMultiSelect();
 
-    return function cleanup() {};
+    return function cleanup() {
+      currentPage = 1; currentSearch = ''; currentStatus = 'all'; currentRole = 'all';
+    };
   }
 
   function setupMultiSelect() {

@@ -6,6 +6,7 @@ var DevConsole = (function () {
   var overlay = null;
   var fpsInterval = null;
   var metricsInterval = null;
+  var fpsRafId = null;
 
   function init() {
     var div = document.createElement('div');
@@ -47,8 +48,6 @@ var DevConsole = (function () {
     document.getElementById('devClearStorage').addEventListener('click', function () { if (confirm('Clear all localStorage?')) { localStorage.clear(); ToastSystem.success('Storage cleared'); updateMetrics(); } });
     document.getElementById('devResetData').addEventListener('click', function () { if (confirm('Reset all data to defaults?')) { localStorage.removeItem('saas_dashboard_state'); localStorage.removeItem('saas_activity_log'); window.location.reload(); } });
 
-    setupFpsCounter();
-
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
         e.preventDefault();
@@ -64,15 +63,20 @@ var DevConsole = (function () {
     overlay.classList.add('open');
     metricsInterval = setInterval(updateMetrics, 1000);
     updateMetrics();
+    startFpsCounter();
   }
 
   function close() {
     isOpen = false;
     overlay.classList.remove('open');
     if (metricsInterval) { clearInterval(metricsInterval); metricsInterval = null; }
+    if (fpsRafId) { cancelAnimationFrame(fpsRafId); fpsRafId = null; }
   }
 
-  function setupFpsCounter() {
+  function startFpsCounter() {
+    if (fpsRafId) return;
+    frames = 0;
+    lastTime = performance.now();
     function frame(time) {
       frames++;
       if (time - lastTime >= 1000) {
@@ -85,9 +89,9 @@ var DevConsole = (function () {
           fpsEl.style.color = fps >= 50 ? 'var(--clr-success)' : fps >= 30 ? 'var(--clr-warning)' : 'var(--clr-danger)';
         }
       }
-      requestAnimationFrame(frame);
+      fpsRafId = requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
+    fpsRafId = requestAnimationFrame(frame);
   }
 
   function updateMetrics() {
