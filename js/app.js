@@ -127,6 +127,7 @@
   function setupGlobalSearch() {
     var searchInput = document.getElementById('globalSearch');
     var searchClear = document.getElementById('searchClear');
+    if (!searchInput || !searchClear) return;
     var originalPlaceholder = searchInput.placeholder;
 
     searchInput.addEventListener('input', function () {
