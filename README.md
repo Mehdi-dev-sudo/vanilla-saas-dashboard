@@ -12,16 +12,15 @@ A production-grade analytics dashboard built with **vanilla JavaScript** — no 
 
 ---
 
-## Performance Metrics
+## Performance
 
-| Category | Score |
-|----------|-------|
-| Performance | 95+ |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
-
-> Run `npx lighthouse index.html --view` to verify.
+- **Zero production dependencies** — no frameworks, no build tools, no runtime bloat
+- **Debounced resize/search** — 250ms / 300ms debounce prevents layout thrashing
+- **requestAnimationFrame** — all animations, FPS counter, and chart rendering use rAF
+- **Canvas HiDPI** — Retina-aware charts via `devicePixelRatio` scaling
+- **Page Visibility API** — background intervals are paused when tab is hidden
+- **Memory-safe** — animation frame IDs tracked and cleaned; error log capped at 20 entries
+- **Service Worker** — cache-first strategy for assets, network-first for HTML, offline fallback
 
 ---
 
@@ -260,11 +259,11 @@ npm test
 
 | Quarter | Planned Features |
 |---------|-----------------|
-| Q3 2026 | **Plugin System** — hot-loadable plugins from `plugins/` directory |
-| Q3 2026 | **Performance Monitor** — dedicated panel for FPS, memory, DOM tracking |
-| Q4 2026 | **FLIP Animations** — smooth list reordering with FLIP technique |
-| Q4 2026 | **View Transition API** — cross-document view transitions with fallback |
-| Q4 2026 | **Spring Animations** — spring-based physics for micro-interactions |
+| ✅ | **Plugin System** — hot-loadable plugins from `plugins/` directory |
+| ✅ | **Performance Monitor** — dedicated panel for FPS, memory, DOM tracking |
+| ✅ | **FLIP Animations** — smooth list reordering with FLIP technique |
+| ✅ | **View Transition API** — cross-document view transitions with fallback |
+| ✅ | **Spring Animations** — spring-based physics for micro-interactions |
 | Q1 2027 | **End-to-End Tests** — Playwright or Cypress for critical user flows |
 | Q1 2027 | **i18n** — Full internationalization with RTL support |
 | Q1 2027 | **Theme Builder** — Custom accent color picker with preview |

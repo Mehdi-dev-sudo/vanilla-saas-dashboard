@@ -103,9 +103,9 @@ const AnalyticsPage = (function () {
       ToastSystem.info('Data refreshed successfully');
     });
 
-    document.querySelectorAll('#analyticsRevenueChart .chart-tab').forEach(tab => {
+    document.querySelectorAll('.chart-tab').forEach(tab => {
       tab.addEventListener('click', function () {
-        document.querySelectorAll('#analyticsRevenueChart .chart-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
       });
     });

@@ -99,5 +99,24 @@ const Utils = {
     }
 
     requestAnimationFrame(update);
+  },
+
+  copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('Copied: ' + text);
+      }).catch(function () { fallbackCopy(text); });
+    } else { fallbackCopy(text); }
   }
 };
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); if (typeof ToastSystem !== 'undefined') ToastSystem.success('Copied: ' + text); }
+  catch (e) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Failed to copy'); }
+  document.body.removeChild(ta);
+}
+
+window.copyToClipboard = Utils.copyToClipboard;

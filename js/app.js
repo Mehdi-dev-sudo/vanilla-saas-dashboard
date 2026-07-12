@@ -34,9 +34,7 @@
     initApiData();
   }
 
-  window.addEventListener('resize', Utils.debounce(function () {
-    ChartEngine.resize();
-  }, 250));
+  function initApiData() {
     var statusEl = document.getElementById('apiStatus');
     if (!statusEl) return;
 
@@ -55,10 +53,6 @@
       statusEl.className = 'header__api-status header__api-status--offline';
     });
   }
-
-  window.addEventListener('resize', Utils.debounce(function () {
-    ChartEngine.resize();
-  }, 250));
 
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) {

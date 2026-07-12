@@ -794,7 +794,7 @@ img { max-width: 100%; display: block; }
   to { transform: translateX(100%); opacity: 0; }
 }
 
-.toast { overflow: hidden; }
+.toast { overflow: hidden; position: relative; }
 .toast__progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; }
 .toast__progress-bar { height: 100%; width: 100%; opacity: 0.25; }
 .toast--success .toast__progress-bar { background: var(--clr-success); }
