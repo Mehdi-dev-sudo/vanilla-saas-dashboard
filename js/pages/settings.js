@@ -177,14 +177,16 @@ const SettingsPage = (function () {
           reducedMotion: false, dateFormat: 'MMM D, YYYY', defaultPage: 'analytics', sidebarCollapsed: false,
           showActivityLog: true, showQuickActions: true
         });
-        SettingsPage.init();
+        applySettingsOnLoad();
         ToastSystem.success('Settings reset to defaults');
       });
     });
 
     applySettingsOnLoad();
 
-    return function cleanup() {};
+    return function cleanup() {
+      document.getElementById('resetSettingsBtn') && (document.getElementById('resetSettingsBtn').onclick = null);
+    };
   }
 
   function applySettingsOnLoad() {
