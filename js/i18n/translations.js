@@ -143,6 +143,7 @@
       },
       time: { justNow: 'Just now', minutesAgo: '{n}m ago', hoursAgo: '{n}h ago', daysAgo: '{n}d ago' },
       trafficSource: { organic: 'Organic', social: 'Social', direct: 'Direct', referral: 'Referral', email: 'Email' },
+      chart: { total: 'Total' },
       language: { en: 'English', fa: 'Persian (RTL)', de: 'Deutsch', fr: 'Français', es: 'Español' }
     },
 
@@ -284,6 +285,7 @@
       },
       time: { justNow: 'اکنون', minutesAgo: '{n} دقیقه پیش', hoursAgo: '{n} ساعت پیش', daysAgo: '{n} روز پیش' },
       trafficSource: { organic: 'ارگانیک', social: 'اجتماعی', direct: 'مستقیم', referral: 'ارجاعی', email: 'ایمیل' },
+      chart: { total: 'مجموع' },
       language: { en: 'English', fa: 'فارسی', de: 'Deutsch', fr: 'Français', es: 'Español' }
     }
   };

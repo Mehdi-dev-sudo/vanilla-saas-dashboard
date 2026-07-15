@@ -67,7 +67,7 @@ const Router = (function () {
           var handler = routes[name];
           if (handler && typeof handler.render === 'function') {
             contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
-            hideLoader();
+            requestAnimationFrame(function () { hideLoader(); });
             if (typeof handler.init === 'function') {
               currentCleanup = handler.init();
             }
