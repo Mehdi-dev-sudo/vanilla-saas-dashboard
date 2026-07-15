@@ -15,7 +15,7 @@ const CommandPalette = (function () {
         '<input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false">' +
         '<span class="cmd-palette__hint">ESC to close</span>' +
       '</div>' +
-      '<div class="cmd-palette__results" id="cmdResults"></div>' +
+      '<div class="cmd-palette__results" id="cmdResults" role="listbox"></div>' +
       '<div class="cmd-palette__footer">' +
         '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 12 15 20 7"/></svg> Navigate</span>' +
         '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select</span>' +
@@ -186,13 +186,14 @@ const CommandPalette = (function () {
         html += '<div class="cmd-palette__category">' + currentCategory + '</div>';
       }
       html +=
-        '<div class="cmd-palette__item' + (idx === selectedIndex ? ' selected' : '') + '" data-index="' + idx + '">' +
+        '<div class="cmd-palette__item' + (idx === selectedIndex ? ' selected' : '') + '" data-index="' + idx + '" role="option" id="cmd-opt-' + idx + '"' + (idx === selectedIndex ? ' aria-selected="true"' : '') + '>' +
           '<span class="cmd-palette__item-icon">' + getIconSvg(cmd.icon) + '</span>' +
           '<span class="cmd-palette__item-label">' + cmd.label + '</span>' +
         '</div>';
     });
 
     resultsEl.innerHTML = html;
+    input.setAttribute('aria-activedescendant', 'cmd-opt-' + selectedIndex);
 
     resultsEl.querySelectorAll('.cmd-palette__item').forEach(function (item) {
       item.addEventListener('click', function () {
@@ -214,8 +215,11 @@ const CommandPalette = (function () {
   function updateSelected() {
     resultsEl.querySelectorAll('.cmd-palette__item').forEach(function (item, idx) {
       item.classList.toggle('selected', idx === selectedIndex);
+      if (idx === selectedIndex) item.setAttribute('aria-selected', 'true');
+      else item.removeAttribute('aria-selected');
     });
-    const selected = resultsEl.querySelector('.cmd-palette__item.selected');
+    input.setAttribute('aria-activedescendant', 'cmd-opt-' + selectedIndex);
+    var selected = resultsEl.querySelector('.cmd-palette__item.selected');
     if (selected) selected.scrollIntoView({ block: 'nearest' });
   }
 

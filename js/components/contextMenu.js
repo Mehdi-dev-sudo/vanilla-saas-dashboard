@@ -73,7 +73,11 @@ const ContextMenuManager = (function () {
     });
 
     document.body.appendChild(menu);
-    requestAnimationFrame(function () { menu.classList.add('open'); });
+    requestAnimationFrame(function () {
+      menu.classList.add('open');
+      var firstItem = menu.querySelector('.context-menu__item');
+      if (firstItem) firstItem.focus();
+    });
   }
 
   function hide() {
@@ -86,6 +90,29 @@ const ContextMenuManager = (function () {
       }, 150);
     }
   }
+
+  document.addEventListener('keydown', function (e) {
+    if (!menu) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      var items = menu.querySelectorAll('.context-menu__item');
+      var active = menu.querySelector('.context-menu__item:focus');
+      var idx = Array.from(items).indexOf(active);
+      var next = (idx + 1) % items.length;
+      items[next].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      var items = menu.querySelectorAll('.context-menu__item');
+      var active = menu.querySelector('.context-menu__item:focus');
+      var idx = Array.from(items).indexOf(active);
+      var prev = (idx - 1 + items.length) % items.length;
+      items[prev].focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      var active = menu.querySelector('.context-menu__item:focus');
+      if (active) active.click();
+    }
+  });
 
   function getIcon(name) {
     const icons = {

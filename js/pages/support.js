@@ -77,13 +77,14 @@ const SupportPage = (function () {
   }
 
   function renderFaqItem(index, question, answer) {
+    var answerId = 'faq-answer-' + index;
     return `
       <div class="faq-item" data-faq="${index}">
-        <div class="faq-item__question" tabindex="0" role="button" aria-expanded="false">
+        <div class="faq-item__question" tabindex="0" role="button" aria-expanded="false" aria-controls="${answerId}">
           <span>${question}</span>
           <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="faq-item__answer">${answer}</div>
+        <div class="faq-item__answer" id="${answerId}" role="region">${answer}</div>
       </div>
     `;
   }

@@ -180,7 +180,7 @@ const AppStore = (function () {
     if (role && role !== 'all') filtered = filtered.filter(u => u.role === role);
 
     const total = filtered.length;
-    const totalPages = Math.ceil(total / perPage) || 1;
+    const totalPages = Math.max(1, Math.ceil(total / perPage));
     const start = (page - 1) * perPage;
     const items = filtered.slice(start, start + perPage);
 
@@ -214,7 +214,7 @@ const AppStore = (function () {
     }
 
     const total = filtered.length;
-    const totalPages = Math.ceil(total / perPage) || 1;
+    const totalPages = Math.max(1, Math.ceil(total / perPage));
     const start = (page - 1) * perPage;
     const items = filtered.slice(start, start + perPage);
 

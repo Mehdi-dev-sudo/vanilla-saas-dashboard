@@ -106,7 +106,7 @@ PluginSystem.register('perfMonitor', {
     }
 
     var domEl = document.getElementById('perfDom');
-    if (domEl) domEl.textContent = document.querySelectorAll('*').length;
+    if (domEl) domEl.textContent = document.getElementsByTagName('*').length;
 
     var storageEl = document.getElementById('perfStorage');
     if (storageEl) {

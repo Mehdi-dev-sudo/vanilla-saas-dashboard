@@ -131,10 +131,12 @@ const AnalyticsPage = (function () {
       ChartEngine.drawLineChart('analyticsRevenueChart', months.map((m, i) => ({ month: m, value: 18000 + i * 1400 + Math.round(Math.sin(i) * 2000) })), { height: 280, prefix: '$', divisor: 1000, suffix: 'k' });
     }
     if (document.getElementById('analyticsUserChart')) {
-      ChartEngine.drawBarChart('analyticsUserChart', [], { height: 280 });
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      ChartEngine.drawBarChart('analyticsUserChart', months.map((m, i) => ({ month: m, value: 110 + i * 18 + Math.round(Math.sin(i * 1.3) * 25) })), { height: 280 });
     }
     if (document.getElementById('analyticsRefundChart')) {
-      ChartEngine.drawLineChart('analyticsRefundChart', [], { height: 250 });
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      ChartEngine.drawLineChart('analyticsRefundChart', months.map((m, i) => ({ month: m, value: Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15) })), { height: 250 });
     }
   }
 

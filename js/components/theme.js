@@ -7,7 +7,8 @@ const ThemeManager = (function () {
     const theme = saved || (prefersDark ? 'dark' : 'light');
     setTheme(theme);
 
-    document.getElementById('themeToggle').addEventListener('click', toggle);
+    var toggleBtn = document.getElementById('themeToggle');
+    if (toggleBtn) toggleBtn.addEventListener('click', toggle);
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
       if (!localStorage.getItem(STORAGE_KEY)) {
@@ -23,6 +24,8 @@ const ThemeManager = (function () {
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(STORAGE_KEY, theme);
+    var toggleBtn = document.getElementById('themeToggle');
+    if (toggleBtn) toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   }
 
   function toggle() {
