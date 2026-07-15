@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vanilla-saas-dashboard-v4';
+const CACHE_NAME = 'vanilla-saas-dashboard-v5';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -11,6 +11,9 @@ const URLS_TO_CACHE = [
   './js/data/data.js?v=1',
   './js/data/history.js?v=1',
   './js/data/activity.js?v=1',
+  './js/i18n/i18n.js?v=1',
+  './js/i18n/translations.js?v=1',
+  './js/core/export.js?v=1',
   './js/components/toast.js?v=1',
   './js/components/modal.js?v=1',
   './js/components/sidebar.js?v=1',

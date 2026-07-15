@@ -60,10 +60,12 @@
       clearInterval(window.__clockInterval);
       clearInterval(window.__onlineInterval);
       clearInterval(window.__updatedInterval);
+      if (typeof DashboardPage !== 'undefined' && DashboardPage.stopRealtimeUpdates) DashboardPage.stopRealtimeUpdates();
     } else {
       window.__clockInterval = setInterval(updateClock, 1000);
       window.__onlineInterval = setInterval(updateOnline, 8000);
       window.__updatedInterval = setInterval(updateLastUpdated, 30000);
+      if (typeof DashboardPage !== 'undefined' && DashboardPage.startRealtimeUpdates) DashboardPage.startRealtimeUpdates();
     }
   });
 
@@ -198,7 +200,8 @@
       dropdown.classList.toggle('open');
     });
 
-    document.getElementById('markAllRead').addEventListener('click', function () {
+    var markAllBtn = document.getElementById('markAllRead');
+    if (markAllBtn) markAllBtn.addEventListener('click', function () {
       AppStore.clearNotifications();
       dropdown.querySelectorAll('.notif-dropdown__item--unread').forEach(function (el) { el.classList.remove('notif-dropdown__item--unread'); });
       badge.style.display = 'none';
@@ -212,8 +215,9 @@
     });
 
     AppStore.subscribe('notifications', function (count) {
-      badge.textContent = count;
-      badge.style.display = count > 0 ? 'flex' : 'none';
+      var unreadCount = typeof count === 'number' ? count : (count && count.length ? count.length : 0);
+      badge.textContent = unreadCount;
+      badge.style.display = unreadCount > 0 ? 'flex' : 'none';
     });
   }
 
@@ -310,6 +314,7 @@
     dbg.appendChild(entry);
     dbg.scrollTop = dbg.scrollHeight;
     console.error(msg, url, line, col, err);
+    if (typeof _origOnError === 'function') _origOnError(msg, url, line, col, err);
   };
 
   if (document.readyState === 'loading') {

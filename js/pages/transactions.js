@@ -135,7 +135,7 @@ const TransactionsPage = (function () {
     } else {
       tbody.innerHTML = result.items.map(t =>
         '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
-          '<td><strong class="copyable" data-copy="' + t.invoice + '" style="cursor:pointer" onclick="copyToClipboard(\'' + t.invoice + '\')" data-tooltip="Copy invoice">' + t.invoice + '</strong></td>' +
+          '<td><strong class="copyable" data-copy="' + Utils.escapeHtml(t.invoice) + '" style="cursor:pointer" onclick="copyToClipboard(decodeURIComponent(\'' + encodeURIComponent(t.invoice) + '\'))" data-tooltip="Copy invoice">' + Utils.escapeHtml(t.invoice) + '</strong></td>' +
           '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
           '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
           '<td><span class="status-badge status-badge--' + t.status + '">' + t.status.charAt(0).toUpperCase() + t.status.slice(1) + '</span></td>' +

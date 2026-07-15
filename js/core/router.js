@@ -5,6 +5,7 @@ const Router = (function () {
   var routes = {};
   var contentEl = document.getElementById('appContent');
   var loaderEl = document.getElementById('pageLoader');
+  var navGeneration = 0;
 
   var routeMeta = {
     dashboard: { title: function () { return __('route.dashboard'); }, icon: 'grid', parent: null },
@@ -54,7 +55,9 @@ const Router = (function () {
 
       showLoader();
 
+      var gen = ++navGeneration;
       requestAnimationFrame(function () {
+        if (gen !== navGeneration) return;
         try {
           if (name === 'login') {
             renderLogin();

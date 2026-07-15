@@ -145,7 +145,7 @@ const SettingsPage = (function () {
     document.querySelectorAll('[data-setting-select]').forEach(function (select) {
       var key = select.dataset.settingSelect;
       select.addEventListener('change', function () {
-        AppStore.updateState('settings', (function (o) { o[key] = this.value; return o; })({}));
+        AppStore.updateState('settings', (function (o, val) { o[key] = val; return o; })({}, select.value));
         if (key === 'accentColor') applyAccentColor(this.value);
         if (key === 'density') applyDensity(this.value);
         if (key === 'dateFormat' || key === 'currency') {

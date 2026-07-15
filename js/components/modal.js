@@ -20,6 +20,13 @@ const ModalSystem = (function () {
     content.innerHTML = html;
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
+    content.setAttribute('role', 'dialog');
+    content.setAttribute('aria-modal', 'true');
+    var titleEl = content.querySelector('.modal__title');
+    if (titleEl) {
+      if (!titleEl.id) titleEl.id = 'modal-title-' + Date.now();
+      content.setAttribute('aria-labelledby', titleEl.id);
+    }
     isOpen = true;
     document.body.style.overflow = 'hidden';
 

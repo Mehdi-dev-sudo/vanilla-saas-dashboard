@@ -1,16 +1,20 @@
 const Utils = {
   formatCurrency(amount) {
     var n = Number(amount);
-    if (isNaN(n) || n === undefined || n === null) return '$0';
+    if (isNaN(n)) return '$0';
     return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   },
 
   formatNumber(num) {
-    return Number(num).toLocaleString('en-US');
+    var n = Number(num);
+    if (isNaN(n)) return '0';
+    return n.toLocaleString('en-US');
   },
 
   formatPercent(value) {
-    return Number(value).toFixed(1) + '%';
+    var n = Number(value);
+    if (isNaN(n)) return '0.0%';
+    return n.toFixed(1) + '%';
   },
 
   formatDate(dateStr) {
@@ -49,7 +53,7 @@ const Utils = {
   escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
-    return div.innerHTML;
+    return div.innerHTML.replace(/'/g, '&#39;');
   },
 
   stringToColor(str) {
@@ -75,7 +79,7 @@ const Utils = {
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(start + range * eased);
-      const text = Number.isInteger(end) ? current : current.toFixed(1);
+      const text = Number.isInteger(end) ? Math.round(current) : current.toFixed(1);
       el.textContent = text;
       if (progress < 1) requestAnimationFrame(update);
     }

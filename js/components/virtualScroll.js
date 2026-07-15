@@ -47,7 +47,7 @@ const VirtualScroll = (function () {
 
     wrapper.addEventListener('scroll', function () {
       requestAnimationFrame(render);
-    });
+    }, { passive: true });
 
     render();
 

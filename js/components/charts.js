@@ -1,12 +1,15 @@
 const ChartEngine = (function () {
   let dpr = 1;
-let animFrames = [];
-let cachedStyles = null;
+  let animFrames = [];
+  let cachedStyles = null;
+  var canvasCache = {};
 
-function init() {
-  dpr = window.devicePixelRatio || 1;
-  cachedStyles = null;
-}
+  function init() {
+    dpr = window.devicePixelRatio || 1;
+    cachedStyles = null;
+    canvasCache = {};
+    window.addEventListener('resize', resize);
+  }
 
 function getCanvasStyles() {
   if (cachedStyles) return cachedStyles;
@@ -23,16 +26,22 @@ function getCanvasStyles() {
 }
 
 function setupCanvas(canvas, width, height) {
-  const rect = canvas.getBoundingClientRect();
-  const w = width || rect.width;
-    const h = height || rect.height;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
-    return { ctx, w, h };
+  var id = canvas.id;
+  var cache = canvasCache[id];
+  var rect = canvas.getBoundingClientRect();
+  var w = width || rect.width;
+  var h = height || rect.height;
+  if (cache && cache.w === w && cache.h === h) {
+    return { ctx: cache.ctx, w: w, h: h };
+  }
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  canvasCache[id] = { ctx: ctx, w: w, h: h };
+  return { ctx: ctx, w: w, h: h };
   }
 
   /* ---------- Line Chart ---------- */
@@ -292,11 +301,12 @@ function setupCanvas(canvas, width, height) {
   }
 
   function resize() {
-    animFrames.forEach(id => cancelAnimationFrame(id));
+    animFrames.forEach(function (id) { cancelAnimationFrame(id); });
     animFrames = [];
     cachedStyles = null;
-    DashboardPage.reinitCharts();
-    AnalyticsPage.reinitCharts();
+    canvasCache = {};
+    if (typeof DashboardPage !== 'undefined') DashboardPage.reinitCharts();
+    if (typeof AnalyticsPage !== 'undefined') AnalyticsPage.reinitCharts();
   }
 
   function downloadChart(canvasId, filename) {

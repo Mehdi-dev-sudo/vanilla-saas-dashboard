@@ -109,10 +109,10 @@ const ApiClient = (function () {
       var transactions = (data.products || []).map(function (p, i) {
         return {
           id: 'api-t' + p.id,
-          invoice: 'INV-' + String(2026000 + p.id).slice(0, 7),
+          invoice: 'INV-' + String(2026000 + parseInt(p.id)).slice(-7),
           customer: p.title,
           email: p.brand ? p.brand.toLowerCase().replace(/\s+/g, '') + '@example.com' : 'vendor@example.com',
-          amount: Math.round(p.price * (p.stock || 10) * (0.5 + Math.random())),
+          amount: Math.round(p.price * (p.stock !== undefined ? p.stock : 10) * (0.5 + Math.random())),
           status: statuses[i % statuses.length],
           date: new Date(Date.now() - Math.random() * 30 * 86400000).toISOString().slice(0, 10),
           method: methods[i % methods.length],

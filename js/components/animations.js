@@ -127,8 +127,8 @@ var AnimationEngine = (function () {
   function microRipple(e, el) {
     if (reducedMotion) return;
     var rect = el.getBoundingClientRect();
-    var x = (e.clientX || e.touches[0].clientX) - rect.left;
-    var y = (e.clientY || e.touches[0].clientY) - rect.top;
+    var x = (e.clientX !== undefined ? e.clientX : e.touches[0].clientX) - rect.left;
+    var y = (e.clientY !== undefined ? e.clientY : e.touches[0].clientY) - rect.top;
     var size = Math.max(rect.width, rect.height) * 2;
     var ripple = document.createElement('span');
     ripple.className = 'ripple-effect';

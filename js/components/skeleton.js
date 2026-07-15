@@ -46,7 +46,7 @@ const SkeletonLoader = (function () {
     html += '<div class="empty-state__icon">' + icon + '</div>';
     html += '<h3 class="empty-state__title">' + title + '</h3>';
     html += '<p class="empty-state__desc">' + desc + '</p>';
-    if (action) html += '<button class="btn btn--primary mt-lg" onclick="' + action.fn + '">' + action.label + '</button>';
+    if (action) html += '<button class="btn btn--primary mt-lg">' + action.label + '</button>';
     html += '</div>';
     return html;
   }

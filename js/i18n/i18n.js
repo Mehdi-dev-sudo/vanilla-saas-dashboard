@@ -31,10 +31,11 @@ const I18n = (function () {
   function __(key, params) {
     var parts = key.split('.');
     var val = translations[locale];
-    for (var i = 0; val && i < parts.length; i++) val = val[parts[i]];
+    var i;
+    for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
     if (val === undefined) {
       val = translations[fallback];
-      for (var i = 0; val && i < parts.length; i++) val = val[parts[i]];
+      for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
     }
     if (val === undefined) return key;
     if (params) {

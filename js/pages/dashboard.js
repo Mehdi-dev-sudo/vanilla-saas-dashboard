@@ -485,5 +485,5 @@ const DashboardPage = (function () {
     if (document.getElementById('dashRevenueChart')) drawCharts();
   }
 
-  return { render: render, init: init, refresh: refresh, reinitCharts: reinitCharts };
+  return { render: render, init: init, refresh: refresh, reinitCharts: reinitCharts, startRealtimeUpdates: startRealtimeUpdates, stopRealtimeUpdates: stopRealtimeUpdates };
 })();

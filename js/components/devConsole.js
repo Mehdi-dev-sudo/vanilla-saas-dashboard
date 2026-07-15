@@ -105,7 +105,7 @@ var DevConsole = (function () {
 
     // DOM Nodes
     var domEl = document.getElementById('devDomNodes');
-    if (domEl) domEl.textContent = document.querySelectorAll('*').length;
+    if (domEl) domEl.textContent = document.getElementsByTagName('*').length;
 
     // Storage
     var storageEl = document.getElementById('devStorage');
