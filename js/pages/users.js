@@ -185,7 +185,7 @@ const UsersPage = (function () {
 
     totalInfo.textContent = result.total + ' user' + (result.total !== 1 ? 's' : '');
     if (currentSearch && result.total > 0) {
-      totalInfo.textContent = result.total + ' result' + (result.total !== 1 ? 's' : '') + ' for "' + currentSearch + '"';
+      totalInfo.textContent = result.total + ' result' + (result.total !== 1 ? 's' : '') + ' for "' + Utils.escapeHtml(currentSearch) + '"';
     }
 
     renderPagination(pagination, result);
@@ -262,7 +262,7 @@ const UsersPage = (function () {
       if (data.email && !data.email.includes('@')) { errors.push('Invalid email format'); if (emailInput) emailInput.classList.add('form-input--error'); }
 
       if (errors.length > 0) {
-        ToastSystem.error(errors.join('<br>'));
+        errors.forEach(function (e) { ToastSystem.error(e); });
         return;
       }
 
@@ -276,7 +276,7 @@ const UsersPage = (function () {
         revenue: 0
       });
 
-      ToastSystem.success('User "' + data.name.trim() + '" added successfully');
+      ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
       renderUsers();
     });
   }
@@ -305,13 +305,17 @@ const UsersPage = (function () {
       '</div>';
 
     ModalSystem.form('Edit User', html, 'Save Changes', function (data) {
+      var name = (data.name || '').trim();
+      var email = (data.email || '').trim();
+      if (!name) { ToastSystem.error('Name is required'); return; }
+      if (!email || !email.includes('@')) { ToastSystem.error('Valid email is required'); return; }
       AppStore.updateUser(id, {
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        status: data.status
+        name: name,
+        email: email,
+        role: data.role || 'Viewer',
+        status: data.status || 'active'
       });
-      ToastSystem.success('User "' + data.name + '" updated successfully');
+      ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
       renderUsers();
     });
   }

@@ -144,7 +144,7 @@ const TransactionsPage = (function () {
 
     totalInfo.textContent = result.total + ' transaction' + (result.total !== 1 ? 's' : '');
     if (currentSearch && result.total > 0) {
-      totalInfo.textContent = result.total + ' result' + (result.total !== 1 ? 's' : '') + ' for "' + currentSearch + '"';
+      totalInfo.textContent = result.total + ' result' + (result.total !== 1 ? 's' : '') + ' for "' + Utils.escapeHtml(currentSearch) + '"';
     }
 
     document.querySelectorAll('#transactionTable th[data-sort]').forEach(th => {
