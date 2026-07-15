@@ -93,7 +93,7 @@ const AnalyticsPage = (function () {
     Utils.animateValue(document.getElementById('analyticsAvgOrder'), 0, data.avgOrder, 1200);
     Utils.animatePercent(document.getElementById('analyticsConversion'), 0, data.conversion, 1200);
 
-    drawCharts();
+    requestAnimationFrame(function () { drawCharts(); });
 
     document.getElementById('analyticsExportBtn').addEventListener('click', function () {
       ExportManager.exportAnalytics();

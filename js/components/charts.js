@@ -29,8 +29,9 @@ function setupCanvas(canvas, width, height) {
   var id = canvas.id;
   var cache = canvasCache[id];
   var rect = canvas.getBoundingClientRect();
-  var w = width || rect.width;
-  var h = height || rect.height;
+  var parentW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
+  var w = width || rect.width || parentW;
+  var h = height || rect.height || 300;
   if (cache && cache.w === w && cache.h === h) {
     return { ctx: cache.ctx, w: w, h: h };
   }
