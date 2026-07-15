@@ -52,10 +52,10 @@ const AuthManager = (function () {
 
   function login(username, password, remember) {
     if (!username || !password) {
-      return { success: false, error: 'Please fill in all fields' };
+      return { success: false, error: __('auth.validation.allFields') };
     }
     if (password.length < 3) {
-      return { success: false, error: 'Password must be at least 3 characters' };
+      return { success: false, error: __('auth.validation.passwordLength') };
     }
 
     currentUser = {
@@ -137,30 +137,30 @@ const AuthManager = (function () {
                 '</linearGradient>',
               '</defs>',
             '</svg>',
-            '<h1 class="auth-card__title">Sign in to SaaSify</h1>',
-            '<p class="auth-card__subtitle">Enter your credentials to access the dashboard</p>',
+            '<h1 class="auth-card__title">' + __('auth.login.title') + '</h1>',
+            '<p class="auth-card__subtitle">' + __('auth.login.subtitle') + '</p>',
           '</div>',
           '<form class="auth-card__body" id="loginForm">',
             '<div class="form-group">',
-              '<label class="form-label" for="loginUsername">Username or Email</label>',
-              '<input type="text" class="form-input" id="loginUsername" name="username" placeholder="Enter your username" autocomplete="username" required autofocus>',
+              '<label class="form-label" for="loginUsername">' + __('auth.login.usernameLabel') + '</label>',
+              '<input type="text" class="form-input" id="loginUsername" name="username" placeholder="' + __('auth.login.usernamePlaceholder') + '" autocomplete="username" required autofocus>',
             '</div>',
             '<div class="form-group">',
-              '<label class="form-label" for="loginPassword">Password</label>',
-              '<input type="password" class="form-input" id="loginPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>',
+              '<label class="form-label" for="loginPassword">' + __('auth.login.passwordLabel') + '</label>',
+              '<input type="password" class="form-input" id="loginPassword" name="password" placeholder="' + __('auth.login.passwordPlaceholder') + '" autocomplete="current-password" required>',
             '</div>',
             '<div class="auth-card__options">',
               '<label class="toggle" id="rememberToggle">',
                 '<div class="toggle__track"></div>',
-                '<span style="font-size:var(--font-sm);color:var(--text-secondary)">Remember me</span>',
+                '<span style="font-size:var(--font-sm);color:var(--text-secondary)">' + __('auth.login.rememberMe') + '</span>',
               '</label>',
-              '<a href="#" class="auth-card__forgot" onclick="ToastSystem.info(\'Password reset is not available in demo\')">Forgot password?</a>',
+              '<a href="#" class="auth-card__forgot" onclick="ToastSystem.info(\'' + __('auth.login.noPasswordReset') + '\')">' + __('auth.login.forgotPassword') + '</a>',
             '</div>',
-            '<button type="submit" class="btn btn--primary btn--lg auth-card__btn">Sign In</button>',
+            '<button type="submit" class="btn btn--primary btn--lg auth-card__btn">' + __('auth.login.signIn') + '</button>',
             '<div class="auth-card__error" id="loginError" style="display:none"></div>',
           '</form>',
           '<div class="auth-card__footer">',
-            '<span style="font-size:var(--font-sm);color:var(--text-tertiary)">Demo: any username / password (3+ chars)</span>',
+            '<span style="font-size:var(--font-sm);color:var(--text-tertiary)">' + __('auth.login.demoHint') + '</span>',
           '</div>',
         '</div>',
       '</div>'

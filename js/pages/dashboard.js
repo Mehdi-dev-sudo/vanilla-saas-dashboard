@@ -7,13 +7,13 @@ const DashboardPage = (function () {
     var savedOrder = loadWidgetOrder();
 
     var widgets = [
-      { id: 'stats', title: 'Key Metrics', render: renderStatsSection, default: true },
-      { id: 'charts', title: 'Charts', render: renderChartsSection, default: true },
-      { id: 'transactions', title: 'Recent Transactions', render: renderTransactionsSection, default: true },
-      { id: 'traffic', title: 'Traffic Sources', render: renderTrafficSection, default: true },
-      { id: 'shortcuts', title: 'Quick Actions', render: renderQuickActions, default: settings.showQuickActions !== false },
-      { id: 'activity', title: 'Recent Activity', render: renderActivitySection, default: settings.showActivityLog !== false },
-      { id: 'recentUsers', title: 'Recent Users', render: renderRecentUsers, default: true }
+      { id: 'stats', title: __('dashboard.widget.keyMetrics'), render: renderStatsSection, default: true },
+      { id: 'charts', title: __('dashboard.widget.charts'), render: renderChartsSection, default: true },
+      { id: 'transactions', title: __('dashboard.widget.recentTransactions'), render: renderTransactionsSection, default: true },
+      { id: 'traffic', title: __('dashboard.widget.trafficSources'), render: renderTrafficSection, default: true },
+      { id: 'shortcuts', title: __('dashboard.widget.quickActions'), render: renderQuickActions, default: settings.showQuickActions !== false },
+      { id: 'activity', title: __('dashboard.widget.recentActivity'), render: renderActivitySection, default: settings.showActivityLog !== false },
+      { id: 'recentUsers', title: __('dashboard.widget.recentUsers'), render: renderRecentUsers, default: true }
     ];
 
     widgetOrder = savedOrder.length === widgets.length ? savedOrder : widgets.map(function (w) { return w.id; });
@@ -22,17 +22,17 @@ const DashboardPage = (function () {
     return `
       <div class="page-header">
         <div>
-          <h1 class="page-header__title">Dashboard</h1>
-          <p class="page-header__subtitle">Welcome back${AuthManager.isLoggedIn ? ', ' + AuthManager.getUser().name : ''}! Here's what's happening today.</p>
+          <h1 class="page-header__title">${__('dashboard.title')}</h1>
+          <p class="page-header__subtitle">${__('dashboard.subtitle', { name: AuthManager.isLoggedIn ? AuthManager.getUser().name : '' })}</p>
         </div>
         <div class="page-header__actions">
           <button class="btn btn--ghost btn--sm" id="widgetConfigBtn" title="Configure widgets">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            Widgets
+            ${__('dashboard.widgets.button')}
           </button>
           <button class="btn btn--secondary btn--sm" id="exportDashboardBtn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            Export
+            ${__('dashboard.export.button')}
           </button>
         </div>
       </div>
