@@ -126,6 +126,7 @@ var AnimationEngine = (function () {
 
   function microRipple(e, el) {
     if (reducedMotion) return;
+    if (!document.body.contains(el)) return;
     var rect = el.getBoundingClientRect();
     var x = (e.clientX !== undefined ? e.clientX : e.touches[0].clientX) - rect.left;
     var y = (e.clientY !== undefined ? e.clientY : e.touches[0].clientY) - rect.top;
@@ -136,7 +137,7 @@ var AnimationEngine = (function () {
     el.style.position = 'relative';
     el.style.overflow = 'hidden';
     el.appendChild(ripple);
-    ripple.addEventListener('animationend', function () { ripple.remove(); });
+    ripple.addEventListener('animationend', function () { if (ripple.parentNode) ripple.remove(); });
   }
 
   function init() {

@@ -27,21 +27,20 @@ const ExportManager = {
 
   exportDashboard() {
     var state = AppStore.getState();
-    var stats = AppStore.getStats();
+    var stats = AppStore.getDashboardStats();
     var lines = [];
     lines.push('=== Dashboard Report ===');
     lines.push('Generated: ' + new Date().toLocaleString());
     lines.push('');
     lines.push('--- Key Metrics ---');
-    lines.push('Total Revenue: ' + I18n.formatCurrency(stats.totalRevenue));
-    lines.push('Active Users: ' + I18n.formatNumber(stats.activeUsers));
-    lines.push('Total Users: ' + I18n.formatNumber(stats.totalUsers));
-    lines.push('Total Transactions: ' + I18n.formatNumber(stats.totalTransactions));
-    lines.push('Conversion Rate: ' + stats.conversionRate + '%');
+    lines.push('Total Revenue: ' + Utils.formatCurrency(stats.revenue.value));
+    lines.push('Active Users: ' + Utils.formatNumber(stats.users.value));
+    lines.push('Subscribers: ' + Utils.formatNumber(stats.subscribers.value));
+    lines.push('Churn Rate: ' + Utils.formatPercent(stats.churn.value));
     lines.push('');
     lines.push('--- Top Transactions ---');
     (state.transactions || []).slice(0, 10).forEach(function (t) {
-      lines.push(t.invoice + ' | ' + t.customer + ' | ' + I18n.formatCurrency(t.amount) + ' | ' + t.status + ' | ' + t.date);
+      lines.push(t.invoice + ' | ' + Utils.escapeHtml(t.customer) + ' | ' + Utils.formatCurrency(t.amount) + ' | ' + t.status + ' | ' + t.date);
     });
     this.download('dashboard-report-' + new Date().toISOString().slice(0, 10) + '.txt', lines.join('\n'));
     ActivityLog.add('export', 'Dashboard report exported', 'export');

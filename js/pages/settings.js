@@ -134,7 +134,7 @@ const SettingsPage = (function () {
         if (key === 'animations') document.documentElement.classList.toggle('no-animations', !isActive);
         if (key === 'reducedMotion') document.documentElement.classList.toggle('reduced-motion', isActive);
         if (key === 'compactView') document.documentElement.classList.toggle('compact-view', isActive);
-        if (key === 'sidebarCollapsed') document.body.classList.toggle('sidebar-collapsed', isActive);
+        if (key === 'sidebarCollapsed') document.querySelector('.sidebar').classList.toggle('collapsed', isActive);
       }
       toggle.addEventListener('click', toggleActive);
       toggle.addEventListener('keydown', function (e) {
@@ -238,8 +238,8 @@ const SettingsPage = (function () {
     var d = map[density] || map.comfortable;
     document.documentElement.style.setProperty('--sidebar-width', d.sidebar);
     document.documentElement.style.setProperty('--header-height', d.header);
-    document.querySelector('.content').style.padding = d.content;
-    document.querySelector('.content').style.gap = d.gap;
+    var content = document.querySelector('.content');
+    if (content) { content.style.padding = d.content; content.style.gap = d.gap; }
   }
 
   return { render: render, init: init };

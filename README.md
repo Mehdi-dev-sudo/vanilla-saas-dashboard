@@ -54,6 +54,8 @@ A production-grade analytics dashboard built with **vanilla JavaScript** — no 
 | 24 | **Search Count** — Result count with query display in tables | ✅ |
 | 25 | **Custom Context Menu** — Right-click on table rows (Edit, Delete, Copy, Duplicate) | ✅ |
 | 26 | **Keyboard Shortcuts Help** — Ctrl+/ reference modal | ✅ |
+| 27 | **i18n / RTL** — Internationalization system with EN/FA, locale-aware dates, numbers, currency | ✅ |
+| 28 | **Real Export** — Downloadable reports (dashboard .txt, analytics .csv, settings .json) with import | ✅ |
 
 ---
 
@@ -70,10 +72,14 @@ vanilla-saas-dashboard/
 ├── css/
 │   └── main.css                  # 1400+ line design system (ITCSS + BEM)
 ├── js/
+│   ├── i18n/
+│   │   ├── i18n.js               # Translation engine with locale switching
+│   │   └── translations.js       # EN + FA dictionaries (~340 keys each)
 │   ├── app.js                    # Application bootstrap & module integration
 │   ├── core/
 │   │   ├── router.js             # Hash-based SPA router with auth guards
-│   │   └── utils.js              # Formatters, animators, debounce, HTML escape
+│   │   ├── utils.js              # Formatters, animators, debounce, HTML escape
+│   │   └── export.js             # Export manager (CSV, JSON, .txt report)
 │   ├── data/
 │   │   ├── api.js                # HTTP client: fetch, retry, cache, offline fallback
 │   │   ├── data.js               # State management with localStorage persistence
@@ -265,7 +271,7 @@ npm test
 | ✅ | **View Transition API** — cross-document view transitions with fallback |
 | ✅ | **Spring Animations** — spring-based physics for micro-interactions |
 | Q1 2027 | **End-to-End Tests** — Playwright or Cypress for critical user flows |
-| Q1 2027 | **i18n** — Full internationalization with RTL support |
+| ✅ | **i18n** — Full internationalization with RTL support |
 | Q1 2027 | **Theme Builder** — Custom accent color picker with preview |
 
 ---

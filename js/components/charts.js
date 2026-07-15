@@ -268,7 +268,7 @@ function setupCanvas(canvas, width, height) {
       ctx.font = '12px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('Total', cx, cy - 12);
+      ctx.fillText(typeof I18n !== 'undefined' ? I18n.__('chart.total') : 'Total', cx, cy - 12);
       ctx.fillStyle = colors.textPrimary;
       ctx.font = 'bold 20px Inter, sans-serif';
       ctx.fillText(total + '%', cx, cy + 14);

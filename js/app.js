@@ -38,21 +38,30 @@
   function initApiData() {
     var statusEl = document.getElementById('apiStatus');
     if (!statusEl) return;
+    var results = [];
 
-    Promise.all([
-      ApiClient.fetchUsers().then(function (users) {
-        try { (AppStore.getState('users') || []).length <= 10 && AppStore.setState('users', users); } catch (e) { /* ignore */ }
-      }).catch(function () { /* fallback to mock */ }),
-      ApiClient.fetchTransactions().then(function (tx) {
-        try { (AppStore.getState('transactions') || []).length <= 10 && AppStore.setState('transactions', tx); } catch (e) { /* ignore */ }
-      }).catch(function () { /* fallback to mock */ })
-    ]).then(function () {
-      statusEl.textContent = 'API ✓';
-      statusEl.className = 'header__api-status header__api-status--online';
-    }).catch(function () {
-      statusEl.textContent = 'Mock';
-      statusEl.className = 'header__api-status header__api-status--offline';
-    });
+    function trackResult(success) {
+      results.push(success);
+      if (results.length === 2) {
+        var allOk = results.every(function (r) { return r; });
+        if (allOk) {
+          statusEl.textContent = 'API ✓';
+          statusEl.className = 'header__api-status header__api-status--online';
+        } else {
+          statusEl.textContent = results.some(function (r) { return r; }) ? 'Partial' : 'Mock';
+          statusEl.className = 'header__api-status header__api-status--offline';
+        }
+      }
+    }
+
+    ApiClient.fetchUsers().then(function (users) {
+      try { (AppStore.getState('users') || []).length <= 10 && AppStore.setState('users', users); } catch (e) { /* ignore */ }
+      trackResult(true);
+    }).catch(function () { trackResult(false); });
+    ApiClient.fetchTransactions().then(function (tx) {
+      try { (AppStore.getState('transactions') || []).length <= 10 && AppStore.setState('transactions', tx); } catch (e) { /* ignore */ }
+      trackResult(true);
+    }).catch(function () { trackResult(false); });
   }
 
   document.addEventListener('visibilitychange', function () {
@@ -65,7 +74,9 @@
       window.__clockInterval = setInterval(updateClock, 1000);
       window.__onlineInterval = setInterval(updateOnline, 8000);
       window.__updatedInterval = setInterval(updateLastUpdated, 30000);
-      if (typeof DashboardPage !== 'undefined' && DashboardPage.startRealtimeUpdates) DashboardPage.startRealtimeUpdates();
+      if (typeof DashboardPage !== 'undefined' && DashboardPage.startRealtimeUpdates && Router.getCurrentRoute() === 'dashboard') {
+        DashboardPage.startRealtimeUpdates();
+      }
     }
   });
 
@@ -242,6 +253,12 @@
   }
 
   var gotoBuffer = '';
+  var gotoBufferTimer = null;
+
+  function resetGotoBufferTimeout() {
+    if (gotoBufferTimer) clearTimeout(gotoBufferTimer);
+    gotoBufferTimer = setTimeout(function () { gotoBuffer = ''; gotoBufferTimer = null; }, 1500);
+  }
 
   function isTyping() {
     var tag = document.activeElement ? document.activeElement.tagName : '';
@@ -271,6 +288,7 @@
         if (gotoBuffer === 'gu') { Router.navigate('users'); gotoBuffer = ''; }
         if (gotoBuffer === 'gt') { Router.navigate('transactions'); gotoBuffer = ''; }
         if (gotoBuffer === 'gs') { Router.navigate('settings'); gotoBuffer = ''; }
+        resetGotoBufferTimeout();
       }
     });
 
