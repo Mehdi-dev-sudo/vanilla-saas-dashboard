@@ -79,7 +79,7 @@ const SupportPage = (function () {
   function renderFaqItem(index, question, answer) {
     return `
       <div class="faq-item" data-faq="${index}">
-        <div class="faq-item__question">
+        <div class="faq-item__question" tabindex="0" role="button" aria-expanded="false">
           <span>${question}</span>
           <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -88,18 +88,30 @@ const SupportPage = (function () {
     `;
   }
 
+  function toggleFaq(e) {
+    var item = this.closest('.faq-item');
+    var isOpen = item.classList.contains('open');
+    var question = item.querySelector('.faq-item__question');
+
+    document.querySelectorAll('.faq-item.open').forEach(function (openItem) {
+      openItem.classList.remove('open');
+      var q = openItem.querySelector('.faq-item__question');
+      if (q) q.setAttribute('aria-expanded', 'false');
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      if (question) question.setAttribute('aria-expanded', 'true');
+    }
+  }
+
   function init() {
     document.querySelectorAll('.faq-item__question').forEach(function (q) {
-      q.addEventListener('click', function () {
-        const item = this.closest('.faq-item');
-        const isOpen = item.classList.contains('open');
-
-        document.querySelectorAll('.faq-item.open').forEach(function (openItem) {
-          openItem.classList.remove('open');
-        });
-
-        if (!isOpen) {
-          item.classList.add('open');
+      q.addEventListener('click', toggleFaq);
+      q.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleFaq.call(this, e);
         }
       });
     });

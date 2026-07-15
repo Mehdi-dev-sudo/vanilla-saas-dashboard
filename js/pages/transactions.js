@@ -84,18 +84,21 @@ const TransactionsPage = (function () {
     document.getElementById('transactionSearch').addEventListener('input', Utils.debounce(function () {
       currentSearch = this.value;
       currentPage = 1;
+      document.getElementById('transactionsTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     }, 300));
 
     document.getElementById('transactionStatusFilter').addEventListener('change', function () {
       currentStatus = this.value;
       currentPage = 1;
+      document.getElementById('transactionsTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     });
 
     document.getElementById('transactionMethodFilter').addEventListener('change', function () {
       currentMethod = this.value;
       currentPage = 1;
+      document.getElementById('transactionsTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     });
 
