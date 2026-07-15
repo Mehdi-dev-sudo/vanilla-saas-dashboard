@@ -167,12 +167,13 @@ const DashboardPage = (function () {
             <table class="table">
               <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
               <tbody>
-                ${transactions.map(function (t) {
+                ${transactions.length === 0 ? '<tr><td colspan="5"><div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions yet</p></div></td></tr>' :
+                  transactions.map(function (t) {
                   return '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
                     '<td><strong>' + t.invoice + '</strong></td>' +
                     '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
                     '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
-                    '<td><span class="status-badge status-badge--' + t.status + '">' + t.status.charAt(0).toUpperCase() + t.status.slice(1) + '</span></td>' +
+                    '<td><span class="status-badge status-badge--' + t.status + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + '</span></td>' +
                     '<td>' + Utils.formatShortDate(t.date) + '</td>' +
                   '</tr>';
                 }).join('')}
@@ -293,16 +294,17 @@ const DashboardPage = (function () {
           <a class="card__link" onclick="Router.navigate('users')">View All</a>
         </div>
         <div class="card__body" style="padding-top:var(--space-sm)">
-          ${users.map(function (u) {
+          ${users.length === 0 ? '<div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><p class="empty-state__text">No users yet</p></div></td></tr>' :
+            users.map(function (u) {
             var initials = u.name.split(' ').map(function (n) { return n[0]; }).join('').slice(0, 2);
             var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : '#6366f1';
             return '<div class="activity-item">' +
               '<div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div>' +
               '<div class="activity-item__content">' +
                 '<div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div>' +
-                '<div class="activity-item__time">' + u.role + ' - ' + u.plan + ' Plan</div>' +
+                '<div class="activity-item__time">' + Utils.escapeHtml(u.role + ' - ' + u.plan + ' Plan') + '</div>' +
               '</div>' +
-              '<span class="status-badge status-badge--' + u.status + '">' + u.status.charAt(0).toUpperCase() + u.status.slice(1) + '</span>' +
+              '<span class="status-badge status-badge--' + u.status + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + '</span>' +
             '</div>';
           }).join('')}
         </div>
