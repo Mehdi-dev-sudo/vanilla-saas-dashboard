@@ -315,7 +315,7 @@ const DashboardPage = (function () {
   function init() {
     var stats = AppStore.getDashboardStats();
     animateStats(stats);
-    drawCharts();
+    requestAnimationFrame(function () { drawCharts(); });
     startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();
