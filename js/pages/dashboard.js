@@ -319,8 +319,8 @@ const DashboardPage = (function () {
     setupDragReorder();
 
     document.getElementById('exportDashboardBtn').addEventListener('click', function () {
-      ToastSystem.success('Dashboard exported successfully');
-      ActivityLog.add('export', 'Exported dashboard view', 'export');
+      ExportManager.exportDashboard();
+      ToastSystem.success(__('toast.dashboard.exported'));
     });
 
     return function cleanup() { cancelAnimationFrames(); stopRealtimeUpdates(); };
