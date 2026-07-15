@@ -7,19 +7,19 @@ const Router = (function () {
   var loaderEl = document.getElementById('pageLoader');
 
   var routeMeta = {
-    dashboard: { title: 'Dashboard', icon: 'grid', parent: null },
-    analytics: { title: 'Analytics', icon: 'bar-chart-2', parent: 'Dashboard' },
-    users: { title: 'Users', icon: 'users', parent: 'Management' },
-    transactions: { title: 'Transactions', icon: 'credit-card', parent: 'Management' },
-    settings: { title: 'Settings', icon: 'settings', parent: null },
-    support: { title: 'Support', icon: 'help-circle', parent: null },
-    error: { title: 'Error', icon: 'alert-triangle', parent: null }
+    dashboard: { title: function () { return __('route.dashboard'); }, icon: 'grid', parent: null },
+    analytics: { title: function () { return __('route.analytics'); }, icon: 'bar-chart-2', parent: null },
+    users: { title: function () { return __('route.users'); }, icon: 'users', parent: null },
+    transactions: { title: function () { return __('route.transactions'); }, icon: 'credit-card', parent: null },
+    settings: { title: function () { return __('route.settings'); }, icon: 'settings', parent: null },
+    support: { title: function () { return __('route.support'); }, icon: 'help-circle', parent: null },
+    error: { title: function () { return __('route.error'); }, icon: 'alert-triangle', parent: null }
   };
 
   function renderBreadcrumbs(route) {
     var m = routeMeta[route];
     if (!m || !m.parent) return '';
-    return '<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#dashboard" class="breadcrumbs__link">Home</a><span class="breadcrumbs__sep">/</span><span class="breadcrumbs__current">' + m.title + '</span></nav>';
+    return '<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#dashboard" class="breadcrumbs__link">' + __('breadcrumb.home') + '</a><span class="breadcrumbs__sep">/</span><span class="breadcrumbs__current">' + (typeof m.title === 'function' ? m.title() : m.title) + '</span></nav>';
   }
 
   function register(name, handler) {
@@ -139,7 +139,7 @@ const Router = (function () {
 
   function updatePageMeta(route) {
     var m = routeMeta[route] || routeMeta.dashboard;
-    document.title = m.title + ' — Vanilla SaaS Dashboard';
+    document.title = (typeof m.title === 'function' ? m.title() : m.title) + ' — Vanilla SaaS Dashboard';
   }
 
   function init() {

@@ -9,6 +9,7 @@
       Router.register('support', SupportPage);
       Router.register('error', ErrorPage);
 
+      I18n.init();
       HistoryManager.init();
       AuthManager.init();
       SidebarManager.init();
