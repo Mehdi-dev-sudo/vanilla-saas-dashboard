@@ -85,18 +85,21 @@ const UsersPage = (function () {
     searchInput.addEventListener('input', Utils.debounce(function () {
       currentSearch = this.value;
       currentPage = 1;
+      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     }, 300));
 
     document.getElementById('userStatusFilter').addEventListener('change', function () {
       currentStatus = this.value;
       currentPage = 1;
+      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
     document.getElementById('userRoleFilter').addEventListener('change', function () {
       currentRole = this.value;
       currentPage = 1;
+      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
