@@ -84,7 +84,10 @@ const SettingsPage = (function () {
         </div>
       </div>
 
-      <div class="settings-actions" style="margin-top:var(--space-xl)">
+      <div class="settings-actions" style="margin-top:var(--space-xl);display:flex;gap:var(--space-sm);flex-wrap:wrap">
+        <button class="btn btn--secondary" id="exportSettingsBtn">Export Settings</button>
+        <button class="btn btn--secondary" id="importSettingsBtn">Import Settings</button>
+        <input type="file" id="importSettingsFile" accept=".json" style="display:none">
         <button class="btn btn--secondary" id="resetSettingsBtn">Reset to Defaults</button>
         <button class="btn btn--primary" id="saveSettingsBtn">Save Changes</button>
       </div>
@@ -160,6 +163,19 @@ const SettingsPage = (function () {
       document.getElementById('themeStatus').textContent = ThemeManager.getCurrent() === 'dark' ? 'Dark' : 'Light';
       ActivityLog.add('theme', 'Theme changed to ' + ThemeManager.getCurrent(), 'theme');
       setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 350);
+    });
+
+    document.getElementById('exportSettingsBtn').addEventListener('click', function () {
+      ExportManager.exportSettings();
+    });
+
+    document.getElementById('importSettingsBtn').addEventListener('click', function () {
+      document.getElementById('importSettingsFile').click();
+    });
+
+    document.getElementById('importSettingsFile').addEventListener('change', function () {
+      if (this.files && this.files[0]) ExportManager.importSettings(this.files[0]);
+      this.value = '';
     });
 
     document.getElementById('saveSettingsBtn').addEventListener('click', function () {

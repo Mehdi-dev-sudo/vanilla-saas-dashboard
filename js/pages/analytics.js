@@ -96,7 +96,8 @@ const AnalyticsPage = (function () {
     drawCharts();
 
     document.getElementById('analyticsExportBtn').addEventListener('click', function () {
-      ToastSystem.success('Analytics report exported as PDF');
+      ExportManager.exportAnalytics();
+      ToastSystem.success(__('toast.analytics.exported'));
     });
 
     document.getElementById('analyticsRefreshBtn').addEventListener('click', function () {
