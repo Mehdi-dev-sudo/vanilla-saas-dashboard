@@ -1,6 +1,8 @@
 const Utils = {
   formatCurrency(amount) {
-    return '$' + Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    var n = Number(amount);
+    if (isNaN(n) || n === undefined || n === null) return '$0';
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   },
 
   formatNumber(num) {
