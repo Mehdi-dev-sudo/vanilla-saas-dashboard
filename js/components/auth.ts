@@ -29,9 +29,9 @@ const AuthManager = (function () {
         return true;
       } catch (e) { /* ignore */ }
     }
-    var remember = localStorage.getItem(REMEMBER_KEY);
+    var remember = SafeStorage.getItem(REMEMBER_KEY);
     if (remember === 'true') {
-      var credentials = localStorage.getItem(CREDENTIALS_KEY);
+      var credentials = SafeStorage.getItem(CREDENTIALS_KEY);
       if (credentials) {
         try {
           var cred = JSON.parse(credentials);
@@ -70,15 +70,15 @@ const AuthManager = (function () {
     isAuthenticated = true;
 
     if (remember) {
-      localStorage.setItem(REMEMBER_KEY, 'true');
-      localStorage.setItem(CREDENTIALS_KEY, JSON.stringify({
+      SafeStorage.setItem(REMEMBER_KEY, 'true');
+      SafeStorage.setObject(CREDENTIALS_KEY, {
         username: username,
         name: currentUser.name,
         email: currentUser.email
-      }));
+      });
     } else {
-      localStorage.removeItem(REMEMBER_KEY);
-      localStorage.removeItem(CREDENTIALS_KEY);
+      SafeStorage.removeItem(REMEMBER_KEY);
+      SafeStorage.removeItem(CREDENTIALS_KEY);
     }
 
     updateUserDisplay();
@@ -107,8 +107,8 @@ const AuthManager = (function () {
     isAuthenticated = false;
     currentUser = null;
 
-    if (!localStorage.getItem(REMEMBER_KEY)) {
-      localStorage.removeItem(CREDENTIALS_KEY);
+    if (!SafeStorage.getItem(REMEMBER_KEY)) {
+      SafeStorage.removeItem(CREDENTIALS_KEY);
     }
 
     Router.navigate('login');

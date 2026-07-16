@@ -116,6 +116,39 @@ const Utils = {
   }
 };
 
+var SafeStorage = {
+  _quotaNotified: false,
+  getItem: function (key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  },
+  setItem: function (key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      if (e.name === 'QuotaExceededError' || e.code === 22 || e.number === -2147024882) {
+        if (!SafeStorage._quotaNotified) {
+          SafeStorage._quotaNotified = true;
+          if (typeof ToastSystem !== 'undefined') {
+            ToastSystem.error('Storage quota exceeded. Data may not be saved.');
+          }
+        }
+      }
+    }
+  },
+  removeItem: function (key) {
+    try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
+  },
+  getObject: function (key) {
+    try {
+      var data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : null;
+    } catch (e) { return null; }
+  },
+  setObject: function (key, obj) {
+    this.setItem(key, JSON.stringify(obj));
+  }
+};
+
 function fallbackCopy(text) {
   var ta = document.createElement('textarea');
   ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';

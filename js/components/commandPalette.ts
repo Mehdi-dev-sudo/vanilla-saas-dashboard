@@ -256,16 +256,12 @@ const CommandPalette = (function () {
   }
 
   function loadHistory() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      searchHistory = data ? JSON.parse(data) : [];
-    } catch (e) { searchHistory = []; }
+    var data = SafeStorage.getItem(STORAGE_KEY);
+    try { searchHistory = data ? JSON.parse(data) : []; } catch (e) { searchHistory = []; }
   }
 
   function saveHistory() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory));
-    } catch (e) { /* ignore */ }
+    SafeStorage.setObject(STORAGE_KEY, searchHistory);
   }
 
   function getIconSvg(name) {

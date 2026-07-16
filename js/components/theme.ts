@@ -2,7 +2,7 @@ const ThemeManager = (function () {
   const STORAGE_KEY = 'saas_dashboard_theme';
 
   function init() {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = SafeStorage.getItem(STORAGE_KEY);
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const theme = saved || (prefersDark ? 'dark' : 'light');
     setTheme(theme);
@@ -11,7 +11,7 @@ const ThemeManager = (function () {
     if (toggleBtn) toggleBtn.addEventListener('click', toggle);
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-      if (!localStorage.getItem(STORAGE_KEY)) {
+      if (!SafeStorage.getItem(STORAGE_KEY)) {
         setTheme(e.matches ? 'dark' : 'light');
       }
     });
@@ -23,7 +23,7 @@ const ThemeManager = (function () {
 
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(STORAGE_KEY, theme);
+    SafeStorage.setItem(STORAGE_KEY, theme);
     var toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   }

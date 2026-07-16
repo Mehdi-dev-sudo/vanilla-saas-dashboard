@@ -87,18 +87,33 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  // For all other assets, use cache-first with network update
+  // For all other assets, use cache-first with network update and old-cache fallback
   event.respondWith(
     caches.match(event.request).then(function (cached) {
       if (cached) return cached;
-      return fetch(event.request).then(function (response) {
-        if (response && response.ok) {
-          var copy = response.clone();
-          caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, copy); });
+      return caches.keys().then(function (names) {
+        var fallbackPromise = Promise.resolve(null);
+        for (var i = names.length - 1; i >= 0; i--) {
+          if (names[i] !== CACHE_NAME) {
+            fallbackPromise = fallbackPromise.then(function (result) {
+              return result || caches.open(names[i]).then(function (oldCache) {
+                return oldCache.match(event.request);
+              });
+            });
+          }
         }
-        return response;
-      }).catch(function () {
-        return caches.match('./index.html');
+        return fallbackPromise;
+      }).then(function (fromOld) {
+        if (fromOld) return fromOld;
+        return fetch(event.request).then(function (response) {
+          if (response && response.ok) {
+            var copy = response.clone();
+            caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, copy); });
+          }
+          return response;
+        }).catch(function () {
+          return caches.match('./index.html');
+        });
       });
     })
   );

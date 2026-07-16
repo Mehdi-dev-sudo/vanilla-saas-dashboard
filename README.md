@@ -4,7 +4,7 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-34%20passing-success.svg)](__tests__/)
 
-A production-grade analytics dashboard built with **vanilla JavaScript** — no frameworks, no build tools. Features real API data, PWA support, Canvas charts, command palette, and comprehensive testing.
+A production-grade analytics dashboard built with **vanilla TypeScript** — no frameworks, no runtime libraries. Features real API data, PWA support, Canvas charts, command palette, comprehensive testing, and an esbuild-powered build pipeline.
 
 ---
 
@@ -14,13 +14,14 @@ A production-grade analytics dashboard built with **vanilla JavaScript** — no 
 
 ## Performance
 
-- **Zero production dependencies** — no frameworks, no build tools, no runtime bloat
+- **Zero production dependencies** — no frameworks, no runtime libraries, no bloat
+- **esbuild build pipeline** — sub-second incremental builds, TypeScript type-stripping compilation
 - **Debounced resize/search** — 250ms / 300ms debounce prevents layout thrashing
 - **requestAnimationFrame** — all animations, FPS counter, and chart rendering use rAF
 - **Canvas HiDPI** — Retina-aware charts via `devicePixelRatio` scaling
 - **Page Visibility API** — background intervals are paused when tab is hidden
 - **Memory-safe** — animation frame IDs tracked and cleaned; error log capped at 20 entries
-- **Service Worker** — cache-first strategy for assets, network-first for HTML, offline fallback
+- **Service Worker** — cache-first with old-cache fallback, network-first for HTML, offline fallback
 
 ---
 
@@ -56,6 +57,8 @@ A production-grade analytics dashboard built with **vanilla JavaScript** — no 
 | 26 | **Keyboard Shortcuts Help** — Ctrl+/ reference modal | ✅ |
 | 27 | **i18n / RTL** — Internationalization system with EN/FA, locale-aware dates, numbers, currency | ✅ |
 | 28 | **Real Export** — Downloadable reports (dashboard .txt, analytics .csv, settings .json) with import | ✅ |
+| 29 | **TypeScript + esbuild** — Full TypeScript migration, global type declarations, sub-second esbuild builds | ✅ |
+| 30 | **UI/UX Overhaul** — Spring animations, refined shadows, press effects, shimmer skeletons, polished hover states | ✅ |
 
 ---
 
@@ -63,48 +66,63 @@ A production-grade analytics dashboard built with **vanilla JavaScript** — no 
 
 ```
 vanilla-saas-dashboard/
-├── index.html                    # Single HTML entry with semantic markup
+├── index.html                    # Single HTML entry → references dist/
 ├── manifest.json                 # PWA manifest for installable app
 ├── sw.js                         # Service worker for offline caching
-├── package.json                  # Project metadata + test configuration
+├── package.json                  # Project metadata + test + build configuration
 ├── jest.config.js                # Jest test runner configuration
+├── tsconfig.json                 # TypeScript configuration
+├── build.mjs                     # esbuild build script (node build.mjs)
 ├── __tests__/                    # 34 Jest tests for utilities and data layer
 ├── css/
 │   └── main.css                  # 1400+ line design system (ITCSS + BEM)
-├── js/
+├── js/                           # TypeScript source files
+│   ├── types/
+│   │   └── globals.d.ts          # Global type declarations for all modules
 │   ├── i18n/
-│   │   ├── i18n.js               # Translation engine with locale switching
-│   │   └── translations.js       # EN + FA dictionaries (~340 keys each)
-│   ├── app.js                    # Application bootstrap & module integration
+│   │   ├── i18n.ts               # Translation engine with locale switching
+│   │   └── translations.ts       # EN + FA dictionaries (~340 keys each)
+│   ├── app.ts                    # Application bootstrap & module integration
 │   ├── core/
-│   │   ├── router.js             # Hash-based SPA router with auth guards
-│   │   ├── utils.js              # Formatters, animators, debounce, HTML escape
-│   │   └── export.js             # Export manager (CSV, JSON, .txt report)
+│   │   ├── router.ts             # Hash-based SPA router with auth guards
+│   │   ├── utils.ts              # Formatters, animators, debounce, SafeStorage
+│   │   ├── export.ts             # Export manager (CSV, JSON, .txt report)
+│   │   └── pluginSystem.ts       # Plugin registration & hook system
 │   ├── data/
-│   │   ├── api.js                # HTTP client: fetch, retry, cache, offline fallback
-│   │   ├── data.js               # State management with localStorage persistence
-│   │   ├── history.js            # Undo/redo stack with snapshot system
-│   │   └── activity.js           # User action logging (100-entry ring buffer)
+│   │   ├── api.ts                # HTTP client: fetch, retry, cache, offline fallback
+│   │   ├── data.ts               # State management with localStorage persistence
+│   │   ├── history.ts            # Undo/redo stack with snapshot system
+│   │   └── activity.ts           # User action logging (100-entry ring buffer)
 │   ├── components/
-│   │   ├── charts.js             # Canvas 2D chart engine (line, bar, donut)
-│   │   ├── commandPalette.js     # Fuzzy-search command palette (Ctrl+K)
-│   │   ├── devConsole.js         # Developer console (Ctrl+Shift+D)
-│   │   ├── modal.js              # Modal dialog system (confirm, form)
-│   │   ├── toast.js              # Notification system (4 types)
-│   │   ├── sidebar.js            # Collapsible sidebar + mobile drawer
-│   │   ├── theme.js              # Dark/light mode with system detection
-│   │   ├── auth.js               # Authentication & session management
-│   │   ├── contextMenu.js        # Right-click contextual menu
-│   │   ├── skeleton.js           # Loading skeleton generators
-│   │   └── virtualScroll.js      # Virtual scrolling for large lists
-│   └── pages/
-│       ├── dashboard.js          # Widget dashboard with drag-reorder + real-time charts
-│       ├── analytics.js          # Analytics page with multi-chart views
-│       ├── users.js              # User CRUD with multi-select & batch ops
-│       ├── transactions.js       # Transaction table with filtering & pagination
-│       ├── settings.js           # Settings with 18 customizable options
-│       ├── support.js            # FAQ accordion & contact form
-│       └── error.js              # 404/500/Network error pages
+│   │   ├── charts.ts             # Canvas 2D chart engine (line, bar, donut)
+│   │   ├── commandPalette.ts     # Fuzzy-search command palette (Ctrl+K)
+│   │   ├── devConsole.ts         # Developer console (Ctrl+Shift+D)
+│   │   ├── modal.ts              # Modal dialog system (confirm, form)
+│   │   ├── toast.ts              # Notification system (4 types)
+│   │   ├── sidebar.ts            # Collapsible sidebar + mobile drawer
+│   │   ├── theme.ts              # Dark/light mode with system detection
+│   │   ├── auth.ts               # Authentication & session management
+│   │   ├── contextMenu.ts        # Right-click contextual menu
+│   │   ├── skeleton.ts           # Loading skeleton generators
+│   │   ├── animations.ts         # Spring physics, FLIP, View Transition polyfill
+│   │   └── virtualScroll.ts      # Virtual scrolling for large lists
+│   ├── pages/
+│   │   ├── dashboard.ts          # Widget dashboard with drag-reorder + real-time charts
+│   │   ├── analytics.ts          # Analytics page with multi-chart views
+│   │   ├── users.ts              # User CRUD with multi-select & batch ops
+│   │   ├── transactions.ts       # Transaction table with filtering & pagination
+│   │   ├── settings.ts           # Settings with 18 customizable options
+│   │   ├── support.ts            # FAQ accordion & contact form
+│   │   └── error.ts              # 404/500/Network error pages
+│   └── plugins/
+│       └── perfMonitor.ts        # FPS, memory, DOM node monitoring
+├── dist/                         # esbuild build output (gitignored)
+│   ├── index.html                # Copied from root
+│   ├── css/main.css              # Copied from css/
+│   ├── sw.js                     # Copied from root
+│   └── js/                       # Compiled .js files (one per source .ts)
+├── plugins/
+│   └── README.md                 # Plugin development guide
 ├── .github/                      # Issue templates, PR template, community health
 ├── CHANGELOG.md, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md
 └── LICENSE (MIT)
@@ -221,9 +239,10 @@ ApiClient.fetch(url)
 | Virtual scroll for large datasets | `VirtualScroll.createTable` |
 | Skeleton loading during transitions | Router page loader |
 | CSS containment | `content-visibility: auto;` on scrollable areas |
-| localStorage batching | Single save call per mutation |
+| localStorage batching | Single save call per mutation via `SafeStorage` |
 | Animation frame cleanup | All RAF IDs tracked and cancelled on unmount |
 | Lazy module initialization | Components self-register on first use |
+| esbuild build pipeline | Sub-second incremental builds, TypeScript type-stripping |
 
 ---
 
@@ -233,13 +252,24 @@ ApiClient.fetch(url)
 # Clone the repository
 git clone https://github.com/Mehdi-dev-sudo/vanilla-saas-dashboard.git
 
-# Open in browser (no build step required)
+# Install dependencies (TypeScript, esbuild, Jest)
 cd vanilla-saas-dashboard
-start index.html
+npm install
+
+# Build the project (compiles TypeScript → dist/)
+npm run build
+
+# Open in browser
+start dist/index.html
+
+# Development — watch mode with auto-rebuild
+npm run watch
 
 # Run tests
-npm install
 npm test
+
+# Type-check (optional — strict mode w/ 200+ known issues)
+npm run typecheck
 ```
 
 **Demo Credentials:**
@@ -270,9 +300,11 @@ npm test
 | ✅ | **FLIP Animations** — smooth list reordering with FLIP technique |
 | ✅ | **View Transition API** — cross-document view transitions with fallback |
 | ✅ | **Spring Animations** — spring-based physics for micro-interactions |
+| ✅ | **TypeScript Migration** — 31 source files migrated, esbuild pipeline, global types |
+| ✅ | **UI/UX Overhaul** — spring curves, elevated shadows, press effects, shimmer skeletons |
 | Q1 2027 | **End-to-End Tests** — Playwright or Cypress for critical user flows |
-| ✅ | **i18n** — Full internationalization with RTL support |
 | Q1 2027 | **Theme Builder** — Custom accent color picker with preview |
+| Q1 2027 | **Strict TypeScript** — Resolve 200+ strict-mode type errors for full type safety |
 
 ---
 

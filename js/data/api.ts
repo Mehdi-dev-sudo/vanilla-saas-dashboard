@@ -7,34 +7,32 @@ const ApiClient = (function () {
   }
 
   function loadCache(url) {
-    try {
-      var key = getCacheKey(url);
-      var cached = localStorage.getItem(key);
-      if (cached) {
+    var key = getCacheKey(url);
+    var cached = SafeStorage.getItem(key);
+    if (cached) {
+      try {
         var parsed = JSON.parse(cached);
         if (parsed.expiry > Date.now()) {
           return parsed.data;
         }
-        localStorage.removeItem(key);
-      }
-    } catch (e) { /* ignore */ }
+        SafeStorage.removeItem(key);
+      } catch (e) { /* ignore */ }
+    }
     return null;
   }
 
   function saveCache(url, data, ttlMs) {
-    try {
-      var key = getCacheKey(url);
-      localStorage.setItem(key, JSON.stringify({ data: data, expiry: Date.now() + (ttlMs || 120000) }));
-    } catch (e) { /* ignore */ }
+    var key = getCacheKey(url);
+    SafeStorage.setObject(key, { data: data, expiry: Date.now() + (ttlMs || 120000) });
   }
 
   function clearCache() {
-    try {
-      Object.keys(localStorage).forEach(function (k) {
-        if (k.startsWith('api_cache_')) localStorage.removeItem(k);
-      });
-      cache = {};
-    } catch (e) { /* ignore */ }
+    var keys = [];
+    for (var k in localStorage) {
+      if (localStorage.hasOwnProperty(k) && k.startsWith('api_cache_')) keys.push(k);
+    }
+    keys.forEach(function (k) { SafeStorage.removeItem(k); });
+    cache = {};
   }
 
   function fetchWithTimeout(url, options, timeoutMs) {

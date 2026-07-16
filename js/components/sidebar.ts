@@ -6,7 +6,7 @@ const SidebarManager = (function () {
 
   function init() {
     try {
-      if (localStorage.getItem('sidebar_collapsed') === 'true' && sidebar) {
+      if (SafeStorage.getItem('sidebar_collapsed') === 'true' && sidebar) {
         sidebar.classList.add('collapsed');
       }
       if (collapseBtn) collapseBtn.addEventListener('click', toggleCollapse);
@@ -36,7 +36,7 @@ const SidebarManager = (function () {
 
   function toggleCollapse() {
     sidebar.classList.toggle('collapsed');
-    localStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
+    SafeStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
     setTimeout(function () {
       window.dispatchEvent(new Event('resize'));
     }, 350);

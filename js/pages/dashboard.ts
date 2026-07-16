@@ -457,23 +457,19 @@ const DashboardPage = (function () {
   }
 
   function loadWidgetOrder() {
-    try { return JSON.parse(localStorage.getItem('saas_widget_order')) || []; }
-    catch (e) { return []; }
+    return SafeStorage.getObject('saas_widget_order') || [];
   }
 
   function saveWidgetOrder() {
-    try { localStorage.setItem('saas_widget_order', JSON.stringify(widgetOrder)); }
-    catch (e) { /* ignore */ }
+    SafeStorage.setObject('saas_widget_order', widgetOrder);
   }
 
   function getHiddenWidgets() {
-    try { return JSON.parse(localStorage.getItem('saas_hidden_widgets')) || []; }
-    catch (e) { return []; }
+    return SafeStorage.getObject('saas_hidden_widgets') || [];
   }
 
   function saveHiddenWidgets() {
-    try { localStorage.setItem('saas_hidden_widgets', JSON.stringify(hiddenWidgets)); }
-    catch (e) { /* ignore */ }
+    SafeStorage.setObject('saas_hidden_widgets', hiddenWidgets);
   }
 
   var animFrameIds = [];
@@ -483,6 +479,12 @@ const DashboardPage = (function () {
   }
 
   function refresh() {
+    var contentEl = document.getElementById('appContent');
+    if (!contentEl) return;
+    var statsSection = contentEl.querySelector('.stats');
+    if (statsSection) {
+      statsSection.outerHTML = renderStatsSection();
+    }
     reinitCharts();
   }
 
