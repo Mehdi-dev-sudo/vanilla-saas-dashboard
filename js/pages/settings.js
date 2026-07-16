@@ -212,7 +212,7 @@ const SettingsPage = (function () {
     if (settings.animations === false) document.documentElement.classList.add('no-animations');
     if (settings.compactView) document.documentElement.classList.add('compact-view');
     if (settings.reducedMotion) document.documentElement.classList.add('reduced-motion');
-    if (settings.sidebarCollapsed) { document.body.classList.add('sidebar-collapsed'); };
+    if (settings.sidebarCollapsed) { document.querySelector('.sidebar').classList.add('collapsed'); };
   }
 
   function applyAccentColor(color) {

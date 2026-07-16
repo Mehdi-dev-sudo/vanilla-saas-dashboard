@@ -294,7 +294,7 @@ const DashboardPage = (function () {
           <a class="card__link" onclick="Router.navigate('users')">View All</a>
         </div>
         <div class="card__body" style="padding-top:var(--space-sm)">
-          ${users.length === 0 ? '<div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><p class="empty-state__text">No users yet</p></div></td></tr>' :
+          ${users.length === 0 ? '<div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><p class="empty-state__text">No users yet</p></div>' :
             users.map(function (u) {
             var initials = u.name.split(' ').map(function (n) { return n[0]; }).join('').slice(0, 2);
             var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : '#6366f1';
@@ -419,7 +419,12 @@ const DashboardPage = (function () {
         else { hiddenWidgets = hiddenWidgets.filter(function (h) { return h !== id; }); }
         saveHiddenWidgets();
         var widget = document.querySelector('[data-widget-id="' + id + '"]');
-        if (widget) widget.style.display = hide ? 'none' : '';
+        if (widget) {
+          widget.style.display = hide ? 'none' : '';
+          if (!hide && (id === 'charts' || id === 'traffic')) {
+            requestAnimationFrame(function () { drawCharts(); });
+          }
+        }
       });
     });
   }

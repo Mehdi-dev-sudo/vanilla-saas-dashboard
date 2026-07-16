@@ -53,7 +53,10 @@ const SidebarManager = (function () {
     sidebar.classList.remove('open');
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    var modal = document.getElementById('modalOverlay');
+    if (!modal || !modal.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
   }
 
   return { init, toggleCollapse, openMobile, closeMobile };
