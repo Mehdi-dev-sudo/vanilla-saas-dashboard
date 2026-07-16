@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-import { readdirSync, statSync, cpSync, mkdirSync, existsSync } from 'fs';
+import { readdirSync, statSync, cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -39,8 +39,14 @@ async function build() {
   if (!existsSync(cssDst)) mkdirSync(cssDst, { recursive: true });
   cpSync(join(__dirname, 'css'), cssDst, { recursive: true });
 
-  // Copy static root files
-  for (const f of ['manifest.json', 'sw.js', 'index.html']) {
+  // Copy index.html, stripping "dist/" prefix from paths for dist/ serving
+  const htmlPath = join(__dirname, 'index.html');
+  const htmlContent = readFileSync(htmlPath, 'utf8');
+  const distHtml = htmlContent.replace(/(src|href)="dist\//g, '$1="');
+  writeFileSync(join(__dirname, 'dist', 'index.html'), distHtml);
+
+  // Copy manifest.json and sw.js
+  for (const f of ['manifest.json', 'sw.js']) {
     try { cpSync(join(__dirname, f), join(__dirname, 'dist', f)); } catch (e) {}
   }
 
