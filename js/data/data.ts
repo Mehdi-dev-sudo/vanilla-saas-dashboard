@@ -75,20 +75,18 @@ const AppStore = (function () {
   }
 
   function loadState() {
-    try {
-      const saved = localStorage.getItem('saas_dashboard_state');
-      if (saved) {
-        const parsed = JSON.parse(saved);
+    var saved = SafeStorage.getItem('saas_dashboard_state');
+    if (saved) {
+      try {
+        var parsed = JSON.parse(saved);
         return { ...defaultState(), ...parsed, settings: { ...defaultState().settings, ...(parsed.settings || {}) } };
-      }
-    } catch (e) { /* ignore */ }
+      } catch (e) { /* ignore */ }
+    }
     return defaultState();
   }
 
   function saveState() {
-    try {
-      localStorage.setItem('saas_dashboard_state', JSON.stringify(state));
-    } catch (e) { /* ignore */ }
+    SafeStorage.setObject('saas_dashboard_state', state);
   }
 
   function getState(key) {
@@ -105,6 +103,14 @@ const AppStore = (function () {
     state[key] = value;
     saveState();
     notify(key);
+    if (key === 'users' || key === 'transactions') {
+      if (typeof Router !== 'undefined' && Router.getCurrentRoute() === 'dashboard' && typeof DashboardPage !== 'undefined') {
+        DashboardPage.refresh();
+      }
+      if (typeof Router !== 'undefined' && Router.getCurrentRoute() === 'analytics' && typeof AnalyticsPage !== 'undefined') {
+        AnalyticsPage.reinitCharts();
+      }
+    }
   }
 
   function updateState(key, updates) {

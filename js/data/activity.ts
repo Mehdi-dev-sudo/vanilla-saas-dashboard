@@ -4,16 +4,12 @@ const ActivityLog = (function () {
   let entries = load();
 
   function load() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch (e) { return []; }
+    var data = SafeStorage.getItem(STORAGE_KEY);
+    try { return data ? JSON.parse(data) : []; } catch (e) { return []; }
   }
 
   function save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    } catch (e) { /* ignore */ }
+    SafeStorage.setObject(STORAGE_KEY, entries);
   }
 
   function add(action, detail, type) {
