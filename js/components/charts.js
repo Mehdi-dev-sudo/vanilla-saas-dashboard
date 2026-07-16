@@ -285,8 +285,8 @@ function setupCanvas(canvas, width, height) {
   function startAnimation(canvas, drawFrame) {
     const duration = 900;
     const startTime = performance.now();
-    animFrames.forEach(id => cancelAnimationFrame(id));
-    animFrames = [];
+    var canvasFrames = canvas._animFrames || [];
+    canvasFrames.forEach(function (id) { cancelAnimationFrame(id); });
 
     function frame(time) {
       const elapsed = time - startTime;
@@ -294,16 +294,16 @@ function setupCanvas(canvas, width, height) {
       const eased = 1 - Math.pow(1 - progress, 3);
       drawFrame(eased);
       if (progress < 1) {
-        animFrames.push(requestAnimationFrame(frame));
+        canvas._animFrames = [requestAnimationFrame(frame)];
+      } else {
+        canvas._animFrames = [];
       }
     }
 
-    animFrames.push(requestAnimationFrame(frame));
+    canvas._animFrames = [requestAnimationFrame(frame)];
   }
 
   function resize() {
-    animFrames.forEach(function (id) { cancelAnimationFrame(id); });
-    animFrames = [];
     cachedStyles = null;
     canvasCache = {};
     if (typeof DashboardPage !== 'undefined') DashboardPage.reinitCharts();
