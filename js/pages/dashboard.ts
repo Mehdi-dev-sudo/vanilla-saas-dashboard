@@ -308,7 +308,7 @@ const DashboardPage = (function () {
                 '<div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div>' +
                 '<div class="activity-item__time">' + Utils.escapeHtml(u.role + ' - ' + u.plan + ' Plan') + '</div>' +
               '</div>' +
-              '<span class="status-badge status-badge--' + u.status + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + '</span>' +
+              '<span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + '</span>' +
             '</div>';
           }).join('')}
         </div>

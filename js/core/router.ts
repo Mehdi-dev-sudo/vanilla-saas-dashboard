@@ -117,7 +117,8 @@ const Router = (function () {
       }
       updateSidebar(null);
       document.title = 'Sign In — Vanilla SaaS Dashboard';
-      document.querySelector('.sidebar') && document.querySelector('.sidebar').classList.remove('open');
+      var sidebarEl = document.querySelector('.sidebar');
+      if (sidebarEl) sidebarEl.classList.remove('open');
     }
   }
 
