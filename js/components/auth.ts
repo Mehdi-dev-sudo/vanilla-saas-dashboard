@@ -158,7 +158,7 @@ const AuthManager = (function () {
                 '<div class="toggle__track"></div>',
                 '<span style="font-size:var(--font-sm);color:var(--text-secondary)">' + __('auth.login.rememberMe') + '</span>',
               '</label>',
-              '<a href="#" class="auth-card__forgot" onclick="ToastSystem.info(\'' + __('auth.login.noPasswordReset') + '\')">' + __('auth.login.forgotPassword') + '</a>',
+              '<a href="#" class="auth-card__forgot" onclick="ToastSystem.info(\'' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(__('auth.login.noPasswordReset')) : __('auth.login.noPasswordReset')) + '\')">' + __('auth.login.forgotPassword') + '</a>',
             '</div>',
             '<button type="submit" class="btn btn--primary btn--lg auth-card__btn">' + __('auth.login.signIn') + '</button>',
             '<div class="auth-card__error" id="loginError" style="display:none"></div>',
