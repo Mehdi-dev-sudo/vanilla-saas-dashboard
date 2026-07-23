@@ -27,7 +27,7 @@ const DashboardPage = (function () {
       <div class="page-header">
         <div>
           <h1 class="page-header__title">${__('dashboard.title')}</h1>
-          <p class="page-header__subtitle">${__('dashboard.subtitle', { name: AuthManager.isLoggedIn ? AuthManager.getUser().name : '' })}</p>
+          <p class="page-header__subtitle">${__('dashboard.subtitle', { name: (typeof AuthManager !== 'undefined' && AuthManager.isLoggedIn && AuthManager.getUser) ? AuthManager.getUser().name : '' })}</p>
         </div>
         <div class="page-header__actions">
           <button class="btn btn--ghost btn--sm" id="widgetConfigBtn" title="Configure widgets">

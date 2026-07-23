@@ -72,7 +72,7 @@ const CommandPalette = (function () {
       { id: 'act-undo', category: 'Actions', label: 'Undo', keywords: 'ctrl z', icon: 'rotate-ccw', action: function () { close(); setTimeout(function () { HistoryManager.undo(); }, 100); } },
       { id: 'act-redo', category: 'Actions', label: 'Redo', keywords: 'ctrl shift z', icon: 'rotate-cw', action: function () { close(); setTimeout(function () { HistoryManager.redo(); }, 100); } },
       { id: 'act-keys', category: 'Actions', label: 'Keyboard Shortcuts', keywords: 'help keys shortcuts', icon: 'keyboard', action: function () { close(); setTimeout(function () { if (window.showKeyboardHelp) window.showKeyboardHelp(); }, 100); } },
-      { id: 'act-reload', category: 'Actions', label: 'Reload Data', keywords: 'refresh reset api', icon: 'refresh-cw', action: function () { close(); ApiClient.clearCache(); ToastSystem.success('Cache cleared. Reloading...'); setTimeout(function () { window.location.reload(); }, 500); } },
+      { id: 'act-reload', category: 'Actions', label: 'Reload Data', keywords: 'refresh reset api', icon: 'refresh-cw', action: function () { close(); ApiClient.clearCache(); if (typeof ToastSystem !== 'undefined') ToastSystem.success('Cache cleared. Reloading...'); setTimeout(function () { window.location.reload(); }, 500); } },
       { id: 'act-logout', category: 'Actions', label: 'Logout', keywords: 'sign out exit', icon: 'log-out', action: function () { close(); setTimeout(function () { AuthManager.logout(); }, 100); } },
 
       // Pages
