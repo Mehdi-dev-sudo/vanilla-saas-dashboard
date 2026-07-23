@@ -35,6 +35,7 @@
     setupGlobalSearch();
     setupNotifications();
     setupKeyboardNavigation();
+    setupConnectivityListeners();
 
     initApiData();
   }
@@ -75,9 +76,15 @@
       clearInterval(window.__updatedInterval);
       if (typeof DashboardPage !== 'undefined' && DashboardPage.stopRealtimeUpdates) DashboardPage.stopRealtimeUpdates();
     } else {
-      window.__clockInterval = setInterval(updateClock, 1000);
-      window.__onlineInterval = setInterval(updateOnline, 8000);
-      window.__updatedInterval = setInterval(updateLastUpdated, 30000);
+      if (window.__clockInterval) clearInterval(window.__clockInterval);
+      if (window.__onlineInterval) clearInterval(window.__onlineInterval);
+      if (window.__updatedInterval) clearInterval(window.__updatedInterval);
+    if (window.__clockInterval) clearInterval(window.__clockInterval);
+    window.__clockInterval = setInterval(updateClock, 1000);
+    if (window.__onlineInterval) clearInterval(window.__onlineInterval);
+    window.__onlineInterval = setInterval(updateOnline, 8000);
+    if (window.__updatedInterval) clearInterval(window.__updatedInterval);
+    window.__updatedInterval = setInterval(updateLastUpdated, 30000);
       if (typeof DashboardPage !== 'undefined' && DashboardPage.startRealtimeUpdates && Router.getCurrentRoute() === 'dashboard') {
         DashboardPage.startRealtimeUpdates();
       }
@@ -190,10 +197,10 @@
     var unreadCount = notifs.filter(function (n) { return n.unread; }).length;
     list.innerHTML = notifs.map(function (n) {
       return '<div class="notif-dropdown__item' + (n.unread ? ' notif-dropdown__item--unread' : '') + '">' +
-        '<div class="notif-dropdown__item-icon notif-dropdown__item-icon--' + n.type + '"></div>' +
+        '<div class="notif-dropdown__item-icon notif-dropdown__item-icon--' + Utils.escapeHtml(n.type) + '"></div>' +
         '<div class="notif-dropdown__item-content">' +
-          '<div class="notif-dropdown__item-text">' + n.text + '</div>' +
-          '<div class="notif-dropdown__item-time">' + n.time + '</div>' +
+          '<div class="notif-dropdown__item-text">' + Utils.escapeHtml(n.text) + '</div>' +
+          '<div class="notif-dropdown__item-time">' + Utils.escapeHtml(n.time) + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
@@ -215,24 +222,33 @@
       dropdown.classList.toggle('open');
     });
 
-    var markAllBtn = document.getElementById('markAllRead');
-    if (markAllBtn) markAllBtn.addEventListener('click', function () {
-      AppStore.clearNotifications();
-      dropdown.querySelectorAll('.notif-dropdown__item--unread').forEach(function (el) { el.classList.remove('notif-dropdown__item--unread'); });
-      badge.style.display = 'none';
-      ToastSystem.info('All notifications marked as read');
-    });
-
-    document.addEventListener('click', function (e) {
-      if (!dropdown.contains(e.target) && e.target !== notifBtn) {
+    document.addEventListener('keydown', function notifEsc(e) {
+      if (e.key === 'Escape' && dropdown.classList.contains('open')) {
         dropdown.classList.remove('open');
       }
     });
 
-    AppStore.subscribe('notifications', function (count) {
+    var markAllBtn = document.getElementById('markAllRead');
+    if (markAllBtn) markAllBtn.addEventListener('click', function () {
+      if (typeof AppStore.clearNotifications === 'function') AppStore.clearNotifications();
+      dropdown.querySelectorAll('.notif-dropdown__item--unread').forEach(function (el) { el.classList.remove('notif-dropdown__item--unread'); });
+      if (badge) badge.style.display = 'none';
+      if (typeof ToastSystem !== 'undefined') ToastSystem.info('All notifications marked as read');
+    });
+
+    var notifOutsideClick = function (e) {
+      if (!dropdown.contains(e.target) && e.target !== notifBtn) {
+        dropdown.classList.remove('open');
+      }
+    };
+    document.addEventListener('click', notifOutsideClick);
+
+    var notifUnsub = AppStore.subscribe('notifications', function (count) {
       var unreadCount = typeof count === 'number' ? count : (count && count.length ? count.length : 0);
-      badge.textContent = unreadCount;
-      badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+      if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+      }
     });
   }
 
@@ -270,8 +286,10 @@
     return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || type === 'search' || type === 'text' || type === 'email' || type === 'password';
   }
 
+  var _kbNavHandler, _escapeHandler;
+
   function setupKeyboardNavigation() {
-    document.addEventListener('keydown', function (e) {
+    _kbNavHandler = function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === '/' ) {
         e.preventDefault();
         showKeyboardHelp();
@@ -281,7 +299,7 @@
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        ToastSystem.success('Changes saved');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('Changes saved');
         ActivityLog.add('edit', 'Quick save triggered', 'edit');
       }
 
@@ -294,9 +312,10 @@
         if (gotoBuffer === 'gs') { Router.navigate('settings'); gotoBuffer = ''; }
         resetGotoBufferTimeout();
       }
-    });
+    };
+    document.addEventListener('keydown', _kbNavHandler);
 
-    document.addEventListener('keydown', function (e) {
+    _escapeHandler = function (e) {
       if (e.key === 'Escape') {
         var openCmd = document.querySelector('.cmd-palette-overlay.open');
         if (openCmd) return;
@@ -305,18 +324,44 @@
           ModalSystem.close();
         }
       }
-    });
+    };
+    document.addEventListener('keydown', _escapeHandler);
+  }
+
+  var _onlineHandler, _offlineHandler;
+
+  function setupConnectivityListeners() {
+    _onlineHandler = function () {
+      var statusEl = document.getElementById('apiStatus');
+      if (statusEl) {
+        statusEl.textContent = 'API ???';
+        statusEl.className = 'header__api-status header__api-status--online';
+      }
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('Connection restored');
+    };
+    window.addEventListener('online', _onlineHandler);
+
+    _offlineHandler = function () {
+      var statusEl = document.getElementById('apiStatus');
+      if (statusEl) {
+        statusEl.textContent = 'Offline';
+        statusEl.className = 'header__api-status header__api-status--offline';
+      }
+      if (typeof ToastSystem !== 'undefined') ToastSystem.warning('You are offline');
+    };
+    window.addEventListener('offline', _offlineHandler);
   }
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function () { /* SW registration requires HTTPS */ });
   }
 
-  window.addEventListener('error', function (e) {
+  var _globalErrorHandler = function (e) {
     console.error('Global error:', e.error || e.message);
     var loader = document.getElementById('pageLoader');
     if (loader) loader.style.display = 'none';
-  });
+  };
+  window.addEventListener('error', _globalErrorHandler);
 
   // Debug overlay for errors (visible when live server running)
   var _origOnError = window.onerror;

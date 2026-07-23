@@ -1,7 +1,12 @@
 const ToastSystem = (function() {
   var container = document.getElementById("toastContainer");
   var activeToasts = [];
+  if (!container) console.warn("ToastSystem: #toastContainer missing");
   function show(message, type, duration) {
+    if (!container) {
+      console.warn("ToastSystem: cannot show toast, no container");
+      return null;
+    }
     type = type || "info";
     duration = duration || 4e3;
     var icons = {
@@ -12,7 +17,7 @@ const ToastSystem = (function() {
     };
     var el = document.createElement("div");
     el.className = "toast toast--" + type;
-    el.innerHTML = (icons[type] || icons.info) + '<span class="toast__message">' + message + '</span><button class="toast__close" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="toast__progress"><div class="toast__progress-bar"></div></div>';
+    el.innerHTML = (icons[type] || icons.info) + '<span class="toast__message">' + (typeof Utils !== "undefined" ? Utils.escapeHtml(message) : message) + '</span><button class="toast__close" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="toast__progress"><div class="toast__progress-bar"></div></div>';
     el.querySelector(".toast__close").addEventListener("click", function() {
       dismiss(el);
     });
@@ -21,9 +26,12 @@ const ToastSystem = (function() {
     updatePositions();
     var progressBar = el.querySelector(".toast__progress-bar");
     if (duration > 0 && progressBar) {
+      progressBar.style.width = "100%";
       progressBar.style.transition = "width " + duration + "ms linear";
       requestAnimationFrame(function() {
-        progressBar.style.width = "0%";
+        requestAnimationFrame(function() {
+          progressBar.style.width = "0%";
+        });
       });
       el._timer = setTimeout(function() {
         dismiss(el);

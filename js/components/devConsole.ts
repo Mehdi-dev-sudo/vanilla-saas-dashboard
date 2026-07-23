@@ -47,10 +47,14 @@ var DevConsole = (function () {
     document.body.appendChild(div);
     overlay = div;
 
-    document.getElementById('devConsoleClose').addEventListener('click', close);
-    document.getElementById('devClearCache').addEventListener('click', function () { ApiClient.clearCache(); ToastSystem.success('API cache cleared'); updateMetrics(); });
-    document.getElementById('devClearStorage').addEventListener('click', function () { if (confirm('Clear all localStorage?')) { localStorage.clear(); ToastSystem.success('Storage cleared'); updateMetrics(); } });
-    document.getElementById('devResetData').addEventListener('click', function () { if (confirm('Reset all data to defaults?')) { localStorage.removeItem('saas_dashboard_state'); localStorage.removeItem('saas_activity_log'); window.location.reload(); } });
+    var devClose = document.getElementById('devConsoleClose');
+    if (devClose) devClose.addEventListener('click', close);
+    var devClearCache = document.getElementById('devClearCache');
+    if (devClearCache) devClearCache.addEventListener('click', function () { ApiClient.clearCache(); if (typeof ToastSystem !== 'undefined') ToastSystem.success('API cache cleared'); updateMetrics(); });
+    var devClearStorage = document.getElementById('devClearStorage');
+    if (devClearStorage) devClearStorage.addEventListener('click', function () { if (confirm('Clear all localStorage?')) { localStorage.clear(); if (typeof ToastSystem !== 'undefined') ToastSystem.success('Storage cleared'); updateMetrics(); } });
+    var devResetData = document.getElementById('devResetData');
+    if (devResetData) devResetData.addEventListener('click', function () { if (confirm('Reset all data to defaults?')) { localStorage.removeItem('saas_dashboard_state'); localStorage.removeItem('saas_activity_log'); window.location.reload(); } });
 
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {

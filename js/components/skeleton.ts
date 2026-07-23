@@ -48,9 +48,9 @@ const SkeletonLoader = (function () {
   function getEmptyState(icon, title, desc, action) {
     var html = '<div class="empty-state">';
     html += '<div class="empty-state__icon">' + icon + '</div>';
-    html += '<h3 class="empty-state__title">' + title + '</h3>';
-    html += '<p class="empty-state__desc">' + desc + '</p>';
-    if (action) html += '<button class="btn btn--primary mt-lg">' + action.label + '</button>';
+    html += '<h3 class="empty-state__title">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(title) : title) + '</h3>';
+    html += '<p class="empty-state__desc">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(desc) : desc) + '</p>';
+    if (action) html += '<button class="btn btn--primary mt-lg">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(action.label) : action.label) + '</button>';
     html += '</div>';
     return html;
   }

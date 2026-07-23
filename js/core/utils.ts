@@ -23,11 +23,13 @@ const Utils = {
 
   formatDate(dateStr) {
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   },
 
   formatShortDate(dateStr) {
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[date.getMonth()] + ' ' + date.getDate();
   },
@@ -35,6 +37,7 @@ const Utils = {
   timeAgo(dateStr) {
     const now = new Date();
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
     if (diffMins < 1) return 'Just now';
@@ -73,6 +76,7 @@ const Utils = {
 
   animateValue(el, start, end, duration) {
     if (!el) return;
+    if (!el.offsetParent) { el.textContent = end; return; }
     duration = duration || 1000;
     const range = end - start;
     const startTime = performance.now();
@@ -93,6 +97,7 @@ const Utils = {
 
   animatePercent(el, start, end, duration, suffix) {
     if (!el) return;
+    if (!el.offsetParent) { el.textContent = end + '%'; return; }
     suffix = suffix || '%';
     duration = duration || 1000;
     const range = end - start;
@@ -112,6 +117,7 @@ const Utils = {
   },
 
   copyToClipboard(text) {
+    if (typeof text !== 'string') return;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
         if (typeof ToastSystem !== 'undefined') ToastSystem.success('Copied: ' + text);

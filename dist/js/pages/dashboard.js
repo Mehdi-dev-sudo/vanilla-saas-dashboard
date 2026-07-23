@@ -21,7 +21,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
       <div class="page-header">
         <div>
           <h1 class="page-header__title">${__("dashboard.title")}</h1>
-          <p class="page-header__subtitle">${__("dashboard.subtitle", { name: AuthManager.isLoggedIn ? AuthManager.getUser().name : "" })}</p>
+          <p class="page-header__subtitle">${__("dashboard.subtitle", { name: typeof AuthManager !== "undefined" && AuthManager.isLoggedIn && AuthManager.getUser ? AuthManager.getUser().name : "" })}</p>
         </div>
         <div class="page-header__actions">
           <button class="btn btn--ghost btn--sm" id="widgetConfigBtn" title="Configure widgets">
@@ -165,7 +165,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
               <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
               <tbody>
                 ${transactions.length === 0 ? '<tr><td colspan="5"><div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions yet</p></div></td></tr>' : transactions.map(function(t) {
-      return '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '"><td><strong>' + t.invoice + "</strong></td><td>" + Utils.escapeHtml(t.customer) + "</td><td><strong>" + Utils.formatCurrency(t.amount) + '</strong></td><td><span class="status-badge status-badge--' + t.status + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + "</span></td><td>" + Utils.formatShortDate(t.date) + "</td></tr>";
+      return '<tr data-context="transaction" data-id="' + Utils.escapeHtml(t.id) + '" data-invoice="' + Utils.escapeHtml(t.invoice) + '"><td><strong>' + Utils.escapeHtml(t.invoice) + "</strong></td><td>" + Utils.escapeHtml(t.customer) + "</td><td><strong>" + Utils.formatCurrency(t.amount) + '</strong></td><td><span class="status-badge status-badge--' + Utils.escapeHtml(t.status) + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + "</span></td><td>" + Utils.formatShortDate(t.date) + "</td></tr>";
     }).join("")}
               </tbody>
             </table>
@@ -252,7 +252,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
         <div class="card__body">
           <div class="activity-feed">
             ${activities.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--text-tertiary);font-size:var(--font-sm)">No recent activity</div>' : activities.map(function(a) {
-      return '<div class="activity-item"><div class="activity-item__icon activity-item__icon--' + a.type + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-item__content"><div class="activity-item__text"><strong>' + a.action + "</strong> " + a.detail + '</div><div class="activity-item__time">' + ActivityLog.formatDate(a.timestamp) + "</div></div></div>";
+      return '<div class="activity-item"><div class="activity-item__icon activity-item__icon--' + Utils.escapeHtml(a.type) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-item__content"><div class="activity-item__text"><strong>' + Utils.escapeHtml(a.action) + "</strong> " + Utils.escapeHtml(a.detail) + '</div><div class="activity-item__time">' + ActivityLog.formatDate(a.timestamp) + "</div></div></div>";
     }).join("")}
           </div>
         </div>
@@ -276,7 +276,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
         return n[0];
       }).join("").slice(0, 2);
       var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : "#6366f1";
-      return '<div class="activity-item"><div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div><div class="activity-item__content"><div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div><div class="activity-item__time">' + Utils.escapeHtml(u.role + " - " + u.plan + " Plan") + '</div></div><span class="status-badge status-badge--' + u.status + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></div>";
+      return '<div class="activity-item"><div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div><div class="activity-item__content"><div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div><div class="activity-item__time">' + Utils.escapeHtml(u.role + " - " + u.plan + " Plan") + '</div></div><span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></div>";
     }).join("")}
         </div>
       </div>
@@ -291,9 +291,10 @@ const DashboardPage = /* @__PURE__ */ (function() {
     startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();
-    document.getElementById("exportDashboardBtn").addEventListener("click", function() {
+    var exportBtn = document.getElementById("exportDashboardBtn");
+    if (exportBtn) exportBtn.addEventListener("click", function() {
       ExportManager.exportDashboard();
-      ToastSystem.success(__("toast.dashboard.exported"));
+      if (typeof ToastSystem !== "undefined") ToastSystem.success(__("toast.dashboard.exported"));
     });
     return function cleanup() {
       cancelAnimationFrames();
@@ -331,6 +332,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
         stopRealtimeUpdates();
         return;
       }
+      if (document.hidden) return;
       var revChart = document.getElementById("dashRevenueChart");
       var userChart = document.getElementById("dashUserChart");
       if (!revChart || !userChart) return;
@@ -401,13 +403,13 @@ const DashboardPage = /* @__PURE__ */ (function() {
           });
         }
         saveHiddenWidgets();
-        var widget = document.querySelector('[data-widget-id="' + id + '"]');
+        var widget = document.querySelector('[data-widget-id="' + (typeof Utils !== "undefined" ? Utils.escapeHtml(id) : id) + '"]');
         if (widget) {
           widget.style.display = hide ? "none" : "";
           if (!hide && (id === "charts" || id === "traffic")) {
-            requestAnimationFrame(function() {
+            _trackAnimFrame(requestAnimationFrame(function() {
               drawCharts();
-            });
+            }));
           }
         }
       });
@@ -455,12 +457,15 @@ const DashboardPage = /* @__PURE__ */ (function() {
   function saveHiddenWidgets() {
     SafeStorage.setObject("saas_hidden_widgets", hiddenWidgets);
   }
-  var animFrameIds = [];
+  var _animFrameIds = [];
+  function _trackAnimFrame(id) {
+    if (id) _animFrameIds.push(id);
+  }
   function cancelAnimationFrames() {
-    animFrameIds.forEach(function(id) {
+    _animFrameIds.forEach(function(id) {
       cancelAnimationFrame(id);
     });
-    animFrameIds = [];
+    _animFrameIds = [];
   }
   function refresh() {
     var contentEl = document.getElementById("appContent");

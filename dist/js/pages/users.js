@@ -78,25 +78,31 @@ const UsersPage = /* @__PURE__ */ (function() {
     currentRole = "all";
     renderUsers();
     const searchInput = document.getElementById("userSearch");
-    searchInput.addEventListener("input", Utils.debounce(function() {
+    if (searchInput) searchInput.addEventListener("input", Utils.debounce(function() {
       currentSearch = this.value;
       currentPage = 1;
-      document.getElementById("usersTableBody").innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById("usersTableBody");
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     }, 300));
-    document.getElementById("userStatusFilter").addEventListener("change", function() {
+    var statusFilter = document.getElementById("userStatusFilter");
+    if (statusFilter) statusFilter.addEventListener("change", function() {
       currentStatus = this.value;
       currentPage = 1;
-      document.getElementById("usersTableBody").innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById("usersTableBody");
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
-    document.getElementById("userRoleFilter").addEventListener("change", function() {
+    var roleFilter = document.getElementById("userRoleFilter");
+    if (roleFilter) roleFilter.addEventListener("change", function() {
       currentRole = this.value;
       currentPage = 1;
-      document.getElementById("usersTableBody").innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById("usersTableBody");
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
-    document.getElementById("addUserBtn").addEventListener("click", showAddUserModal);
+    var addBtn = document.getElementById("addUserBtn");
+    if (addBtn) addBtn.addEventListener("click", showAddUserModal);
     setupMultiSelect();
     return function cleanup() {
       currentPage = 1;
@@ -109,27 +115,29 @@ const UsersPage = /* @__PURE__ */ (function() {
     var selectAll = document.getElementById("selectAllUsers");
     var batchActions = document.getElementById("batchActions");
     var selectedCount = document.getElementById("selectedCount");
-    selectAll.addEventListener("change", function() {
+    if (selectAll) selectAll.addEventListener("change", function() {
       document.querySelectorAll(".user-checkbox").forEach(function(cb) {
         cb.checked = selectAll.checked;
       });
       updateBatchVisibility();
     });
-    document.getElementById("batchDeleteBtn").addEventListener("click", function() {
+    var batchDeleteBtn = document.getElementById("batchDeleteBtn");
+    if (batchDeleteBtn) batchDeleteBtn.addEventListener("click", function() {
       var selected = getSelectedUsers();
       if (selected.length === 0) return;
       ModalSystem.confirm("Delete Users", "Are you sure you want to delete " + selected.length + " selected user(s)?", "Delete", "Cancel", function() {
         selected.forEach(function(id) {
           AppStore.deleteUser(id);
         });
-        ToastSystem.success(selected.length + " user(s) deleted");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success(selected.length + " user(s) deleted");
         renderUsers();
       });
     });
-    document.getElementById("batchExportBtn").addEventListener("click", function() {
+    var batchExportBtn = document.getElementById("batchExportBtn");
+    if (batchExportBtn) batchExportBtn.addEventListener("click", function() {
       var selected = getSelectedUsers();
       if (selected.length === 0) return;
-      ToastSystem.success(selected.length + " user(s) exported");
+      if (typeof ToastSystem !== "undefined") ToastSystem.success(selected.length + " user(s) exported");
     });
   }
   function getSelectedUsers() {
@@ -151,7 +159,7 @@ const UsersPage = /* @__PURE__ */ (function() {
     }
   }
   function renderUsers() {
-    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage);
+    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage) || { items: [], total: 0, totalPages: 0, page: 1 };
     const tbody = document.getElementById("usersTableBody");
     const totalInfo = document.getElementById("userTotalInfo");
     const pagination = document.getElementById("usersPagination");
@@ -161,7 +169,7 @@ const UsersPage = /* @__PURE__ */ (function() {
       tbody.innerHTML = result.items.map((u) => {
         const initials = u.name.split(" ").map((n) => n[0]).join("").slice(0, 2);
         var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : "#6366f1";
-        return '<tr data-context="user" data-id="' + u.id + '" data-email="' + Utils.escapeHtml(u.email) + '"><td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td><td><div class="flex items-center gap-sm"><span class="user-avatar-sm" style="background:' + avatarColor + '">' + initials + "</span> <strong>" + Utils.escapeHtml(u.name) + "</strong></div></td><td>" + Utils.escapeHtml(u.email) + "</td><td>" + u.role + "</td><td>" + u.plan + '</td><td><span class="status-badge status-badge--' + u.status + '">' + u.status.charAt(0).toUpperCase() + u.status.slice(1) + "</span></td><td><strong>" + Utils.formatCurrency(u.revenue) + '</strong></td><td><div class="flex gap-sm"><button class="btn btn--sm btn--ghost edit-user-btn" data-id="' + u.id + '">Edit</button><button class="btn btn--sm btn--ghost delete-user-btn" data-id="' + u.id + '" style="color:var(--clr-danger)">Delete</button></div></td></tr>';
+        return '<tr data-context="user" data-id="' + u.id + '" data-email="' + Utils.escapeHtml(u.email) + '"><td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td><td><div class="flex items-center gap-sm"><span class="user-avatar-sm" style="background:' + avatarColor + '">' + initials + "</span> <strong>" + Utils.escapeHtml(u.name) + "</strong></div></td><td>" + Utils.escapeHtml(u.email) + "</td><td>" + Utils.escapeHtml(u.role) + "</td><td>" + Utils.escapeHtml(u.plan) + '</td><td><span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></td><td><strong>" + Utils.formatCurrency(u.revenue) + '</strong></td><td><div class="flex gap-sm"><button class="btn btn--sm btn--ghost edit-user-btn" data-id="' + u.id + '">Edit</button><button class="btn btn--sm btn--ghost delete-user-btn" data-id="' + u.id + '" style="color:var(--clr-danger)">Delete</button></div></td></tr>';
       }).join("");
     }
     totalInfo.textContent = result.total + " user" + (result.total !== 1 ? "s" : "");
@@ -203,13 +211,15 @@ const UsersPage = /* @__PURE__ */ (function() {
         renderUsers();
       });
     });
-    document.getElementById("prevPage").addEventListener("click", function() {
+    var prevPage = document.getElementById("prevPage");
+    if (prevPage) prevPage.addEventListener("click", function() {
       if (currentPage > 1) {
         currentPage--;
         renderUsers();
       }
     });
-    document.getElementById("nextPage").addEventListener("click", function() {
+    var nextPage = document.getElementById("nextPage");
+    if (nextPage) nextPage.addEventListener("click", function() {
       if (currentPage < result.totalPages) {
         currentPage++;
         renderUsers();
@@ -238,7 +248,7 @@ const UsersPage = /* @__PURE__ */ (function() {
       }
       if (errors.length > 0) {
         errors.forEach(function(e) {
-          ToastSystem.error(e);
+          if (typeof ToastSystem !== "undefined") ToastSystem.error(e);
         });
         return;
       }
@@ -251,23 +261,23 @@ const UsersPage = /* @__PURE__ */ (function() {
         joined: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
         revenue: 0
       });
-      ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
+      if (typeof ToastSystem !== "undefined") ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
       renderUsers();
     });
   }
   function showEditUserModal(id) {
     const user = AppStore.getUser(id);
     if (!user) return;
-    const html = '<input type="hidden" name="id" value="' + id + '"><div class="form-row"><div class="form-group"><label class="form-label" for="uEditName">Full Name</label><input type="text" class="form-input" id="uEditName" name="name" value="' + Utils.escapeHtml(user.name) + '" required></div><div class="form-group"><label class="form-label" for="uEditEmail">Email</label><input type="email" class="form-input" id="uEditEmail" name="email" value="' + Utils.escapeHtml(user.email) + '" required></div></div><div class="form-row"><div class="form-group"><label class="form-label" for="uEditRole">Role</label><select class="form-select" id="uEditRole" name="role"><option' + (user.role === "Admin" ? " selected" : "") + ">Admin</option><option" + (user.role === "Editor" ? " selected" : "") + ">Editor</option><option" + (user.role === "Viewer" ? " selected" : "") + '>Viewer</option></select></div><div class="form-group"><label class="form-label" for="uEditStatus">Status</label><select class="form-select" id="uEditStatus" name="status"><option value="active"' + (user.status === "active" ? " selected" : "") + '>Active</option><option value="inactive"' + (user.status === "inactive" ? " selected" : "") + '>Inactive</option><option value="suspended"' + (user.status === "suspended" ? " selected" : "") + ">Suspended</option></select></div></div>";
+    const html = '<input type="hidden" name="id" value="' + Utils.escapeHtml(id) + '"><div class="form-row"><div class="form-group"><label class="form-label" for="uEditName">Full Name</label><input type="text" class="form-input" id="uEditName" name="name" value="' + Utils.escapeHtml(user.name) + '" required></div><div class="form-group"><label class="form-label" for="uEditEmail">Email</label><input type="email" class="form-input" id="uEditEmail" name="email" value="' + Utils.escapeHtml(user.email) + '" required></div></div><div class="form-row"><div class="form-group"><label class="form-label" for="uEditRole">Role</label><select class="form-select" id="uEditRole" name="role"><option' + (user.role === "Admin" ? " selected" : "") + ">Admin</option><option" + (user.role === "Editor" ? " selected" : "") + ">Editor</option><option" + (user.role === "Viewer" ? " selected" : "") + '>Viewer</option></select></div><div class="form-group"><label class="form-label" for="uEditStatus">Status</label><select class="form-select" id="uEditStatus" name="status"><option value="active"' + (user.status === "active" ? " selected" : "") + '>Active</option><option value="inactive"' + (user.status === "inactive" ? " selected" : "") + '>Inactive</option><option value="suspended"' + (user.status === "suspended" ? " selected" : "") + ">Suspended</option></select></div></div>";
     ModalSystem.form("Edit User", html, "Save Changes", function(data) {
       var name = (data.name || "").trim();
       var email = (data.email || "").trim();
       if (!name) {
-        ToastSystem.error("Name is required");
+        if (typeof ToastSystem !== "undefined") ToastSystem.error("Name is required");
         return;
       }
       if (!email || !email.includes("@")) {
-        ToastSystem.error("Valid email is required");
+        if (typeof ToastSystem !== "undefined") ToastSystem.error("Valid email is required");
         return;
       }
       AppStore.updateUser(id, {
@@ -276,7 +286,7 @@ const UsersPage = /* @__PURE__ */ (function() {
         role: data.role || "Viewer",
         status: data.status || "active"
       });
-      ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
+      if (typeof ToastSystem !== "undefined") ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
       renderUsers();
     });
   }
@@ -290,7 +300,7 @@ const UsersPage = /* @__PURE__ */ (function() {
       "Cancel",
       function() {
         AppStore.deleteUser(id);
-        ToastSystem.success("User deleted successfully");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success("User deleted successfully");
         renderUsers();
       }
     );

@@ -158,7 +158,7 @@ const AuthManager = (function () {
                 '<div class="toggle__track"></div>',
                 '<span style="font-size:var(--font-sm);color:var(--text-secondary)">' + __('auth.login.rememberMe') + '</span>',
               '</label>',
-              '<a href="#" class="auth-card__forgot" onclick="ToastSystem.info(\'' + __('auth.login.noPasswordReset') + '\')">' + __('auth.login.forgotPassword') + '</a>',
+              '<a href="#" class="auth-card__forgot" onclick="ToastSystem.info(\'' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(__('auth.login.noPasswordReset')) : __('auth.login.noPasswordReset')) + '\')">' + __('auth.login.forgotPassword') + '</a>',
             '</div>',
             '<button type="submit" class="btn btn--primary btn--lg auth-card__btn">' + __('auth.login.signIn') + '</button>',
             '<div class="auth-card__error" id="loginError" style="display:none"></div>',
@@ -177,22 +177,28 @@ const AuthManager = (function () {
     var rememberToggle = document.getElementById('rememberToggle');
 
     var remember = false;
-    rememberToggle.addEventListener('click', function () {
-      remember = !remember;
-      this.classList.toggle('active', remember);
-    });
+    if (rememberToggle) {
+      rememberToggle.addEventListener('click', function () {
+        remember = !remember;
+        this.classList.toggle('active', remember);
+      });
+    }
 
+    if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      errorEl.style.display = 'none';
+      if (errorEl) errorEl.style.display = 'none';
 
-      var username = document.getElementById('loginUsername').value.trim();
-      var password = document.getElementById('loginPassword').value;
+      var usernameEl = document.getElementById('loginUsername');
+      var passwordEl = document.getElementById('loginPassword');
+      if (!usernameEl || !passwordEl) return;
+      var username = usernameEl.value.trim();
+      var password = passwordEl.value;
 
       var result = login(username, password, remember);
       if (result.success) {
         Router.navigate('dashboard');
-        ToastSystem.success('Welcome, ' + (currentUser ? currentUser.name : username) + '!');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('Welcome, ' + (currentUser ? currentUser.name : username) + '!');
       } else {
         errorEl.textContent = result.error;
         errorEl.style.display = 'block';

@@ -39,7 +39,9 @@ const VirtualScroll = (function () {
       viewport.innerHTML = '';
 
       for (var i = startIdx; i < endIdx; i++) {
+        if (typeof renderRow !== 'function') break;
         var row = renderRow(items[i], i);
+        if (!row) continue;
         row.style.position = 'absolute';
         row.style.top = ((i - startIdx) * rowHeight) + 'px';
         row.style.height = rowHeight + 'px';
@@ -49,9 +51,11 @@ const VirtualScroll = (function () {
       }
     }
 
-    wrapper.addEventListener('scroll', function () {
+    function onScroll() {
       requestAnimationFrame(render);
-    }, { passive: true });
+    }
+
+    wrapper.addEventListener('scroll', onScroll, { passive: true });
 
     render();
 
@@ -63,6 +67,7 @@ const VirtualScroll = (function () {
         render();
       },
       destroy: function () {
+        wrapper.removeEventListener('scroll', onScroll);
         container.innerHTML = '';
       }
     };

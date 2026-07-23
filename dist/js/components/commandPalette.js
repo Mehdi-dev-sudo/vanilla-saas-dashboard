@@ -7,7 +7,7 @@ const CommandPalette = (function() {
   let searchHistory = [];
   const overlay = document.createElement("div");
   overlay.className = "cmd-palette-overlay";
-  overlay.innerHTML = '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette"><div class="cmd-palette__input-wrapper"><svg class="cmd-palette__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false"><span class="cmd-palette__hint">ESC to close</span></div><div class="cmd-palette__results" id="cmdResults" role="listbox"></div><div class="cmd-palette__footer"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 12 15 20 7"/></svg> Navigate</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> > Actions</span><span>ESC Cancel</span></div></div>';
+  overlay.innerHTML = '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette"><div class="cmd-palette__input-wrapper"><svg class="cmd-palette__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdResults"><span class="cmd-palette__hint">ESC to close</span></div><div class="cmd-palette__results" id="cmdResults" role="listbox"></div><div class="cmd-palette__footer"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 12 15 20 7"/></svg> Navigate</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> > Actions</span><span>ESC Cancel</span></div></div>';
   document.body.appendChild(overlay);
   const input = overlay.querySelector("#cmdInput");
   const resultsEl = overlay.querySelector("#cmdResults");
@@ -68,22 +68,22 @@ const CommandPalette = (function() {
       { id: "act-deleteuser", category: "Actions", label: "Delete User", keywords: "remove", icon: "trash-2", action: function() {
         close();
         Router.navigate("users");
-        ToastSystem.info("Select a user to delete");
+        if (typeof ToastSystem !== "undefined") ToastSystem.info("Select a user to delete");
       } },
       { id: "act-export", category: "Actions", label: "Export CSV", keywords: "download transactions", icon: "download", action: function() {
         close();
         var txs = AppStore.getState("transactions");
         if (txs.length) {
           AppStore.exportTransactionsCSV(txs);
-          ToastSystem.success("CSV exported");
+          if (typeof ToastSystem !== "undefined") ToastSystem.success("CSV exported");
         } else {
-          ToastSystem.error("No transactions to export");
+          if (typeof ToastSystem !== "undefined") ToastSystem.error("No transactions to export");
         }
       } },
       { id: "act-theme", category: "Actions", label: "Toggle Theme", keywords: "dark light mode", icon: "sun", action: function() {
         close();
         ThemeManager.toggle();
-        ToastSystem.info("Theme: " + ThemeManager.getCurrent());
+        if (typeof ToastSystem !== "undefined") ToastSystem.info("Theme: " + ThemeManager.getCurrent());
       } },
       { id: "act-undo", category: "Actions", label: "Undo", keywords: "ctrl z", icon: "rotate-ccw", action: function() {
         close();
@@ -106,7 +106,7 @@ const CommandPalette = (function() {
       { id: "act-reload", category: "Actions", label: "Reload Data", keywords: "refresh reset api", icon: "refresh-cw", action: function() {
         close();
         ApiClient.clearCache();
-        ToastSystem.success("Cache cleared. Reloading...");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success("Cache cleared. Reloading...");
         setTimeout(function() {
           window.location.reload();
         }, 500);

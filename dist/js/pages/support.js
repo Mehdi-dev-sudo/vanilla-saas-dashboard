@@ -87,7 +87,8 @@ const SupportPage = /* @__PURE__ */ (function() {
     `;
   }
   function toggleFaq(e) {
-    var item = this.closest(".faq-item");
+    var item = this && this.closest ? this.closest(".faq-item") : null;
+    if (!item) return;
     var isOpen = item.classList.contains("open");
     var question = item.querySelector(".faq-item__question");
     document.querySelectorAll(".faq-item.open").forEach(function(openItem) {
@@ -111,6 +112,7 @@ const SupportPage = /* @__PURE__ */ (function() {
       });
     });
     const form = document.getElementById("contactForm");
+    if (!form) return;
     form.addEventListener("submit", function(e) {
       e.preventDefault();
       let isValid = true;
@@ -121,18 +123,23 @@ const SupportPage = /* @__PURE__ */ (function() {
       isValid = validateField("contactSubject", "contactSubjectError", "Please select a topic") && isValid;
       isValid = validateField("contactMessage", "contactMessageError", "Message is required") && isValid;
       if (isValid) {
+        var nameEl = document.getElementById("contactName");
+        var emailEl = document.getElementById("contactEmail");
+        var subjectEl = document.getElementById("contactSubject");
+        var msgEl = document.getElementById("contactMessage");
         const data = {
-          name: document.getElementById("contactName").value,
-          email: document.getElementById("contactEmail").value,
-          subject: document.getElementById("contactSubject").value,
-          message: document.getElementById("contactMessage").value
+          name: nameEl ? nameEl.value : "",
+          email: emailEl ? emailEl.value : "",
+          subject: subjectEl ? subjectEl.value : "",
+          message: msgEl ? msgEl.value : ""
         };
-        ToastSystem.success("Message sent successfully! We will get back to you within 24 hours.");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success("Message sent successfully! We will get back to you within 24 hours.");
         form.reset();
       }
     });
     ["contactName", "contactEmail", "contactSubject", "contactMessage"].forEach(function(id) {
-      document.getElementById(id).addEventListener("input", function() {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener("input", function() {
         clearFieldError(id + "Error");
         this.classList.remove("form-input--error");
       });
@@ -143,6 +150,7 @@ const SupportPage = /* @__PURE__ */ (function() {
   function validateField(inputId, errorId, requiredMsg, validator) {
     const input = document.getElementById(inputId);
     const errorEl = document.getElementById(errorId);
+    if (!input) return false;
     const val = input.value.trim();
     if (!val) {
       showFieldError(input, errorEl, requiredMsg);

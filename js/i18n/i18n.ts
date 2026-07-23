@@ -33,14 +33,16 @@ const I18n = (function () {
   function getLocale() { return locale; }
 
   function __(key, params) {
+    if (!key) return '';
     var parts = key.split('.');
-    var val = translations[locale];
+    var val = translations[locale] || translations[fallback];
     var i;
     for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
-    if (val === undefined) {
+    if (val === undefined && locale !== fallback) {
       val = translations[fallback];
       for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
     }
+    if (val === undefined) val = key;
     if (val === undefined) return key;
     if (params) {
       for (var p in params) {
@@ -61,6 +63,7 @@ const I18n = (function () {
 
   function formatDate(dateStr, options) {
     var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
     try { return d.toLocaleDateString(getNumberFormat(), options || { month: 'short', day: 'numeric', year: 'numeric' }); }
     catch (e) { return d.toDateString(); }
   }

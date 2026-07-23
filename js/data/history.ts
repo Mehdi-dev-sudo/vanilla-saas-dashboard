@@ -26,11 +26,15 @@ const HistoryManager = (function () {
     });
   }
 
+  function cloneSnapshot(src) {
+    try { return JSON.parse(JSON.stringify(src)); } catch (e) { return Array.isArray(src) ? [] : {}; }
+  }
+
   function pushSnapshot() {
     if (isRestoring) return;
     const snapshot = {
-      users: JSON.parse(JSON.stringify(AppStore.getState('users'))),
-      transactions: JSON.parse(JSON.stringify(AppStore.getState('transactions')))
+      users: cloneSnapshot(AppStore.getState('users')),
+      transactions: cloneSnapshot(AppStore.getState('transactions'))
     };
     undoStack.push(snapshot);
     if (undoStack.length > MAX_HISTORY) undoStack.shift();
@@ -39,12 +43,12 @@ const HistoryManager = (function () {
 
   function undo() {
     if (undoStack.length === 0) {
-      ToastSystem.warning('Nothing to undo');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.warning('Nothing to undo');
       return;
     }
     const current = {
-      users: JSON.parse(JSON.stringify(AppStore.getState('users'))),
-      transactions: JSON.parse(JSON.stringify(AppStore.getState('transactions')))
+      users: cloneSnapshot(AppStore.getState('users')),
+      transactions: cloneSnapshot(AppStore.getState('transactions'))
     };
     redoStack.push(current);
 
@@ -55,17 +59,17 @@ const HistoryManager = (function () {
     isRestoring = false;
 
     ActivityLog.add('Undo', 'Undo last action', 'undo');
-    ToastSystem.info('Undo successful');
+    if (typeof ToastSystem !== 'undefined') ToastSystem.info('Undo successful');
   }
 
   function redo() {
     if (redoStack.length === 0) {
-      ToastSystem.warning('Nothing to redo');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.warning('Nothing to redo');
       return;
     }
     const current = {
-      users: JSON.parse(JSON.stringify(AppStore.getState('users'))),
-      transactions: JSON.parse(JSON.stringify(AppStore.getState('transactions')))
+      users: cloneSnapshot(AppStore.getState('users')),
+      transactions: cloneSnapshot(AppStore.getState('transactions'))
     };
     undoStack.push(current);
 
@@ -76,7 +80,7 @@ const HistoryManager = (function () {
     isRestoring = false;
 
     ActivityLog.add('Redo', 'Redo last action', 'redo');
-    ToastSystem.info('Redo successful');
+    if (typeof ToastSystem !== 'undefined') ToastSystem.info('Redo successful');
   }
 
   function getUndoCount() { return undoStack.length; }

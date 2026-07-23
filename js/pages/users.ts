@@ -86,28 +86,34 @@ const UsersPage = (function () {
     renderUsers();
 
     const searchInput = document.getElementById('userSearch');
-    searchInput.addEventListener('input', Utils.debounce(function () {
+    if (searchInput) searchInput.addEventListener('input', Utils.debounce(function () {
       currentSearch = this.value;
       currentPage = 1;
-      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById('usersTableBody');
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     }, 300));
 
-    document.getElementById('userStatusFilter').addEventListener('change', function () {
+    var statusFilter = document.getElementById('userStatusFilter');
+    if (statusFilter) statusFilter.addEventListener('change', function () {
       currentStatus = this.value;
       currentPage = 1;
-      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById('usersTableBody');
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
-    document.getElementById('userRoleFilter').addEventListener('change', function () {
+    var roleFilter = document.getElementById('userRoleFilter');
+    if (roleFilter) roleFilter.addEventListener('change', function () {
       currentRole = this.value;
       currentPage = 1;
-      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById('usersTableBody');
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
-    document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
+    var addBtn = document.getElementById('addUserBtn');
+    if (addBtn) addBtn.addEventListener('click', showAddUserModal);
     setupMultiSelect();
 
     return function cleanup() {
@@ -120,25 +126,27 @@ const UsersPage = (function () {
     var batchActions = document.getElementById('batchActions');
     var selectedCount = document.getElementById('selectedCount');
 
-    selectAll.addEventListener('change', function () {
+    if (selectAll) selectAll.addEventListener('change', function () {
       document.querySelectorAll('.user-checkbox').forEach(function (cb) { cb.checked = selectAll.checked; });
       updateBatchVisibility();
     });
 
-    document.getElementById('batchDeleteBtn').addEventListener('click', function () {
+    var batchDeleteBtn = document.getElementById('batchDeleteBtn');
+    if (batchDeleteBtn) batchDeleteBtn.addEventListener('click', function () {
       var selected = getSelectedUsers();
       if (selected.length === 0) return;
       ModalSystem.confirm('Delete Users', 'Are you sure you want to delete ' + selected.length + ' selected user(s)?', 'Delete', 'Cancel', function () {
         selected.forEach(function (id) { AppStore.deleteUser(id); });
-        ToastSystem.success(selected.length + ' user(s) deleted');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success(selected.length + ' user(s) deleted');
         renderUsers();
       });
     });
 
-    document.getElementById('batchExportBtn').addEventListener('click', function () {
+    var batchExportBtn = document.getElementById('batchExportBtn');
+    if (batchExportBtn) batchExportBtn.addEventListener('click', function () {
       var selected = getSelectedUsers();
       if (selected.length === 0) return;
-      ToastSystem.success(selected.length + ' user(s) exported');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success(selected.length + ' user(s) exported');
     });
   }
 
@@ -161,7 +169,7 @@ const UsersPage = (function () {
   }
 
   function renderUsers() {
-    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage);
+    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage) || { items: [], total: 0, totalPages: 0, page: 1 };
     const tbody = document.getElementById('usersTableBody');
     const totalInfo = document.getElementById('userTotalInfo');
     const pagination = document.getElementById('usersPagination');
@@ -176,9 +184,9 @@ const UsersPage = (function () {
           '<td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td>' +
           '<td><div class="flex items-center gap-sm"><span class="user-avatar-sm" style="background:' + avatarColor + '">' + initials + '</span> <strong>' + Utils.escapeHtml(u.name) + '</strong></div></td>' +
           '<td>' + Utils.escapeHtml(u.email) + '</td>' +
-          '<td>' + u.role + '</td>' +
-          '<td>' + u.plan + '</td>' +
-          '<td><span class="status-badge status-badge--' + u.status + '">' + u.status.charAt(0).toUpperCase() + u.status.slice(1) + '</span></td>' +
+          '<td>' + Utils.escapeHtml(u.role) + '</td>' +
+          '<td>' + Utils.escapeHtml(u.plan) + '</td>' +
+          '<td><span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + '</span></td>' +
           '<td><strong>' + Utils.formatCurrency(u.revenue) + '</strong></td>' +
           '<td>' +
             '<div class="flex gap-sm">' +
@@ -236,11 +244,13 @@ const UsersPage = (function () {
       });
     });
 
-    document.getElementById('prevPage').addEventListener('click', function () {
+    var prevPage = document.getElementById('prevPage');
+    if (prevPage) prevPage.addEventListener('click', function () {
       if (currentPage > 1) { currentPage--; renderUsers(); }
     });
 
-    document.getElementById('nextPage').addEventListener('click', function () {
+    var nextPage = document.getElementById('nextPage');
+    if (nextPage) nextPage.addEventListener('click', function () {
       if (currentPage < result.totalPages) { currentPage++; renderUsers(); }
     });
   }
@@ -269,7 +279,7 @@ const UsersPage = (function () {
       if (data.email && !data.email.includes('@')) { errors.push('Invalid email format'); if (emailInput) emailInput.classList.add('form-input--error'); }
 
       if (errors.length > 0) {
-        errors.forEach(function (e) { ToastSystem.error(e); });
+        errors.forEach(function (e) { if (typeof ToastSystem !== 'undefined') ToastSystem.error(e); });
         return;
       }
 
@@ -283,7 +293,7 @@ const UsersPage = (function () {
         revenue: 0
       });
 
-      ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
       renderUsers();
     });
   }
@@ -293,7 +303,7 @@ const UsersPage = (function () {
     if (!user) return;
 
     const html =
-      '<input type="hidden" name="id" value="' + id + '">' +
+      '<input type="hidden" name="id" value="' + Utils.escapeHtml(id) + '">' +
       '<div class="form-row">' +
         '<div class="form-group"><label class="form-label" for="uEditName">Full Name</label><input type="text" class="form-input" id="uEditName" name="name" value="' + Utils.escapeHtml(user.name) + '" required></div>' +
         '<div class="form-group"><label class="form-label" for="uEditEmail">Email</label><input type="email" class="form-input" id="uEditEmail" name="email" value="' + Utils.escapeHtml(user.email) + '" required></div>' +
@@ -314,15 +324,15 @@ const UsersPage = (function () {
     ModalSystem.form('Edit User', html, 'Save Changes', function (data) {
       var name = (data.name || '').trim();
       var email = (data.email || '').trim();
-      if (!name) { ToastSystem.error('Name is required'); return; }
-      if (!email || !email.includes('@')) { ToastSystem.error('Valid email is required'); return; }
+      if (!name) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Name is required'); return; }
+      if (!email || !email.includes('@')) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Valid email is required'); return; }
       AppStore.updateUser(id, {
         name: name,
         email: email,
         role: data.role || 'Viewer',
         status: data.status || 'active'
       });
-      ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
       renderUsers();
     });
   }
@@ -338,7 +348,7 @@ const UsersPage = (function () {
       'Cancel',
       function () {
         AppStore.deleteUser(id);
-        ToastSystem.success('User deleted successfully');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('User deleted successfully');
         renderUsers();
       }
     );

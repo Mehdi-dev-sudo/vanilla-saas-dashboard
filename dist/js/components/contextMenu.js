@@ -4,7 +4,7 @@ const ContextMenuManager = (function() {
   let currentHandler = null;
   function init() {
     document.addEventListener("contextmenu", function(e) {
-      const row = e.target.closest("tr[data-context]");
+      const row = e.target && e.target.closest("tr[data-context]");
       if (row) {
         e.preventDefault();
         show(e.clientX, e.clientY, row);
@@ -94,7 +94,7 @@ const ContextMenuManager = (function() {
       }
       var el = document.createElement("button");
       el.className = "context-menu__item" + (item.danger ? " context-menu__item--danger" : "");
-      el.innerHTML = getIcon(item.icon) + "<span>" + item.label + "</span>";
+      el.innerHTML = getIcon(item.icon) + "<span>" + (typeof Utils !== "undefined" ? Utils.escapeHtml(item.label) : item.label) + "</span>";
       el.addEventListener("click", function() {
         item.action();
         hide();
@@ -123,6 +123,7 @@ const ContextMenuManager = (function() {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       var items = menu.querySelectorAll(".context-menu__item");
+      if (!items.length) return;
       var active = menu.querySelector(".context-menu__item:focus");
       var idx = Array.from(items).indexOf(active);
       var next = (idx + 1) % items.length;
@@ -130,6 +131,7 @@ const ContextMenuManager = (function() {
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       var items = menu.querySelectorAll(".context-menu__item");
+      if (!items.length) return;
       var active = menu.querySelector(".context-menu__item:focus");
       var idx = Array.from(items).indexOf(active);
       var prev = (idx - 1 + items.length) % items.length;

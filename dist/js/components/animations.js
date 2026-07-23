@@ -137,19 +137,22 @@ var AnimationEngine = /* @__PURE__ */ (function() {
       if (ripple.parentNode) ripple.remove();
     });
   }
+  var _animMediaHandler, _animClickHandler;
   function init() {
     var style = document.createElement("style");
     style.textContent = "@keyframes ripple-anim{to{transform:translate(-50%,-50%) scale(1);opacity:0}}";
     document.head.appendChild(style);
     var mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedMotion = mediaQuery.matches;
-    mediaQuery.addEventListener("change", function(e) {
+    _animMediaHandler = function(e) {
       reducedMotion = e.matches;
-    });
-    document.addEventListener("click", function(e) {
-      var btn = e.target.closest(".btn:not(.btn--ghost), .card, .toggle");
+    };
+    mediaQuery.addEventListener("change", _animMediaHandler);
+    _animClickHandler = function(e) {
+      var btn = e.target && e.target.closest(".btn:not(.btn--ghost), .card, .toggle");
       if (btn) microRipple(e, btn);
-    });
+    };
+    document.addEventListener("click", _animClickHandler);
   }
   return {
     init,

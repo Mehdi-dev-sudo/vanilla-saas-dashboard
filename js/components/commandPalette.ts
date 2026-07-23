@@ -16,7 +16,7 @@ const CommandPalette = (function () {
     '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette">' +
       '<div class="cmd-palette__input-wrapper">' +
         '<svg class="cmd-palette__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
-        '<input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false">' +
+        '<input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdResults">' +
         '<span class="cmd-palette__hint">ESC to close</span>' +
       '</div>' +
       '<div class="cmd-palette__results" id="cmdResults" role="listbox"></div>' +
@@ -66,13 +66,13 @@ const CommandPalette = (function () {
 
       // Actions
       { id: 'act-adduser', category: 'Actions', label: 'Create User', keywords: 'new user add', icon: 'user-plus', action: function () { close(); Router.navigate('users'); setTimeout(function () { var btn = document.getElementById('addUserBtn'); if (btn) btn.click(); }, 150); } },
-      { id: 'act-deleteuser', category: 'Actions', label: 'Delete User', keywords: 'remove', icon: 'trash-2', action: function () { close(); Router.navigate('users'); ToastSystem.info('Select a user to delete'); } },
-      { id: 'act-export', category: 'Actions', label: 'Export CSV', keywords: 'download transactions', icon: 'download', action: function () { close(); var txs = AppStore.getState('transactions'); if (txs.length) { AppStore.exportTransactionsCSV(txs); ToastSystem.success('CSV exported'); } else { ToastSystem.error('No transactions to export'); } } },
-      { id: 'act-theme', category: 'Actions', label: 'Toggle Theme', keywords: 'dark light mode', icon: 'sun', action: function () { close(); ThemeManager.toggle(); ToastSystem.info('Theme: ' + ThemeManager.getCurrent()); } },
+      { id: 'act-deleteuser', category: 'Actions', label: 'Delete User', keywords: 'remove', icon: 'trash-2', action: function () { close(); Router.navigate('users'); if (typeof ToastSystem !== 'undefined') ToastSystem.info('Select a user to delete'); } },
+      { id: 'act-export', category: 'Actions', label: 'Export CSV', keywords: 'download transactions', icon: 'download', action: function () { close(); var txs = AppStore.getState('transactions'); if (txs.length) { AppStore.exportTransactionsCSV(txs); if (typeof ToastSystem !== 'undefined') ToastSystem.success('CSV exported'); } else { if (typeof ToastSystem !== 'undefined') ToastSystem.error('No transactions to export'); } } },
+      { id: 'act-theme', category: 'Actions', label: 'Toggle Theme', keywords: 'dark light mode', icon: 'sun', action: function () { close(); ThemeManager.toggle(); if (typeof ToastSystem !== 'undefined') ToastSystem.info('Theme: ' + ThemeManager.getCurrent()); } },
       { id: 'act-undo', category: 'Actions', label: 'Undo', keywords: 'ctrl z', icon: 'rotate-ccw', action: function () { close(); setTimeout(function () { HistoryManager.undo(); }, 100); } },
       { id: 'act-redo', category: 'Actions', label: 'Redo', keywords: 'ctrl shift z', icon: 'rotate-cw', action: function () { close(); setTimeout(function () { HistoryManager.redo(); }, 100); } },
       { id: 'act-keys', category: 'Actions', label: 'Keyboard Shortcuts', keywords: 'help keys shortcuts', icon: 'keyboard', action: function () { close(); setTimeout(function () { if (window.showKeyboardHelp) window.showKeyboardHelp(); }, 100); } },
-      { id: 'act-reload', category: 'Actions', label: 'Reload Data', keywords: 'refresh reset api', icon: 'refresh-cw', action: function () { close(); ApiClient.clearCache(); ToastSystem.success('Cache cleared. Reloading...'); setTimeout(function () { window.location.reload(); }, 500); } },
+      { id: 'act-reload', category: 'Actions', label: 'Reload Data', keywords: 'refresh reset api', icon: 'refresh-cw', action: function () { close(); ApiClient.clearCache(); if (typeof ToastSystem !== 'undefined') ToastSystem.success('Cache cleared. Reloading...'); setTimeout(function () { window.location.reload(); }, 500); } },
       { id: 'act-logout', category: 'Actions', label: 'Logout', keywords: 'sign out exit', icon: 'log-out', action: function () { close(); setTimeout(function () { AuthManager.logout(); }, 100); } },
 
       // Pages

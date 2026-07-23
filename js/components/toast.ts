@@ -23,7 +23,7 @@ const ToastSystem = (function () {
     el.className = 'toast toast--' + type;
     el.innerHTML =
       (icons[type] || icons.info) +
-      '<span class="toast__message">' + message + '</span>' +
+      '<span class="toast__message">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(message) : message) + '</span>' +
       '<button class="toast__close" aria-label="Dismiss">' +
         '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
       '</button>' +
@@ -39,9 +39,12 @@ const ToastSystem = (function () {
 
     var progressBar = el.querySelector('.toast__progress-bar');
     if (duration > 0 && progressBar) {
+      progressBar.style.width = '100%';
       progressBar.style.transition = 'width ' + duration + 'ms linear';
       requestAnimationFrame(function () {
-        progressBar.style.width = '0%';
+        requestAnimationFrame(function () {
+          progressBar.style.width = '0%';
+        });
       });
       el._timer = setTimeout(function () { dismiss(el); }, duration);
     }

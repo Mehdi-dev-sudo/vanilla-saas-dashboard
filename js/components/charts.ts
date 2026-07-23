@@ -54,6 +54,8 @@ function setupCanvas(canvas, width, height) {
   function drawLineChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length < 2) return;
+    options = options || {};
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -64,7 +66,7 @@ function setupCanvas(canvas, width, height) {
     const values = data.map(d => d.value);
     const min = Math.min(...values) * 0.9;
     const max = Math.max(...values) * 1.05;
-    const xStep = chartW / (data.length - 1);
+    const xStep = data.length > 1 ? chartW / (data.length - 1) : 0;
 
     function getX(i) { return pad.left + i * xStep; }
     function getY(v) { return pad.top + chartH - ((v - min) / (max - min)) * chartH; }
@@ -166,6 +168,8 @@ function setupCanvas(canvas, width, height) {
   function drawBarChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length === 0) return;
+    options = options || {};
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -250,6 +254,8 @@ function setupCanvas(canvas, width, height) {
   function drawDonutChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length === 0) return;
+    options = options || {};
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, options.size || 200, options.size || 200);
     if (!ctx) return;
@@ -291,6 +297,8 @@ function setupCanvas(canvas, width, height) {
   }
 
   function startAnimation(canvas, drawFrame) {
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) { drawFrame(1); return; }
     const duration = 900;
     const startTime = performance.now();
     var canvasFrames = canvas._animFrames || [];
@@ -320,7 +328,8 @@ function setupCanvas(canvas, width, height) {
 
   function downloadChart(canvasId, filename) {
     var canvas = document.getElementById(canvasId);
-    if (!canvas) { ToastSystem.error('Chart not found'); return; }
+    if (!canvas) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Chart not found'); return; }
+    if (canvas.width === 0 || canvas.height === 0) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Chart not rendered'); return; }
     var link = document.createElement('a');
     link.download = filename || 'chart.png';
     link.href = canvas.toDataURL('image/png');
@@ -328,7 +337,7 @@ function setupCanvas(canvas, width, height) {
     link.click();
     document.body.removeChild(link);
     if (typeof ActivityLog !== 'undefined') ActivityLog.add('export', 'Downloaded chart: ' + filename, 'export');
-    ToastSystem.success('Chart downloaded');
+    if (typeof ToastSystem !== 'undefined') ToastSystem.success('Chart downloaded');
   }
 
   function clearCache() {

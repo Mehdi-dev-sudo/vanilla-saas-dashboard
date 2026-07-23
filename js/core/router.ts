@@ -75,6 +75,7 @@ const Router = (function () {
 
           var handler = routes[name];
           if (handler && typeof handler.render === 'function') {
+            if (!contentEl) { hideLoader(); return; }
             contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
             requestAnimationFrame(function () { if (gen === navGeneration) hideLoader(); });
             if (typeof handler.init === 'function') {
@@ -88,6 +89,7 @@ const Router = (function () {
             updateSidebar(name);
             updatePageMeta(name);
           } else {
+            if (!contentEl) { hideLoader(); return; }
             contentEl.innerHTML = ErrorPage.render('404');
             hideLoader();
             updateSidebar(null);
@@ -95,7 +97,7 @@ const Router = (function () {
           }
         } catch (e) {
           console.error('Render error:', e);
-          if (contentEl) contentEl.innerHTML = '<div class="page-wrapper"><div class="empty-state"><div class="empty-state__icon">!</div><div class="empty-state__title">Something went wrong</div><div class="empty-state__desc">' + (e.message || 'Unknown error') + '</div><button class="btn btn--primary" onclick="location.reload()">Reload</button></div></div>';
+          if (contentEl) contentEl.innerHTML = '<div class="page-wrapper"><div class="empty-state"><div class="empty-state__icon">!</div><div class="empty-state__title">Something went wrong</div><div class="empty-state__desc">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(e.message || 'Unknown error') : (e.message || 'Unknown error')) + '</div><button class="btn btn--primary" onclick="location.reload()">Reload</button></div></div>';
           hideLoader();
         }
       });
@@ -115,7 +117,8 @@ const Router = (function () {
       }
       updateSidebar(null);
       document.title = 'Sign In — Vanilla SaaS Dashboard';
-      document.querySelector('.sidebar') && document.querySelector('.sidebar').classList.remove('open');
+      var sidebarEl = document.querySelector('.sidebar');
+      if (sidebarEl) sidebarEl.classList.remove('open');
     }
   }
 

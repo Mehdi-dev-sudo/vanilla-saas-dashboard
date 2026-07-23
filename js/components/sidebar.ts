@@ -8,6 +8,8 @@ const SidebarManager = (function () {
   const collapseBtn = document.getElementById('sidebarCollapse');
   const menuToggle = document.getElementById('menuToggle');
 
+  var _resizeHandler, _keyHandler;
+
   function init() {
     try {
       if (SafeStorage.getItem('sidebar_collapsed') === 'true' && sidebar) {
@@ -24,17 +26,19 @@ const SidebarManager = (function () {
         });
       });
 
-      window.addEventListener('resize', function () {
+      _resizeHandler = function () {
         if (window.innerWidth > 1024 && sidebar && sidebar.classList.contains('open')) {
           closeMobile();
         }
-      });
+      };
+      window.addEventListener('resize', _resizeHandler);
 
-      document.addEventListener('keydown', function (e) {
+      _keyHandler = function (e) {
         if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
           closeMobile();
         }
-      });
+      };
+      document.addEventListener('keydown', _keyHandler);
     } catch (e) { console.error('Sidebar init error:', e); }
   }
 

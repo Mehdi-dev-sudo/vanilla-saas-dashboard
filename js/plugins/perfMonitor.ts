@@ -42,8 +42,10 @@ PluginSystem.register('perfMonitor', {
     ].join('');
     document.body.appendChild(this.panel);
 
-    document.getElementById('perfToggle').addEventListener('click', function () {
-      document.getElementById('perfMonitor').style.display = 'none';
+    var perfToggle = document.getElementById('perfToggle');
+    if (perfToggle) perfToggle.addEventListener('click', function () {
+      var perfMon = document.getElementById('perfMonitor');
+      if (perfMon) perfMon.style.display = 'none';
     });
 
     var self = this;
