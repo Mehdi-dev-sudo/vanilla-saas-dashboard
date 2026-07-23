@@ -199,11 +199,13 @@ const TransactionsPage = (function () {
       });
     });
 
-    document.getElementById('prevTxPage').addEventListener('click', function () {
+    var prevTxPage = document.getElementById('prevTxPage');
+    if (prevTxPage) prevTxPage.addEventListener('click', function () {
       if (currentPage > 1) { currentPage--; renderTransactions(); }
     });
 
-    document.getElementById('nextTxPage').addEventListener('click', function () {
+    var nextTxPage = document.getElementById('nextTxPage');
+    if (nextTxPage) nextTxPage.addEventListener('click', function () {
       if (currentPage < result.totalPages) { currentPage++; renderTransactions(); }
     });
   }

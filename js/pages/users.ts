@@ -89,7 +89,8 @@ const UsersPage = (function () {
     if (searchInput) searchInput.addEventListener('input', Utils.debounce(function () {
       currentSearch = this.value;
       currentPage = 1;
-      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById('usersTableBody');
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     }, 300));
 
@@ -97,7 +98,8 @@ const UsersPage = (function () {
     if (statusFilter) statusFilter.addEventListener('change', function () {
       currentStatus = this.value;
       currentPage = 1;
-      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById('usersTableBody');
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
@@ -105,7 +107,8 @@ const UsersPage = (function () {
     if (roleFilter) roleFilter.addEventListener('change', function () {
       currentRole = this.value;
       currentPage = 1;
-      document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var utbody = document.getElementById('usersTableBody');
+      if (utbody) utbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
@@ -241,11 +244,13 @@ const UsersPage = (function () {
       });
     });
 
-    document.getElementById('prevPage').addEventListener('click', function () {
+    var prevPage = document.getElementById('prevPage');
+    if (prevPage) prevPage.addEventListener('click', function () {
       if (currentPage > 1) { currentPage--; renderUsers(); }
     });
 
-    document.getElementById('nextPage').addEventListener('click', function () {
+    var nextPage = document.getElementById('nextPage');
+    if (nextPage) nextPage.addEventListener('click', function () {
       if (currentPage < result.totalPages) { currentPage++; renderUsers(); }
     });
   }
