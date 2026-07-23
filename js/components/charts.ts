@@ -54,6 +54,7 @@ function setupCanvas(canvas, width, height) {
   function drawLineChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length < 2) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -64,7 +65,7 @@ function setupCanvas(canvas, width, height) {
     const values = data.map(d => d.value);
     const min = Math.min(...values) * 0.9;
     const max = Math.max(...values) * 1.05;
-    const xStep = chartW / (data.length - 1);
+    const xStep = data.length > 1 ? chartW / (data.length - 1) : 0;
 
     function getX(i) { return pad.left + i * xStep; }
     function getY(v) { return pad.top + chartH - ((v - min) / (max - min)) * chartH; }
@@ -166,6 +167,7 @@ function setupCanvas(canvas, width, height) {
   function drawBarChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length === 0) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -250,6 +252,7 @@ function setupCanvas(canvas, width, height) {
   function drawDonutChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length === 0) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, options.size || 200, options.size || 200);
     if (!ctx) return;
