@@ -221,7 +221,8 @@ const SettingsPage = /* @__PURE__ */ (function() {
     });
     applySettingsOnLoad();
     return function cleanup() {
-      document.getElementById("resetSettingsBtn") && (document.getElementById("resetSettingsBtn").onclick = null);
+      var resetBtn = document.getElementById("resetSettingsBtn");
+      if (resetBtn) resetBtn.onclick = null;
     };
   }
   function applySettingsOnLoad() {
@@ -232,9 +233,9 @@ const SettingsPage = /* @__PURE__ */ (function() {
     if (settings.compactView) document.documentElement.classList.add("compact-view");
     if (settings.reducedMotion) document.documentElement.classList.add("reduced-motion");
     if (settings.sidebarCollapsed) {
-      document.querySelector(".sidebar").classList.add("collapsed");
+      var sb = document.querySelector(".sidebar");
+      if (sb) sb.classList.add("collapsed");
     }
-    ;
   }
   function applyAccentColor(color) {
     var map = {
