@@ -7,7 +7,7 @@ const CommandPalette = (function() {
   let searchHistory = [];
   const overlay = document.createElement("div");
   overlay.className = "cmd-palette-overlay";
-  overlay.innerHTML = '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette"><div class="cmd-palette__input-wrapper"><svg class="cmd-palette__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false"><span class="cmd-palette__hint">ESC to close</span></div><div class="cmd-palette__results" id="cmdResults" role="listbox"></div><div class="cmd-palette__footer"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 12 15 20 7"/></svg> Navigate</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> > Actions</span><span>ESC Cancel</span></div></div>';
+  overlay.innerHTML = '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette"><div class="cmd-palette__input-wrapper"><svg class="cmd-palette__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="cmd-palette__input" id="cmdInput" placeholder="Type &gt; for actions, or search..." autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdResults"><span class="cmd-palette__hint">ESC to close</span></div><div class="cmd-palette__results" id="cmdResults" role="listbox"></div><div class="cmd-palette__footer"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 12 15 20 7"/></svg> Navigate</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Select</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> > Actions</span><span>ESC Cancel</span></div></div>';
   document.body.appendChild(overlay);
   const input = overlay.querySelector("#cmdInput");
   const resultsEl = overlay.querySelector("#cmdResults");
@@ -33,28 +33,28 @@ const CommandPalette = (function() {
     commands = [
       // Navigation
       { id: "nav-dashboard", category: "Navigation", label: "Go to Dashboard", keywords: "gd home", icon: "grid", action: function() {
-        Router.navigate("dashboard");
         close();
+        Router.navigate("dashboard");
       } },
       { id: "nav-analytics", category: "Navigation", label: "Go to Analytics", keywords: "ga", icon: "bar-chart", action: function() {
-        Router.navigate("analytics");
         close();
+        Router.navigate("analytics");
       } },
       { id: "nav-users", category: "Navigation", label: "Go to Users", keywords: "gu", icon: "users", action: function() {
-        Router.navigate("users");
         close();
+        Router.navigate("users");
       } },
       { id: "nav-transactions", category: "Navigation", label: "Go to Transactions", keywords: "gt", icon: "credit-card", action: function() {
-        Router.navigate("transactions");
         close();
+        Router.navigate("transactions");
       } },
       { id: "nav-settings", category: "Navigation", label: "Go to Settings", keywords: "gs", icon: "settings", action: function() {
-        Router.navigate("settings");
         close();
+        Router.navigate("settings");
       } },
       { id: "nav-support", category: "Navigation", label: "Go to Support", keywords: "gsh", icon: "help-circle", action: function() {
-        Router.navigate("support");
         close();
+        Router.navigate("support");
       } },
       // Actions
       { id: "act-adduser", category: "Actions", label: "Create User", keywords: "new user add", icon: "user-plus", action: function() {
@@ -119,24 +119,24 @@ const CommandPalette = (function() {
       } },
       // Pages
       { id: "pg-dashboard", category: "Pages", label: "Dashboard", keywords: "home", icon: "grid", action: function() {
-        Router.navigate("dashboard");
         close();
+        Router.navigate("dashboard");
       } },
       { id: "pg-analytics", category: "Pages", label: "Analytics", keywords: "stats", icon: "bar-chart", action: function() {
-        Router.navigate("analytics");
         close();
+        Router.navigate("analytics");
       } },
       { id: "pg-users", category: "Pages", label: "Users", keywords: "people team", icon: "users", action: function() {
-        Router.navigate("users");
         close();
+        Router.navigate("users");
       } },
       { id: "pg-transactions", category: "Pages", label: "Transactions", keywords: "payments billing", icon: "credit-card", action: function() {
-        Router.navigate("transactions");
         close();
+        Router.navigate("transactions");
       } },
       { id: "pg-settings", category: "Pages", label: "Settings", keywords: "preferences config", icon: "settings", action: function() {
-        Router.navigate("settings");
         close();
+        Router.navigate("settings");
       } }
       // Recent (from history)
     ];

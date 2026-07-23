@@ -56,6 +56,7 @@ const Router = (function() {
         currentCleanup();
         currentCleanup = null;
       }
+      if (typeof ChartEngine !== "undefined" && ChartEngine.clearCache) ChartEngine.clearCache();
       previousRoute = currentRoute;
       currentRoute = name;
       if (name !== "login") location.hash = name;
@@ -73,7 +74,7 @@ const Router = (function() {
           if (handler && typeof handler.render === "function") {
             contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + "</div>";
             requestAnimationFrame(function() {
-              hideLoader();
+              if (gen === navGeneration) hideLoader();
             });
             if (typeof handler.init === "function") {
               currentCleanup = handler.init();
@@ -98,11 +99,7 @@ const Router = (function() {
     }
   }
   function renderLogin() {
-    if (!contentEl) {
-      hideLoader();
-      return;
-    }
-    if (typeof AuthManager !== "undefined" && AuthManager.getLoginPage) {
+    if (typeof AuthManager !== "undefined" && AuthManager.getLoginPage && contentEl) {
       contentEl.innerHTML = AuthManager.getLoginPage();
       hideLoader();
       if (typeof AuthManager.initLoginPage === "function") {

@@ -29,6 +29,7 @@
     setupGlobalSearch();
     setupNotifications();
     setupKeyboardNavigation();
+    setupConnectivityListeners();
     initApiData();
   }
   function initApiData() {
@@ -226,6 +227,11 @@
       e.stopPropagation();
       dropdown.classList.toggle("open");
     });
+    document.addEventListener("keydown", function notifEsc(e) {
+      if (e.key === "Escape" && dropdown.classList.contains("open")) {
+        dropdown.classList.remove("open");
+      }
+    });
     var markAllBtn = document.getElementById("markAllRead");
     if (markAllBtn) markAllBtn.addEventListener("click", function() {
       AppStore.clearNotifications();
@@ -312,6 +318,24 @@
           ModalSystem.close();
         }
       }
+    });
+  }
+  function setupConnectivityListeners() {
+    window.addEventListener("online", function() {
+      var statusEl = document.getElementById("apiStatus");
+      if (statusEl) {
+        statusEl.textContent = "API \u2713";
+        statusEl.className = "header__api-status header__api-status--online";
+      }
+      if (typeof ToastSystem !== "undefined") ToastSystem.success("Connection restored");
+    });
+    window.addEventListener("offline", function() {
+      var statusEl = document.getElementById("apiStatus");
+      if (statusEl) {
+        statusEl.textContent = "Offline";
+        statusEl.className = "header__api-status header__api-status--offline";
+      }
+      if (typeof ToastSystem !== "undefined") ToastSystem.warning("You are offline");
     });
   }
   if ("serviceWorker" in navigator) {

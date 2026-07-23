@@ -26,14 +26,16 @@ const I18n = /* @__PURE__ */ (function() {
     return locale;
   }
   function __(key, params) {
+    if (!key) return "";
     var parts = key.split(".");
-    var val = translations[locale];
+    var val = translations[locale] || translations[fallback];
     var i;
     for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
-    if (val === void 0) {
+    if (val === void 0 && locale !== fallback) {
       val = translations[fallback];
       for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
     }
+    if (val === void 0) val = key;
     if (val === void 0) return key;
     if (params) {
       for (var p in params) {

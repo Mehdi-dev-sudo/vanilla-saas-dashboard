@@ -32,7 +32,6 @@ const SidebarManager = (function() {
     }
   }
   function toggleCollapse() {
-    if (!sidebar) return;
     sidebar.classList.toggle("collapsed");
     SafeStorage.setItem("sidebar_collapsed", sidebar.classList.contains("collapsed"));
     setTimeout(function() {
@@ -40,14 +39,12 @@ const SidebarManager = (function() {
     }, 350);
   }
   function openMobile() {
-    if (!sidebar || !overlay) return;
     sidebar.classList.add("open");
     overlay.classList.add("open");
     overlay.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
   }
   function closeMobile() {
-    if (!sidebar || !overlay) return;
     sidebar.classList.remove("open");
     overlay.classList.remove("open");
     overlay.setAttribute("aria-hidden", "true");

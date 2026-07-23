@@ -30,7 +30,7 @@ const ChartEngine = /* @__PURE__ */ (function() {
     var parentW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
     var w = width || rect.width || parentW;
     var h = height || rect.height || 300;
-    if (cache && cache.w === w && cache.h === h) {
+    if (cache && cache.w === w && cache.h === h && document.body.contains(cache.ctx.canvas)) {
       return { ctx: cache.ctx, w, h };
     }
     canvas.width = w * dpr;
@@ -288,6 +288,10 @@ const ChartEngine = /* @__PURE__ */ (function() {
       ToastSystem.error("Chart not found");
       return;
     }
+    if (canvas.width === 0 || canvas.height === 0) {
+      ToastSystem.error("Chart not rendered");
+      return;
+    }
     var link = document.createElement("a");
     link.download = filename || "chart.png";
     link.href = canvas.toDataURL("image/png");
@@ -297,10 +301,14 @@ const ChartEngine = /* @__PURE__ */ (function() {
     if (typeof ActivityLog !== "undefined") ActivityLog.add("export", "Downloaded chart: " + filename, "export");
     ToastSystem.success("Chart downloaded");
   }
+  function clearCache() {
+    cachedStyles = null;
+    canvasCache = {};
+  }
   function destroy() {
     window.removeEventListener("resize", resize);
     cachedStyles = null;
     canvasCache = {};
   }
-  return { init, drawLineChart, drawBarChart, drawDonutChart, resize, downloadChart, destroy };
+  return { init, drawLineChart, drawBarChart, drawDonutChart, resize, downloadChart, clearCache, destroy };
 })();

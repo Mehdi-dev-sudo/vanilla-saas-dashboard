@@ -1356,4 +1356,12 @@ body { scrollbar-width: thin; scrollbar-color: var(--border-color) transparent; 
 .compact-view .stats { gap: var(--space-lg); }
 .compact-view .charts-grid { gap: var(--space-lg); }
 
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 

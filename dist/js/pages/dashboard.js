@@ -307,6 +307,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
     Utils.animatePercent(document.getElementById("statChurn"), 0, stats.churn.value, 1200);
   }
   var realtimeInterval = null;
+  var realtimeStopped = false;
   function generateRealtimeData() {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var base = Date.now() / 1e4;
@@ -324,7 +325,12 @@ const DashboardPage = /* @__PURE__ */ (function() {
   }
   function startRealtimeUpdates() {
     if (realtimeInterval) clearInterval(realtimeInterval);
+    realtimeStopped = false;
     realtimeInterval = setInterval(function() {
+      if (realtimeStopped) {
+        stopRealtimeUpdates();
+        return;
+      }
       var revChart = document.getElementById("dashRevenueChart");
       var userChart = document.getElementById("dashUserChart");
       if (!revChart || !userChart) return;
@@ -335,6 +341,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
     }, 5e3);
   }
   function stopRealtimeUpdates() {
+    realtimeStopped = true;
     if (realtimeInterval) {
       clearInterval(realtimeInterval);
       realtimeInterval = null;

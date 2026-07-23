@@ -4,10 +4,6 @@ const ModalSystem = (function() {
   let isOpen = false;
   var lastFocused = null;
   function init() {
-    if (!overlay || !content) {
-      console.warn("ModalSystem: overlay or content missing");
-      return;
-    }
     overlay.addEventListener("click", function(e) {
       if (e.target === overlay) close();
     });
@@ -17,7 +13,6 @@ const ModalSystem = (function() {
     });
   }
   function open(html) {
-    if (!overlay || !content) return;
     lastFocused = document.activeElement;
     content.innerHTML = html;
     overlay.classList.add("open");
@@ -54,7 +49,6 @@ const ModalSystem = (function() {
     }
   }
   function close() {
-    if (!overlay) return;
     overlay.classList.remove("open");
     overlay.setAttribute("aria-hidden", "true");
     isOpen = false;

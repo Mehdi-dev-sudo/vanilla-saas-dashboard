@@ -36,9 +36,10 @@ const VirtualScroll = /* @__PURE__ */ (function() {
         viewport.appendChild(row);
       }
     }
-    wrapper.addEventListener("scroll", function() {
+    function onScroll() {
       requestAnimationFrame(render);
-    }, { passive: true });
+    }
+    wrapper.addEventListener("scroll", onScroll, { passive: true });
     render();
     return {
       refresh: function(newItems) {
@@ -48,6 +49,7 @@ const VirtualScroll = /* @__PURE__ */ (function() {
         render();
       },
       destroy: function() {
+        wrapper.removeEventListener("scroll", onScroll);
         container.innerHTML = "";
       }
     };

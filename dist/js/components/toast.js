@@ -1,12 +1,7 @@
 const ToastSystem = (function() {
   var container = document.getElementById("toastContainer");
   var activeToasts = [];
-  if (!container) console.warn("ToastSystem: #toastContainer missing");
   function show(message, type, duration) {
-    if (!container) {
-      console.warn("ToastSystem: cannot show toast, no container");
-      return null;
-    }
     type = type || "info";
     duration = duration || 4e3;
     var icons = {
@@ -26,9 +21,12 @@ const ToastSystem = (function() {
     updatePositions();
     var progressBar = el.querySelector(".toast__progress-bar");
     if (duration > 0 && progressBar) {
+      progressBar.style.width = "100%";
       progressBar.style.transition = "width " + duration + "ms linear";
       requestAnimationFrame(function() {
-        progressBar.style.width = "0%";
+        requestAnimationFrame(function() {
+          progressBar.style.width = "0%";
+        });
       });
       el._timer = setTimeout(function() {
         dismiss(el);
