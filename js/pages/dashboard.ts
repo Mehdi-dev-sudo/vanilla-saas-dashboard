@@ -271,11 +271,11 @@ const DashboardPage = (function () {
             ${activities.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--text-tertiary);font-size:var(--font-sm)">No recent activity</div>' :
               activities.map(function (a) {
                 return '<div class="activity-item">' +
-                  '<div class="activity-item__icon activity-item__icon--' + a.type + '">' +
+                  '<div class="activity-item__icon activity-item__icon--' + Utils.escapeHtml(a.type) + '">' +
                     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
                   '</div>' +
                   '<div class="activity-item__content">' +
-                    '<div class="activity-item__text"><strong>' + a.action + '</strong> ' + a.detail + '</div>' +
+                    '<div class="activity-item__text"><strong>' + Utils.escapeHtml(a.action) + '</strong> ' + Utils.escapeHtml(a.detail) + '</div>' +
                     '<div class="activity-item__time">' + ActivityLog.formatDate(a.timestamp) + '</div>' +
                   '</div>' +
                 '</div>';
