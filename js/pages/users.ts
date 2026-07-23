@@ -303,7 +303,7 @@ const UsersPage = (function () {
     if (!user) return;
 
     const html =
-      '<input type="hidden" name="id" value="' + id + '">' +
+      '<input type="hidden" name="id" value="' + Utils.escapeHtml(id) + '">' +
       '<div class="form-row">' +
         '<div class="form-group"><label class="form-label" for="uEditName">Full Name</label><input type="text" class="form-input" id="uEditName" name="name" value="' + Utils.escapeHtml(user.name) + '" required></div>' +
         '<div class="form-group"><label class="form-label" for="uEditEmail">Email</label><input type="email" class="form-input" id="uEditEmail" name="email" value="' + Utils.escapeHtml(user.email) + '" required></div>' +
