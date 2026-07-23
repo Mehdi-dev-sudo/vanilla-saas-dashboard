@@ -276,7 +276,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
         return n[0];
       }).join("").slice(0, 2);
       var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : "#6366f1";
-      return '<div class="activity-item"><div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div><div class="activity-item__content"><div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div><div class="activity-item__time">' + Utils.escapeHtml(u.role + " - " + u.plan + " Plan") + '</div></div><span class="status-badge status-badge--' + u.status + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></div>";
+      return '<div class="activity-item"><div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div><div class="activity-item__content"><div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div><div class="activity-item__time">' + Utils.escapeHtml(u.role + " - " + u.plan + " Plan") + '</div></div><span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></div>";
     }).join("")}
         </div>
       </div>
@@ -291,7 +291,8 @@ const DashboardPage = /* @__PURE__ */ (function() {
     startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();
-    document.getElementById("exportDashboardBtn").addEventListener("click", function() {
+    var exportBtn = document.getElementById("exportDashboardBtn");
+    if (exportBtn) exportBtn.addEventListener("click", function() {
       ExportManager.exportDashboard();
       ToastSystem.success(__("toast.dashboard.exported"));
     });
@@ -331,6 +332,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
         stopRealtimeUpdates();
         return;
       }
+      if (document.hidden) return;
       var revChart = document.getElementById("dashRevenueChart");
       var userChart = document.getElementById("dashUserChart");
       if (!revChart || !userChart) return;
@@ -401,7 +403,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
           });
         }
         saveHiddenWidgets();
-        var widget = document.querySelector('[data-widget-id="' + id + '"]');
+        var widget = document.querySelector('[data-widget-id="' + (typeof Utils !== "undefined" ? Utils.escapeHtml(id) : id) + '"]');
         if (widget) {
           widget.style.display = hide ? "none" : "";
           if (!hide && (id === "charts" || id === "traffic")) {

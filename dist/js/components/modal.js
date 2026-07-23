@@ -4,6 +4,10 @@ const ModalSystem = (function() {
   let isOpen = false;
   var lastFocused = null;
   function init() {
+    if (!overlay || !content) {
+      console.warn("ModalSystem: overlay or content missing");
+      return;
+    }
     overlay.addEventListener("click", function(e) {
       if (e.target === overlay) close();
     });
@@ -13,6 +17,7 @@ const ModalSystem = (function() {
     });
   }
   function open(html) {
+    if (!overlay || !content) return;
     lastFocused = document.activeElement;
     content.innerHTML = html;
     overlay.classList.add("open");
@@ -49,6 +54,7 @@ const ModalSystem = (function() {
     }
   }
   function close() {
+    if (!overlay) return;
     overlay.classList.remove("open");
     overlay.setAttribute("aria-hidden", "true");
     isOpen = false;
@@ -60,16 +66,19 @@ const ModalSystem = (function() {
   }
   function confirm(title, message, confirmText, cancelText, onConfirm) {
     confirmText = confirmText || "Confirm";
+    message = typeof Utils !== "undefined" ? Utils.escapeHtml(message) : message;
     cancelText = cancelText || "Cancel";
     const html = '<div class="modal__header"><h3 class="modal__title">' + title + '</h3><button class="modal__close" data-modal-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="modal__body"><p style="color: var(--text-secondary);">' + message + '</p></div><div class="modal__footer"><button class="btn btn--secondary" data-modal-close>' + cancelText + '</button><button class="btn btn--danger" id="confirmBtn">' + confirmText + "</button></div>";
     open(html);
-    document.getElementById("confirmBtn").addEventListener("click", function() {
+    var confirmBtn = document.getElementById("confirmBtn");
+    if (confirmBtn) confirmBtn.addEventListener("click", function() {
       if (typeof onConfirm === "function") onConfirm();
       close();
     });
   }
   function form(title, formHtml, submitText, onSubmit) {
     submitText = submitText || "Save";
+    title = typeof Utils !== "undefined" ? Utils.escapeHtml(title) : title;
     const html = '<div class="modal__header"><h3 class="modal__title">' + title + '</h3><button class="modal__close" data-modal-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><form id="modalForm" class="modal__body">' + formHtml + '</form><div class="modal__footer"><button class="btn btn--secondary" data-modal-close>Cancel</button><button class="btn btn--primary" type="submit" form="modalForm">' + submitText + "</button></div>";
     open(html);
     const form2 = document.getElementById("modalForm");

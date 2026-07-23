@@ -27,39 +27,49 @@ const ExportManager = {
     this.download(filename, "\uFEFF" + csv, "text/csv");
   },
   exportDashboard() {
-    var state = AppStore.getState();
-    var stats = AppStore.getDashboardStats();
-    var lines = [];
-    lines.push("=== Dashboard Report ===");
-    lines.push("Generated: " + (/* @__PURE__ */ new Date()).toLocaleString());
-    lines.push("");
-    lines.push("--- Key Metrics ---");
-    lines.push("Total Revenue: " + Utils.formatCurrency(stats.revenue.value));
-    lines.push("Active Users: " + Utils.formatNumber(stats.users.value));
-    lines.push("Subscribers: " + Utils.formatNumber(stats.subscribers.value));
-    lines.push("Churn Rate: " + Utils.formatPercent(stats.churn.value));
-    lines.push("");
-    lines.push("--- Top Transactions ---");
-    (state.transactions || []).slice(0, 10).forEach(function(t) {
-      lines.push(t.invoice + " | " + Utils.escapeHtml(t.customer) + " | " + Utils.formatCurrency(t.amount) + " | " + t.status + " | " + t.date);
-    });
-    this.download("dashboard-report-" + (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) + ".txt", lines.join("\n"));
-    ActivityLog.add("export", "Dashboard report exported", "export");
+    try {
+      var state = AppStore.getState();
+      var stats = AppStore.getDashboardStats();
+      var lines = [];
+      lines.push("=== Dashboard Report ===");
+      lines.push("Generated: " + (/* @__PURE__ */ new Date()).toLocaleString());
+      lines.push("");
+      lines.push("--- Key Metrics ---");
+      lines.push("Total Revenue: " + Utils.formatCurrency(stats.revenue.value));
+      lines.push("Active Users: " + Utils.formatNumber(stats.users.value));
+      lines.push("Subscribers: " + Utils.formatNumber(stats.subscribers.value));
+      lines.push("Churn Rate: " + Utils.formatPercent(stats.churn.value));
+      lines.push("");
+      lines.push("--- Top Transactions ---");
+      (state.transactions || []).slice(0, 10).forEach(function(t) {
+        lines.push(t.invoice + " | " + Utils.escapeHtml(t.customer) + " | " + Utils.formatCurrency(t.amount) + " | " + t.status + " | " + t.date);
+      });
+      this.download("dashboard-report-" + (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) + ".txt", lines.join("\n"));
+      ActivityLog.add("export", "Dashboard report exported", "export");
+    } catch (e) {
+      console.error("Export error:", e);
+      if (typeof ToastSystem !== "undefined") ToastSystem.error("Export failed: " + e.message);
+    }
   },
   exportAnalytics() {
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var now = /* @__PURE__ */ new Date();
-    var headers = ["Month", "Revenue", "Users", "Refunds"];
-    var rows = months.map(function(m, i) {
-      return [
-        m,
-        Math.round(18e3 + i * 1400 + Math.sin(i) * 2e3),
-        Math.round(110 + i * 18 + Math.sin(i * 1.3) * 25),
-        Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15)
-      ];
-    });
-    this.downloadCSV("analytics-" + now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + ".csv", headers, rows);
-    ActivityLog.add("export", "Analytics report exported", "export");
+    try {
+      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      var now = /* @__PURE__ */ new Date();
+      var headers = ["Month", "Revenue", "Users", "Refunds"];
+      var rows = months.map(function(m, i) {
+        return [
+          m,
+          Math.round(18e3 + i * 1400 + Math.sin(i) * 2e3),
+          Math.round(110 + i * 18 + Math.sin(i * 1.3) * 25),
+          Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15)
+        ];
+      });
+      this.downloadCSV("analytics-" + now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + ".csv", headers, rows);
+      ActivityLog.add("export", "Analytics report exported", "export");
+    } catch (e) {
+      console.error("Export analytics error:", e);
+      if (typeof ToastSystem !== "undefined") ToastSystem.error("Analytics export failed");
+    }
   },
   exportSettings() {
     var settings = AppStore.getState("settings") || {};

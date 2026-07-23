@@ -77,22 +77,28 @@ const TransactionsPage = /* @__PURE__ */ (function() {
     sortBy = "date";
     sortDir = "desc";
     renderTransactions();
-    document.getElementById("transactionSearch").addEventListener("input", Utils.debounce(function() {
+    var searchInput = document.getElementById("transactionSearch");
+    if (searchInput) searchInput.addEventListener("input", Utils.debounce(function() {
       currentSearch = this.value;
       currentPage = 1;
-      document.getElementById("transactionsTableBody").innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var tbody = document.getElementById("transactionsTableBody");
+      if (tbody) tbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     }, 300));
-    document.getElementById("transactionStatusFilter").addEventListener("change", function() {
+    var statusFilter = document.getElementById("transactionStatusFilter");
+    if (statusFilter) statusFilter.addEventListener("change", function() {
       currentStatus = this.value;
       currentPage = 1;
-      document.getElementById("transactionsTableBody").innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var tbody = document.getElementById("transactionsTableBody");
+      if (tbody) tbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     });
-    document.getElementById("transactionMethodFilter").addEventListener("change", function() {
+    var methodFilter = document.getElementById("transactionMethodFilter");
+    if (methodFilter) methodFilter.addEventListener("change", function() {
       currentMethod = this.value;
       currentPage = 1;
-      document.getElementById("transactionsTableBody").innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var tbody = document.getElementById("transactionsTableBody");
+      if (tbody) tbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     });
     document.querySelectorAll("#transactionTable th[data-sort]").forEach((th) => {
@@ -107,10 +113,11 @@ const TransactionsPage = /* @__PURE__ */ (function() {
         renderTransactions();
       });
     });
-    document.getElementById("exportCsvBtn").addEventListener("click", function() {
+    var exportBtn = document.getElementById("exportCsvBtn");
+    if (exportBtn) exportBtn.addEventListener("click", function() {
       const allTransactions = AppStore.getState("transactions");
       AppStore.exportTransactionsCSV(allTransactions);
-      ToastSystem.success("CSV file exported successfully");
+      if (typeof ToastSystem !== "undefined") ToastSystem.success("CSV file exported successfully");
     });
     return function cleanup() {
     };
@@ -124,7 +131,7 @@ const TransactionsPage = /* @__PURE__ */ (function() {
       tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions found</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
     } else {
       tbody.innerHTML = result.items.map(
-        (t) => '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '"><td><strong class="copyable" data-copy="' + Utils.escapeHtml(t.invoice) + `" style="cursor:pointer" onclick="copyToClipboard(decodeURIComponent('` + encodeURIComponent(t.invoice) + `'))" data-tooltip="Copy invoice">` + Utils.escapeHtml(t.invoice) + "</strong></td><td>" + Utils.escapeHtml(t.customer) + "</td><td><strong>" + Utils.formatCurrency(t.amount) + '</strong></td><td><span class="status-badge status-badge--' + t.status + '">' + t.status.charAt(0).toUpperCase() + t.status.slice(1) + "</span></td><td>" + Utils.formatDate(t.date) + "</td><td>" + t.method + "</td></tr>"
+        (t) => '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '"><td><strong class="copyable" data-copy="' + Utils.escapeHtml(t.invoice) + `" style="cursor:pointer" onclick="copyToClipboard(decodeURIComponent('` + encodeURIComponent(t.invoice) + `'))" data-tooltip="Copy invoice">` + Utils.escapeHtml(t.invoice) + "</strong></td><td>" + Utils.escapeHtml(t.customer) + "</td><td><strong>" + Utils.formatCurrency(t.amount) + '</strong></td><td><span class="status-badge status-badge--' + Utils.escapeHtml(t.status) + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + "</span></td><td>" + Utils.formatDate(t.date) + "</td><td>" + Utils.escapeHtml(t.method) + "</td></tr>"
       ).join("");
     }
     totalInfo.textContent = result.total + " transaction" + (result.total !== 1 ? "s" : "");
@@ -157,13 +164,15 @@ const TransactionsPage = /* @__PURE__ */ (function() {
         renderTransactions();
       });
     });
-    document.getElementById("prevTxPage").addEventListener("click", function() {
+    var prevTxPage = document.getElementById("prevTxPage");
+    if (prevTxPage) prevTxPage.addEventListener("click", function() {
       if (currentPage > 1) {
         currentPage--;
         renderTransactions();
       }
     });
-    document.getElementById("nextTxPage").addEventListener("click", function() {
+    var nextTxPage = document.getElementById("nextTxPage");
+    if (nextTxPage) nextTxPage.addEventListener("click", function() {
       if (currentPage < result.totalPages) {
         currentPage++;
         renderTransactions();

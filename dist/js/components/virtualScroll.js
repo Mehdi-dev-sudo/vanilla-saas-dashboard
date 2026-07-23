@@ -27,7 +27,9 @@ const VirtualScroll = /* @__PURE__ */ (function() {
       viewport.style.top = startIdx * rowHeight + "px";
       viewport.innerHTML = "";
       for (var i = startIdx; i < endIdx; i++) {
+        if (typeof renderRow !== "function") break;
         var row = renderRow(items[i], i);
+        if (!row) continue;
         row.style.position = "absolute";
         row.style.top = (i - startIdx) * rowHeight + "px";
         row.style.height = rowHeight + "px";
@@ -36,9 +38,10 @@ const VirtualScroll = /* @__PURE__ */ (function() {
         viewport.appendChild(row);
       }
     }
-    wrapper.addEventListener("scroll", function() {
+    function onScroll() {
       requestAnimationFrame(render);
-    }, { passive: true });
+    }
+    wrapper.addEventListener("scroll", onScroll, { passive: true });
     render();
     return {
       refresh: function(newItems) {
@@ -48,6 +51,7 @@ const VirtualScroll = /* @__PURE__ */ (function() {
         render();
       },
       destroy: function() {
+        wrapper.removeEventListener("scroll", onScroll);
         container.innerHTML = "";
       }
     };
