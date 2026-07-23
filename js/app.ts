@@ -227,10 +227,10 @@
 
     var markAllBtn = document.getElementById('markAllRead');
     if (markAllBtn) markAllBtn.addEventListener('click', function () {
-      AppStore.clearNotifications();
+      if (typeof AppStore.clearNotifications === 'function') AppStore.clearNotifications();
       dropdown.querySelectorAll('.notif-dropdown__item--unread').forEach(function (el) { el.classList.remove('notif-dropdown__item--unread'); });
-      badge.style.display = 'none';
-      ToastSystem.info('All notifications marked as read');
+      if (badge) badge.style.display = 'none';
+      if (typeof ToastSystem !== 'undefined') ToastSystem.info('All notifications marked as read');
     });
 
     var notifOutsideClick = function (e) {
