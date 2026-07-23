@@ -144,6 +144,8 @@ var AnimationEngine = (function () {
     ripple.addEventListener('animationend', function () { if (ripple.parentNode) ripple.remove(); });
   }
 
+  var _animMediaHandler, _animClickHandler;
+
   function init() {
     var style = document.createElement('style');
     style.textContent = '@keyframes ripple-anim{to{transform:translate(-50%,-50%) scale(1);opacity:0}}';
@@ -151,12 +153,14 @@ var AnimationEngine = (function () {
 
     var mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     reducedMotion = mediaQuery.matches;
-    mediaQuery.addEventListener('change', function (e) { reducedMotion = e.matches; });
+    _animMediaHandler = function (e) { reducedMotion = e.matches; };
+    mediaQuery.addEventListener('change', _animMediaHandler);
 
-    document.addEventListener('click', function (e) {
-      var btn = e.target.closest('.btn:not(.btn--ghost), .card, .toggle');
+    _animClickHandler = function (e) {
+      var btn = e.target && e.target.closest('.btn:not(.btn--ghost), .card, .toggle');
       if (btn) microRipple(e, btn);
-    });
+    };
+    document.addEventListener('click', _animClickHandler);
   }
 
   return {
