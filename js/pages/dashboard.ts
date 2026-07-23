@@ -1,3 +1,7 @@
+/**
+ * DashboardPage — Main dashboard with stats, charts, transactions, and widgets.
+ * @module DashboardPage
+ */
 const DashboardPage = (function () {
   var widgetOrder = [];
   var hiddenWidgets = [];

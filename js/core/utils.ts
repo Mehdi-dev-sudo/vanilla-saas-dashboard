@@ -1,3 +1,7 @@
+/**
+ * Utils — Shared utility functions for formatting, escaping, and DOM helpers.
+ * @module Utils
+ */
 const Utils = {
   formatCurrency(amount) {
     var n = Number(amount);

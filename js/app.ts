@@ -1,3 +1,7 @@
+/**
+ * App — Application entry point: initializes all modules, router, and lifecycle.
+ * @module AppMain
+ */
 (function () {
   function init() {
     try {

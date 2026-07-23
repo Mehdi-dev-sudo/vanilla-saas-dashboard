@@ -1,3 +1,7 @@
+/**
+ * TransactionsPage — Transaction listing with filtering, export, and detail view.
+ * @module TransactionsPage
+ */
 const TransactionsPage = (function () {
   let currentPage = 1;
   let currentSearch = '';

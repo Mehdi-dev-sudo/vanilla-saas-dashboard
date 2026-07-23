@@ -1,3 +1,7 @@
+/**
+ * ErrorPage — 404 and error state rendering.
+ * @module ErrorPage
+ */
 const ErrorPage = (function () {
 
   function render(type) {

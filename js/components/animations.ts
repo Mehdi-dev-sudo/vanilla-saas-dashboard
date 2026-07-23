@@ -1,3 +1,7 @@
+/**
+ * AnimationEngine — DOM animation utilities for counters, transitions, and parallax.
+ * @module AnimationEngine
+ */
 var AnimationEngine = (function () {
   var reducedMotion = false;
 

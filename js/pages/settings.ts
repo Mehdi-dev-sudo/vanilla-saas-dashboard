@@ -1,3 +1,7 @@
+/**
+ * SettingsPage — App settings with theme, accent, layout, and preferences.
+ * @module SettingsPage
+ */
 const SettingsPage = (function () {
 
   function render() {

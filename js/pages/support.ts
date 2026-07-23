@@ -1,3 +1,7 @@
+/**
+ * SupportPage — Support/FAQ page with accordion sections and contact form.
+ * @module SupportPage
+ */
 const SupportPage = (function () {
 
   function render() {

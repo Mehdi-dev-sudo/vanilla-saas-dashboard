@@ -1,3 +1,7 @@
+/**
+ * SidebarManager — Responsive sidebar with collapse, mobile overlay, and keyboard nav.
+ * @module SidebarManager
+ */
 const SidebarManager = (function () {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
@@ -35,6 +39,7 @@ const SidebarManager = (function () {
   }
 
   function toggleCollapse() {
+    if (!sidebar) return;
     sidebar.classList.toggle('collapsed');
     SafeStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
     setTimeout(function () {
@@ -43,6 +48,7 @@ const SidebarManager = (function () {
   }
 
   function openMobile() {
+    if (!sidebar || !overlay) return;
     sidebar.classList.add('open');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
@@ -50,6 +56,7 @@ const SidebarManager = (function () {
   }
 
   function closeMobile() {
+    if (!sidebar || !overlay) return;
     sidebar.classList.remove('open');
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');

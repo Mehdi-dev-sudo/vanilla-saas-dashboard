@@ -1,8 +1,14 @@
+/**
+ * ToastSystem — Accessible toast notifications with auto-dismiss and stacked layout.
+ * @module ToastSystem
+ */
 const ToastSystem = (function () {
   var container = document.getElementById('toastContainer');
   var activeToasts = [];
+  if (!container) console.warn('ToastSystem: #toastContainer missing');
 
   function show(message, type, duration) {
+    if (!container) { console.warn('ToastSystem: cannot show toast, no container'); return null; }
     type = type || 'info';
     duration = duration || 4000;
 

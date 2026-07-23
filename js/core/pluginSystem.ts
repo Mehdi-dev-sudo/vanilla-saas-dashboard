@@ -1,3 +1,7 @@
+/**
+ * PluginSystem — Plugin lifecycle management with register, init, and hooks.
+ * @module PluginSystem
+ */
 var PluginSystem = (function () {
   var plugins = {};
   var hooks = {};

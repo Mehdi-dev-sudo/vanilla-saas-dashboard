@@ -1,3 +1,7 @@
+/**
+ * Router — Hash-based SPA router with lifecycle, breadcrumbs, and loader.
+ * @module Router
+ */
 const Router = (function () {
   var currentRoute = null;
   var currentCleanup = null;
@@ -102,7 +106,8 @@ const Router = (function () {
   }
 
   function renderLogin() {
-    if (typeof AuthManager !== 'undefined' && AuthManager.getLoginPage && contentEl) {
+    if (!contentEl) { hideLoader(); return; }
+    if (typeof AuthManager !== 'undefined' && AuthManager.getLoginPage) {
       contentEl.innerHTML = AuthManager.getLoginPage();
       hideLoader();
       if (typeof AuthManager.initLoginPage === 'function') {
@@ -145,7 +150,9 @@ const Router = (function () {
     if (sidebar) {
       sidebar.style.display = (route === 'login' || !route) ? 'none' : 'flex';
     }
-    document.querySelectorAll('.sidebar__item').forEach(function (item) {
+    var items = document.querySelectorAll('.sidebar__item');
+    if (!items || !items.length) return;
+    items.forEach(function (item) {
       item.classList.toggle('active', item.dataset.route === route);
     });
   }

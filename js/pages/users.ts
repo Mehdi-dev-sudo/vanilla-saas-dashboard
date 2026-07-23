@@ -1,3 +1,7 @@
+/**
+ * UsersPage — User management with CRUD, filtering, pagination, and batch actions.
+ * @module UsersPage
+ */
 const UsersPage = (function () {
   let currentPage = 1;
   let currentSearch = '';

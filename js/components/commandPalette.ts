@@ -1,3 +1,7 @@
+/**
+ * CommandPalette — Ctrl+K command palette with fuzzy search, categories, and history.
+ * @module CommandPalette
+ */
 const CommandPalette = (function () {
   const STORAGE_KEY = 'saas_command_history';
   let isOpen = false;

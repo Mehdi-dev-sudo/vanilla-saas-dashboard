@@ -1,3 +1,7 @@
+/**
+ * HistoryManager — Undo/redo state history with snapshot and diff tracking.
+ * @module HistoryManager
+ */
 const HistoryManager = (function () {
   const MAX_HISTORY = 50;
   let undoStack = [];

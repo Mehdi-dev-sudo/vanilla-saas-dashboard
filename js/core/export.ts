@@ -1,3 +1,7 @@
+/**
+ * ExportManager — CSV/JSON export for transactions, users, and dashboard reports.
+ * @module ExportManager
+ */
 const ExportManager = {
   download(filename, content, mimeType) {
     mimeType = mimeType || 'text/plain';

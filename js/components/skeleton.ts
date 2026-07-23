@@ -1,3 +1,7 @@
+/**
+ * SkeletonLoader — Loading skeleton templates for stats, charts, and tables.
+ * @module SkeletonLoader
+ */
 const SkeletonLoader = (function () {
 
   function getCardSkeleton() {

@@ -1,3 +1,7 @@
+/**
+ * DevConsole — Developer console for debugging, logs, and performance monitoring.
+ * @module DevConsole
+ */
 var DevConsole = (function () {
   var isOpen = false;
   var fps = 0;

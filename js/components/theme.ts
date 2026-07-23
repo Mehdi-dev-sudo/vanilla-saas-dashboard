@@ -1,3 +1,7 @@
+/**
+ * ThemeManager — Dark/light theme management with system preference detection.
+ * @module ThemeManager
+ */
 const ThemeManager = (function () {
   const STORAGE_KEY = 'saas_dashboard_theme';
 

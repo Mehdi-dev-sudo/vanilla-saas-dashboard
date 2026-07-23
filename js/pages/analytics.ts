@@ -1,3 +1,7 @@
+/**
+ * AnalyticsPage — Analytics dashboard with charts, stats, and export controls.
+ * @module AnalyticsPage
+ */
 const AnalyticsPage = (function () {
 
   function render() {

@@ -1,3 +1,7 @@
+/**
+ * ActivityLog — User activity tracking with timestamps, categories, and persistence.
+ * @module ActivityLog
+ */
 const ActivityLog = (function () {
   const STORAGE_KEY = 'saas_activity_log';
   const MAX_ENTRIES = 100;
