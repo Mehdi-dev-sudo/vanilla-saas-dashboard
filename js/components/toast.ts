@@ -33,9 +33,12 @@ const ToastSystem = (function () {
 
     var progressBar = el.querySelector('.toast__progress-bar');
     if (duration > 0 && progressBar) {
+      progressBar.style.width = '100%';
       progressBar.style.transition = 'width ' + duration + 'ms linear';
       requestAnimationFrame(function () {
-        progressBar.style.width = '0%';
+        requestAnimationFrame(function () {
+          progressBar.style.width = '0%';
+        });
       });
       el._timer = setTimeout(function () { dismiss(el); }, duration);
     }
