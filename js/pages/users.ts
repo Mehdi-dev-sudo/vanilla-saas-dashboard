@@ -179,9 +179,9 @@ const UsersPage = (function () {
           '<td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td>' +
           '<td><div class="flex items-center gap-sm"><span class="user-avatar-sm" style="background:' + avatarColor + '">' + initials + '</span> <strong>' + Utils.escapeHtml(u.name) + '</strong></div></td>' +
           '<td>' + Utils.escapeHtml(u.email) + '</td>' +
-          '<td>' + u.role + '</td>' +
-          '<td>' + u.plan + '</td>' +
-          '<td><span class="status-badge status-badge--' + u.status + '">' + u.status.charAt(0).toUpperCase() + u.status.slice(1) + '</span></td>' +
+          '<td>' + Utils.escapeHtml(u.role) + '</td>' +
+          '<td>' + Utils.escapeHtml(u.plan) + '</td>' +
+          '<td><span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + '</span></td>' +
           '<td><strong>' + Utils.formatCurrency(u.revenue) + '</strong></td>' +
           '<td>' +
             '<div class="flex gap-sm">' +
