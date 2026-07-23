@@ -214,8 +214,12 @@ const AppStore = (function () {
 
     if (sortBy) {
       filtered.sort((a, b) => {
+        if (a == null || b == null) return 0;
         let valA = a[sortBy];
         let valB = b[sortBy];
+        if (valA == null && valB == null) return 0;
+        if (valA == null) return 1;
+        if (valB == null) return -1;
         if (typeof valA === 'string') valA = valA.toLowerCase();
         if (typeof valB === 'string') valB = valB.toLowerCase();
         if (valA < valB) return sortDir === 'asc' ? -1 : 1;
