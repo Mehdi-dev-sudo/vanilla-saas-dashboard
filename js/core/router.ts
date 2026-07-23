@@ -89,6 +89,7 @@ const Router = (function () {
             updateSidebar(name);
             updatePageMeta(name);
           } else {
+            if (!contentEl) { hideLoader(); return; }
             contentEl.innerHTML = ErrorPage.render('404');
             hideLoader();
             updateSidebar(null);
