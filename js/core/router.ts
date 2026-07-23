@@ -1,3 +1,7 @@
+/**
+ * Router — Hash-based SPA router with lifecycle, breadcrumbs, and loader.
+ * @module Router
+ */
 const Router = (function () {
   var currentRoute = null;
   var currentCleanup = null;
