@@ -55,12 +55,12 @@ const HistoryManager = (function () {
     isRestoring = false;
 
     ActivityLog.add('Undo', 'Undo last action', 'undo');
-    ToastSystem.info('Undo successful');
+    if (typeof ToastSystem !== 'undefined') ToastSystem.info('Undo successful');
   }
 
   function redo() {
     if (redoStack.length === 0) {
-      ToastSystem.warning('Nothing to redo');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.warning('Nothing to redo');
       return;
     }
     const current = {
@@ -76,7 +76,7 @@ const HistoryManager = (function () {
     isRestoring = false;
 
     ActivityLog.add('Redo', 'Redo last action', 'redo');
-    ToastSystem.info('Redo successful');
+    if (typeof ToastSystem !== 'undefined') ToastSystem.info('Redo successful');
   }
 
   function getUndoCount() { return undoStack.length; }
