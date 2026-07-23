@@ -52,6 +52,7 @@ function setupCanvas(canvas, width, height) {
     if (!canvas) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
+    if (!ctx) return;
 
     const pad = { top: 20, right: 20, bottom: 40, left: 55 };
     const chartW = w - pad.left - pad.right;
@@ -163,6 +164,7 @@ function setupCanvas(canvas, width, height) {
     if (!canvas) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
+    if (!ctx) return;
 
     const pad = { top: 20, right: 20, bottom: 40, left: 55 };
     const chartW = w - pad.left - pad.right;
@@ -246,6 +248,7 @@ function setupCanvas(canvas, width, height) {
     if (!canvas) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, options.size || 200, options.size || 200);
+    if (!ctx) return;
 
     const cx = w / 2;
     const cy = h / 2;
