@@ -198,7 +198,7 @@ const AuthManager = (function () {
       var result = login(username, password, remember);
       if (result.success) {
         Router.navigate('dashboard');
-        ToastSystem.success('Welcome, ' + (currentUser ? currentUser.name : username) + '!');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('Welcome, ' + (currentUser ? currentUser.name : username) + '!');
       } else {
         errorEl.textContent = result.error;
         errorEl.style.display = 'block';
