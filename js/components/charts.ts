@@ -26,6 +26,7 @@ function getCanvasStyles() {
 }
 
 function setupCanvas(canvas, width, height) {
+  if (!canvas || !canvas.getContext) return { ctx: null, w: 0, h: 0 };
   var id = canvas.id;
   var cache = canvasCache[id];
   var rect = canvas.getBoundingClientRect();
