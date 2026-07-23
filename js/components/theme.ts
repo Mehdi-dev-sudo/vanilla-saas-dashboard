@@ -14,11 +14,13 @@ const ThemeManager = (function () {
     var toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) toggleBtn.addEventListener('click', toggle);
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq._themeHandler = function (e) {
       if (!SafeStorage.getItem(STORAGE_KEY)) {
         setTheme(e.matches ? 'dark' : 'light');
       }
-    });
+    };
+    mq.addEventListener('change', mq._themeHandler);
   }
 
   function getCurrent() {
