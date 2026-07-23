@@ -173,11 +173,11 @@ const DashboardPage = (function () {
               <tbody>
                 ${transactions.length === 0 ? '<tr><td colspan="5"><div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions yet</p></div></td></tr>' :
                   transactions.map(function (t) {
-                  return '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
-                    '<td><strong>' + t.invoice + '</strong></td>' +
+                  return '<tr data-context="transaction" data-id="' + Utils.escapeHtml(t.id) + '" data-invoice="' + Utils.escapeHtml(t.invoice) + '">' +
+                    '<td><strong>' + Utils.escapeHtml(t.invoice) + '</strong></td>' +
                     '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
                     '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
-                    '<td><span class="status-badge status-badge--' + t.status + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + '</span></td>' +
+                    '<td><span class="status-badge status-badge--' + Utils.escapeHtml(t.status) + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + '</span></td>' +
                     '<td>' + Utils.formatShortDate(t.date) + '</td>' +
                   '</tr>';
                 }).join('')}
