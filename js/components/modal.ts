@@ -67,6 +67,7 @@ const ModalSystem = (function () {
 
   function confirm(title, message, confirmText, cancelText, onConfirm) {
     confirmText = confirmText || 'Confirm';
+    message = (typeof Utils !== 'undefined' ? Utils.escapeHtml(message) : message);
     cancelText = cancelText || 'Cancel';
 
     const html =
@@ -95,6 +96,7 @@ const ModalSystem = (function () {
 
   function form(title, formHtml, submitText, onSubmit) {
     submitText = submitText || 'Save';
+    title = (typeof Utils !== 'undefined' ? Utils.escapeHtml(title) : title);
     const html =
       '<div class="modal__header">' +
         '<h3 class="modal__title">' + title + '</h3>' +
