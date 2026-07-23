@@ -317,6 +317,7 @@ function setupCanvas(canvas, width, height) {
   function downloadChart(canvasId, filename) {
     var canvas = document.getElementById(canvasId);
     if (!canvas) { ToastSystem.error('Chart not found'); return; }
+    if (canvas.width === 0 || canvas.height === 0) { ToastSystem.error('Chart not rendered'); return; }
     var link = document.createElement('a');
     link.download = filename || 'chart.png';
     link.href = canvas.toDataURL('image/png');
