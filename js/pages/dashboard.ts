@@ -327,7 +327,7 @@ const DashboardPage = (function () {
     var exportBtn = document.getElementById('exportDashboardBtn');
     if (exportBtn) exportBtn.addEventListener('click', function () {
       ExportManager.exportDashboard();
-      ToastSystem.success(__('toast.dashboard.exported'));
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success(__('toast.dashboard.exported'));
     });
 
     return function cleanup() { cancelAnimationFrames(); stopRealtimeUpdates(); };
