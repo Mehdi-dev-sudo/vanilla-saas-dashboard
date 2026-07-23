@@ -364,6 +364,7 @@ const DashboardPage = (function () {
     realtimeStopped = false;
     realtimeInterval = setInterval(function () {
       if (realtimeStopped) { stopRealtimeUpdates(); return; }
+      if (document.hidden) return;
       var revChart = document.getElementById('dashRevenueChart');
       var userChart = document.getElementById('dashUserChart');
       if (!revChart || !userChart) return;
