@@ -39,7 +39,7 @@ const HistoryManager = (function () {
 
   function undo() {
     if (undoStack.length === 0) {
-      ToastSystem.warning('Nothing to undo');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.warning('Nothing to undo');
       return;
     }
     const current = {
