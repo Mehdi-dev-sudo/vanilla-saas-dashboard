@@ -137,7 +137,9 @@ const Router = (function () {
     if (sidebar) {
       sidebar.style.display = (route === 'login' || !route) ? 'none' : 'flex';
     }
-    document.querySelectorAll('.sidebar__item').forEach(function (item) {
+    var items = document.querySelectorAll('.sidebar__item');
+    if (!items || !items.length) return;
+    items.forEach(function (item) {
       item.classList.toggle('active', item.dataset.route === route);
     });
   }
