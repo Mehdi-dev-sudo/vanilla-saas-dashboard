@@ -26,11 +26,15 @@ const HistoryManager = (function () {
     });
   }
 
+  function cloneSnapshot(src) {
+    try { return JSON.parse(JSON.stringify(src)); } catch (e) { return Array.isArray(src) ? [] : {}; }
+  }
+
   function pushSnapshot() {
     if (isRestoring) return;
     const snapshot = {
-      users: JSON.parse(JSON.stringify(AppStore.getState('users'))),
-      transactions: JSON.parse(JSON.stringify(AppStore.getState('transactions')))
+      users: cloneSnapshot(AppStore.getState('users')),
+      transactions: cloneSnapshot(AppStore.getState('transactions'))
     };
     undoStack.push(snapshot);
     if (undoStack.length > MAX_HISTORY) undoStack.shift();
@@ -43,8 +47,8 @@ const HistoryManager = (function () {
       return;
     }
     const current = {
-      users: JSON.parse(JSON.stringify(AppStore.getState('users'))),
-      transactions: JSON.parse(JSON.stringify(AppStore.getState('transactions')))
+      users: cloneSnapshot(AppStore.getState('users')),
+      transactions: cloneSnapshot(AppStore.getState('transactions'))
     };
     redoStack.push(current);
 
@@ -64,8 +68,8 @@ const HistoryManager = (function () {
       return;
     }
     const current = {
-      users: JSON.parse(JSON.stringify(AppStore.getState('users'))),
-      transactions: JSON.parse(JSON.stringify(AppStore.getState('transactions')))
+      users: cloneSnapshot(AppStore.getState('users')),
+      transactions: cloneSnapshot(AppStore.getState('transactions'))
     };
     undoStack.push(current);
 
