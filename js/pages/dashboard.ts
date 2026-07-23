@@ -324,7 +324,8 @@ const DashboardPage = (function () {
     setupWidgetConfig();
     setupDragReorder();
 
-    document.getElementById('exportDashboardBtn').addEventListener('click', function () {
+    var exportBtn = document.getElementById('exportDashboardBtn');
+    if (exportBtn) exportBtn.addEventListener('click', function () {
       ExportManager.exportDashboard();
       ToastSystem.success(__('toast.dashboard.exported'));
     });
