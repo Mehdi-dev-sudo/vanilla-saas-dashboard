@@ -39,7 +39,9 @@ const VirtualScroll = (function () {
       viewport.innerHTML = '';
 
       for (var i = startIdx; i < endIdx; i++) {
+        if (typeof renderRow !== 'function') break;
         var row = renderRow(items[i], i);
+        if (!row) continue;
         row.style.position = 'absolute';
         row.style.top = ((i - startIdx) * rowHeight) + 'px';
         row.style.height = rowHeight + 'px';
