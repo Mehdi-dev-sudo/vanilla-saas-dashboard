@@ -63,6 +63,7 @@ const I18n = (function () {
 
   function formatDate(dateStr, options) {
     var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
     try { return d.toLocaleDateString(getNumberFormat(), options || { month: 'short', day: 'numeric', year: 'numeric' }); }
     catch (e) { return d.toDateString(); }
   }
