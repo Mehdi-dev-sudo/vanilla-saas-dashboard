@@ -296,11 +296,11 @@ const ChartEngine = /* @__PURE__ */ (function() {
   function downloadChart(canvasId, filename) {
     var canvas = document.getElementById(canvasId);
     if (!canvas) {
-      ToastSystem.error("Chart not found");
+      if (typeof ToastSystem !== "undefined") ToastSystem.error("Chart not found");
       return;
     }
     if (canvas.width === 0 || canvas.height === 0) {
-      ToastSystem.error("Chart not rendered");
+      if (typeof ToastSystem !== "undefined") ToastSystem.error("Chart not rendered");
       return;
     }
     var link = document.createElement("a");
@@ -310,7 +310,7 @@ const ChartEngine = /* @__PURE__ */ (function() {
     link.click();
     document.body.removeChild(link);
     if (typeof ActivityLog !== "undefined") ActivityLog.add("export", "Downloaded chart: " + filename, "export");
-    ToastSystem.success("Chart downloaded");
+    if (typeof ToastSystem !== "undefined") ToastSystem.success("Chart downloaded");
   }
   function clearCache() {
     cachedStyles = null;
