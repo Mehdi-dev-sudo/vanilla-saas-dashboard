@@ -56,6 +56,7 @@ const SidebarManager = (function () {
   }
 
   function closeMobile() {
+    if (!sidebar || !overlay) return;
     sidebar.classList.remove('open');
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
