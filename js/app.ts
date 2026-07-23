@@ -212,6 +212,12 @@
       dropdown.classList.toggle('open');
     });
 
+    document.addEventListener('keydown', function notifEsc(e) {
+      if (e.key === 'Escape' && dropdown.classList.contains('open')) {
+        dropdown.classList.remove('open');
+      }
+    });
+
     var markAllBtn = document.getElementById('markAllRead');
     if (markAllBtn) markAllBtn.addEventListener('click', function () {
       AppStore.clearNotifications();
