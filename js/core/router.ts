@@ -48,6 +48,8 @@ const Router = (function () {
         currentCleanup = null;
       }
 
+      if (typeof ChartEngine !== 'undefined' && ChartEngine.clearCache) ChartEngine.clearCache();
+
       previousRoute = currentRoute;
       currentRoute = name;
       if (name !== 'login') location.hash = name;
@@ -67,7 +69,7 @@ const Router = (function () {
           var handler = routes[name];
           if (handler && typeof handler.render === 'function') {
             contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
-            requestAnimationFrame(function () { hideLoader(); });
+            requestAnimationFrame(function () { if (gen === navGeneration) hideLoader(); });
             if (typeof handler.init === 'function') {
               currentCleanup = handler.init();
             }

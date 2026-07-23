@@ -323,11 +323,16 @@ function setupCanvas(canvas, width, height) {
     ToastSystem.success('Chart downloaded');
   }
 
+  function clearCache() {
+    cachedStyles = null;
+    canvasCache = {};
+  }
+
   function destroy() {
     window.removeEventListener('resize', resize);
     cachedStyles = null;
     canvasCache = {};
   }
 
-  return { init, drawLineChart, drawBarChart, drawDonutChart, resize, downloadChart, destroy };
+  return { init, drawLineChart, drawBarChart, drawDonutChart, resize, downloadChart, clearCache, destroy };
 })();
