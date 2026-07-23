@@ -158,7 +158,7 @@ const SettingsPage = (function () {
         if (key === 'defaultPage') {
           Router.setDefaultPage && Router.setDefaultPage(this.value);
         }
-        ToastSystem.info(select.options[select.selectedIndex].text + ' applied');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.info(select.options[select.selectedIndex].text + ' applied');
       });
     });
 
@@ -206,7 +206,7 @@ const SettingsPage = (function () {
           showActivityLog: true, showQuickActions: true
         });
         applySettingsOnLoad();
-        ToastSystem.success('Settings reset to defaults');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('Settings reset to defaults');
       });
     });
 
