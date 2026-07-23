@@ -86,7 +86,8 @@ const ModalSystem = (function () {
 
     open(html);
 
-    document.getElementById('confirmBtn').addEventListener('click', function () {
+    var confirmBtn = document.getElementById('confirmBtn');
+    if (confirmBtn) confirmBtn.addEventListener('click', function () {
       if (typeof onConfirm === 'function') onConfirm();
       close();
     });
