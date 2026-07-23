@@ -1,3 +1,7 @@
+/**
+ * SidebarManager — Responsive sidebar with collapse, mobile overlay, and keyboard nav.
+ * @module SidebarManager
+ */
 const SidebarManager = (function () {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
