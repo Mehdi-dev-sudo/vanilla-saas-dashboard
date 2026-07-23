@@ -45,6 +45,7 @@ const ChartEngine = /* @__PURE__ */ (function() {
   function drawLineChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length < 2) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -54,7 +55,7 @@ const ChartEngine = /* @__PURE__ */ (function() {
     const values = data.map((d) => d.value);
     const min = Math.min(...values) * 0.9;
     const max = Math.max(...values) * 1.05;
-    const xStep = chartW / (data.length - 1);
+    const xStep = data.length > 1 ? chartW / (data.length - 1) : 0;
     function getX(i) {
       return pad.left + i * xStep;
     }
@@ -148,6 +149,7 @@ const ChartEngine = /* @__PURE__ */ (function() {
   function drawBarChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length === 0) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -222,6 +224,7 @@ const ChartEngine = /* @__PURE__ */ (function() {
   function drawDonutChart(canvasId, data, options) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
+    if (!data || data.length === 0) return;
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, options.size || 200, options.size || 200);
     if (!ctx) return;
@@ -257,6 +260,11 @@ const ChartEngine = /* @__PURE__ */ (function() {
     }
   }
   function startAnimation(canvas, drawFrame) {
+    var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      drawFrame(1);
+      return;
+    }
     const duration = 900;
     const startTime = performance.now();
     var canvasFrames = canvas._animFrames || [];

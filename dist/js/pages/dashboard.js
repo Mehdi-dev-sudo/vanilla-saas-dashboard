@@ -331,6 +331,7 @@ const DashboardPage = /* @__PURE__ */ (function() {
         stopRealtimeUpdates();
         return;
       }
+      if (document.hidden) return;
       var revChart = document.getElementById("dashRevenueChart");
       var userChart = document.getElementById("dashUserChart");
       if (!revChart || !userChart) return;
