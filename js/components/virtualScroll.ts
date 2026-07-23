@@ -45,9 +45,11 @@ const VirtualScroll = (function () {
       }
     }
 
-    wrapper.addEventListener('scroll', function () {
+    function onScroll() {
       requestAnimationFrame(render);
-    }, { passive: true });
+    }
+
+    wrapper.addEventListener('scroll', onScroll, { passive: true });
 
     render();
 
@@ -59,6 +61,7 @@ const VirtualScroll = (function () {
         render();
       },
       destroy: function () {
+        wrapper.removeEventListener('scroll', onScroll);
         container.innerHTML = '';
       }
     };
