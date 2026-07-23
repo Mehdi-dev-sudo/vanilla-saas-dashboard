@@ -49,6 +49,9 @@ const Router = (function () {
       }
 
       if (typeof ChartEngine !== 'undefined' && ChartEngine.clearCache) ChartEngine.clearCache();
+      if (typeof ModalSystem !== 'undefined' && ModalSystem.close) ModalSystem.close();
+      if (typeof ContextMenuManager !== 'undefined' && ContextMenuManager.hide) ContextMenuManager.hide();
+      if (typeof SidebarManager !== 'undefined' && SidebarManager.closeMobile) SidebarManager.closeMobile();
 
       previousRoute = currentRoute;
       currentRoute = name;

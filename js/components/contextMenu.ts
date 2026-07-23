@@ -126,5 +126,5 @@ const ContextMenuManager = (function () {
     return icons[name] || '';
   }
 
-  return { init };
+  return { init, hide };
 })();
