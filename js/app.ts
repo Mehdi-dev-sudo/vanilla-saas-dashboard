@@ -35,6 +35,7 @@
     setupGlobalSearch();
     setupNotifications();
     setupKeyboardNavigation();
+    setupConnectivityListeners();
 
     initApiData();
   }
@@ -305,6 +306,25 @@
           ModalSystem.close();
         }
       }
+    });
+  }
+
+  function setupConnectivityListeners() {
+    window.addEventListener('online', function () {
+      var statusEl = document.getElementById('apiStatus');
+      if (statusEl) {
+        statusEl.textContent = 'API ???';
+        statusEl.className = 'header__api-status header__api-status--online';
+      }
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('Connection restored');
+    });
+    window.addEventListener('offline', function () {
+      var statusEl = document.getElementById('apiStatus');
+      if (statusEl) {
+        statusEl.textContent = 'Offline';
+        statusEl.className = 'header__api-status header__api-status--offline';
+      }
+      if (typeof ToastSystem !== 'undefined') ToastSystem.warning('You are offline');
     });
   }
 
