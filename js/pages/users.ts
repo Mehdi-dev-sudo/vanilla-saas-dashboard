@@ -279,7 +279,7 @@ const UsersPage = (function () {
       if (data.email && !data.email.includes('@')) { errors.push('Invalid email format'); if (emailInput) emailInput.classList.add('form-input--error'); }
 
       if (errors.length > 0) {
-        errors.forEach(function (e) { ToastSystem.error(e); });
+        errors.forEach(function (e) { if (typeof ToastSystem !== 'undefined') ToastSystem.error(e); });
         return;
       }
 
@@ -293,7 +293,7 @@ const UsersPage = (function () {
         revenue: 0
       });
 
-      ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
       renderUsers();
     });
   }
@@ -324,15 +324,15 @@ const UsersPage = (function () {
     ModalSystem.form('Edit User', html, 'Save Changes', function (data) {
       var name = (data.name || '').trim();
       var email = (data.email || '').trim();
-      if (!name) { ToastSystem.error('Name is required'); return; }
-      if (!email || !email.includes('@')) { ToastSystem.error('Valid email is required'); return; }
+      if (!name) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Name is required'); return; }
+      if (!email || !email.includes('@')) { if (typeof ToastSystem !== 'undefined') ToastSystem.error('Valid email is required'); return; }
       AppStore.updateUser(id, {
         name: name,
         email: email,
         role: data.role || 'Viewer',
         status: data.status || 'active'
       });
-      ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
       renderUsers();
     });
   }
@@ -348,7 +348,7 @@ const UsersPage = (function () {
       'Cancel',
       function () {
         AppStore.deleteUser(id);
-        ToastSystem.success('User deleted successfully');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('User deleted successfully');
         renderUsers();
       }
     );
