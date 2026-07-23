@@ -75,6 +75,7 @@ const Router = (function () {
 
           var handler = routes[name];
           if (handler && typeof handler.render === 'function') {
+            if (!contentEl) { hideLoader(); return; }
             contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
             requestAnimationFrame(function () { if (gen === navGeneration) hideLoader(); });
             if (typeof handler.init === 'function') {
