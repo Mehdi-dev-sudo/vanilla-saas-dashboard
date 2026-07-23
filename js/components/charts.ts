@@ -55,6 +55,7 @@ function setupCanvas(canvas, width, height) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     if (!data || data.length < 2) return;
+    options = options || {};
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -168,6 +169,7 @@ function setupCanvas(canvas, width, height) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     if (!data || data.length === 0) return;
+    options = options || {};
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, null, options.height || 300);
     if (!ctx) return;
@@ -253,6 +255,7 @@ function setupCanvas(canvas, width, height) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     if (!data || data.length === 0) return;
+    options = options || {};
     const colors = getCanvasStyles();
     const { ctx, w, h } = setupCanvas(canvas, options.size || 200, options.size || 200);
     if (!ctx) return;
