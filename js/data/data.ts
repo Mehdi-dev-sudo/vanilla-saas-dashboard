@@ -139,6 +139,7 @@ const AppStore = (function () {
 
   // User CRUD
   function addUser(user) {
+    if (!user || typeof user !== 'object') { console.error('addUser: invalid user data'); return null; }
     if (typeof HistoryManager !== 'undefined' && HistoryManager.pushSnapshot) HistoryManager.pushSnapshot();
     user.id = Utils.generateId();
     state.users.push(user);
