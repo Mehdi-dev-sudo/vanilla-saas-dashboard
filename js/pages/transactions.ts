@@ -142,9 +142,9 @@ const TransactionsPage = (function () {
           '<td><strong class="copyable" data-copy="' + Utils.escapeHtml(t.invoice) + '" style="cursor:pointer" onclick="copyToClipboard(decodeURIComponent(\'' + encodeURIComponent(t.invoice) + '\'))" data-tooltip="Copy invoice">' + Utils.escapeHtml(t.invoice) + '</strong></td>' +
           '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
           '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
-          '<td><span class="status-badge status-badge--' + t.status + '">' + t.status.charAt(0).toUpperCase() + t.status.slice(1) + '</span></td>' +
+          '<td><span class="status-badge status-badge--' + Utils.escapeHtml(t.status) + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + '</span></td>' +
           '<td>' + Utils.formatDate(t.date) + '</td>' +
-          '<td>' + t.method + '</td>' +
+          '<td>' + Utils.escapeHtml(t.method) + '</td>' +
         '</tr>'
       ).join('');
     }
