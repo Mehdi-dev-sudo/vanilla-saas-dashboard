@@ -106,7 +106,7 @@ const CommandPalette = (function() {
       { id: "act-reload", category: "Actions", label: "Reload Data", keywords: "refresh reset api", icon: "refresh-cw", action: function() {
         close();
         ApiClient.clearCache();
-        ToastSystem.success("Cache cleared. Reloading...");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success("Cache cleared. Reloading...");
         setTimeout(function() {
           window.location.reload();
         }, 500);

@@ -248,7 +248,7 @@ const UsersPage = /* @__PURE__ */ (function() {
       }
       if (errors.length > 0) {
         errors.forEach(function(e) {
-          ToastSystem.error(e);
+          if (typeof ToastSystem !== "undefined") ToastSystem.error(e);
         });
         return;
       }
@@ -261,7 +261,7 @@ const UsersPage = /* @__PURE__ */ (function() {
         joined: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
         revenue: 0
       });
-      ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
+      if (typeof ToastSystem !== "undefined") ToastSystem.success('User "' + Utils.escapeHtml(data.name.trim()) + '" added successfully');
       renderUsers();
     });
   }
@@ -273,11 +273,11 @@ const UsersPage = /* @__PURE__ */ (function() {
       var name = (data.name || "").trim();
       var email = (data.email || "").trim();
       if (!name) {
-        ToastSystem.error("Name is required");
+        if (typeof ToastSystem !== "undefined") ToastSystem.error("Name is required");
         return;
       }
       if (!email || !email.includes("@")) {
-        ToastSystem.error("Valid email is required");
+        if (typeof ToastSystem !== "undefined") ToastSystem.error("Valid email is required");
         return;
       }
       AppStore.updateUser(id, {
@@ -286,7 +286,7 @@ const UsersPage = /* @__PURE__ */ (function() {
         role: data.role || "Viewer",
         status: data.status || "active"
       });
-      ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
+      if (typeof ToastSystem !== "undefined") ToastSystem.success('User "' + Utils.escapeHtml(name) + '" updated successfully');
       renderUsers();
     });
   }
@@ -300,7 +300,7 @@ const UsersPage = /* @__PURE__ */ (function() {
       "Cancel",
       function() {
         AppStore.deleteUser(id);
-        ToastSystem.success("User deleted successfully");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success("User deleted successfully");
         renderUsers();
       }
     );

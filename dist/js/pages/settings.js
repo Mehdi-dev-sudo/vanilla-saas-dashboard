@@ -160,7 +160,7 @@ const SettingsPage = /* @__PURE__ */ (function() {
         if (key === "defaultPage") {
           Router.setDefaultPage && Router.setDefaultPage(this.value);
         }
-        ToastSystem.info(select.options[select.selectedIndex].text + " applied");
+        if (typeof ToastSystem !== "undefined") ToastSystem.info(select.options[select.selectedIndex].text + " applied");
       });
     });
     var toggleThemeBtn = document.getElementById("toggleThemeBtn");
@@ -216,7 +216,7 @@ const SettingsPage = /* @__PURE__ */ (function() {
           showQuickActions: true
         });
         applySettingsOnLoad();
-        ToastSystem.success("Settings reset to defaults");
+        if (typeof ToastSystem !== "undefined") ToastSystem.success("Settings reset to defaults");
       });
     });
     applySettingsOnLoad();
