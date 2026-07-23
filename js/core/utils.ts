@@ -23,11 +23,13 @@ const Utils = {
 
   formatDate(dateStr) {
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   },
 
   formatShortDate(dateStr) {
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[date.getMonth()] + ' ' + date.getDate();
   },
@@ -35,6 +37,7 @@ const Utils = {
   timeAgo(dateStr) {
     const now = new Date();
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
     if (diffMins < 1) return 'Just now';
