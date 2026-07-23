@@ -1,38 +1,36 @@
-const DashboardPage = (function () {
+const DashboardPage = /* @__PURE__ */ (function() {
   var widgetOrder = [];
   var hiddenWidgets = [];
-
   function render() {
-    var settings = AppStore.getState('settings');
+    var settings = AppStore.getState("settings");
     var savedOrder = loadWidgetOrder();
-
     var widgets = [
-      { id: 'stats', title: __('dashboard.widget.keyMetrics'), render: renderStatsSection, default: true },
-      { id: 'charts', title: __('dashboard.widget.charts'), render: renderChartsSection, default: true },
-      { id: 'transactions', title: __('dashboard.widget.recentTransactions'), render: renderTransactionsSection, default: true },
-      { id: 'traffic', title: __('dashboard.widget.trafficSources'), render: renderTrafficSection, default: true },
-      { id: 'shortcuts', title: __('dashboard.widget.quickActions'), render: renderQuickActions, default: settings.showQuickActions !== false },
-      { id: 'activity', title: __('dashboard.widget.recentActivity'), render: renderActivitySection, default: settings.showActivityLog !== false },
-      { id: 'recentUsers', title: __('dashboard.widget.recentUsers'), render: renderRecentUsers, default: true }
+      { id: "stats", title: __("dashboard.widget.keyMetrics"), render: renderStatsSection, default: true },
+      { id: "charts", title: __("dashboard.widget.charts"), render: renderChartsSection, default: true },
+      { id: "transactions", title: __("dashboard.widget.recentTransactions"), render: renderTransactionsSection, default: true },
+      { id: "traffic", title: __("dashboard.widget.trafficSources"), render: renderTrafficSection, default: true },
+      { id: "shortcuts", title: __("dashboard.widget.quickActions"), render: renderQuickActions, default: settings.showQuickActions !== false },
+      { id: "activity", title: __("dashboard.widget.recentActivity"), render: renderActivitySection, default: settings.showActivityLog !== false },
+      { id: "recentUsers", title: __("dashboard.widget.recentUsers"), render: renderRecentUsers, default: true }
     ];
-
-    widgetOrder = savedOrder.length === widgets.length ? savedOrder : widgets.map(function (w) { return w.id; });
+    widgetOrder = savedOrder.length === widgets.length ? savedOrder : widgets.map(function(w) {
+      return w.id;
+    });
     hiddenWidgets = getHiddenWidgets();
-
     return `
       <div class="page-header">
         <div>
-          <h1 class="page-header__title">${__('dashboard.title')}</h1>
-          <p class="page-header__subtitle">${__('dashboard.subtitle', { name: AuthManager.isLoggedIn ? AuthManager.getUser().name : '' })}</p>
+          <h1 class="page-header__title">${__("dashboard.title")}</h1>
+          <p class="page-header__subtitle">${__("dashboard.subtitle", { name: AuthManager.isLoggedIn ? AuthManager.getUser().name : "" })}</p>
         </div>
         <div class="page-header__actions">
           <button class="btn btn--ghost btn--sm" id="widgetConfigBtn" title="Configure widgets">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            ${__('dashboard.widgets.button')}
+            ${__("dashboard.widgets.button")}
           </button>
           <button class="btn btn--secondary btn--sm" id="exportDashboardBtn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            ${__('dashboard.export.button')}
+            ${__("dashboard.export.button")}
           </button>
         </div>
       </div>
@@ -43,23 +41,24 @@ const DashboardPage = (function () {
           <button class="modal__close" id="widgetConfigClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <div class="widget-config__list">
-          ${widgets.map(function (w) {
-            var isHidden = hiddenWidgets.indexOf(w.id) !== -1;
-            return '<label class="widget-config__item"><input type="checkbox" ' + (!isHidden ? 'checked' : '') + ' data-widget="' + w.id + '"><span>' + w.title + '</span></label>';
-          }).join('')}
+          ${widgets.map(function(w) {
+      var isHidden = hiddenWidgets.indexOf(w.id) !== -1;
+      return '<label class="widget-config__item"><input type="checkbox" ' + (!isHidden ? "checked" : "") + ' data-widget="' + w.id + '"><span>' + w.title + "</span></label>";
+    }).join("")}
         </div>
       </div>
 
       <div class="dashboard-widgets" id="dashboardWidgets">
-        ${widgetOrder.map(function (id) {
-          var widget = widgets.find(function (w) { return w.id === id; });
-          if (!widget || hiddenWidgets.indexOf(id) !== -1) return '';
-          return '<div class="widget" data-widget-id="' + id + '">' + widget.render() + '</div>';
-        }).join('')}
+        ${widgetOrder.map(function(id) {
+      var widget = widgets.find(function(w) {
+        return w.id === id;
+      });
+      if (!widget || hiddenWidgets.indexOf(id) !== -1) return "";
+      return '<div class="widget" data-widget-id="' + id + '">' + widget.render() + "</div>";
+    }).join("")}
       </div>
     `;
   }
-
   function renderStatsSection() {
     var stats = AppStore.getDashboardStats();
     return `
@@ -119,7 +118,6 @@ const DashboardPage = (function () {
       </div>
     `;
   }
-
   function renderChartsSection() {
     return `
       <div class="charts-grid" style="margin-top:0">
@@ -150,9 +148,8 @@ const DashboardPage = (function () {
       </div>
     `;
   }
-
   function renderTransactionsSection() {
-    var transactions = AppStore.getState('transactions').slice(0, 5);
+    var transactions = AppStore.getState("transactions").slice(0, 5);
     return `
       <div class="card">
         <div class="card__header">
@@ -167,16 +164,9 @@ const DashboardPage = (function () {
             <table class="table">
               <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
               <tbody>
-                ${transactions.length === 0 ? '<tr><td colspan="5"><div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions yet</p></div></td></tr>' :
-                  transactions.map(function (t) {
-                  return '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
-                    '<td><strong>' + t.invoice + '</strong></td>' +
-                    '<td>' + Utils.escapeHtml(t.customer) + '</td>' +
-                    '<td><strong>' + Utils.formatCurrency(t.amount) + '</strong></td>' +
-                    '<td><span class="status-badge status-badge--' + t.status + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + '</span></td>' +
-                    '<td>' + Utils.formatShortDate(t.date) + '</td>' +
-                  '</tr>';
-                }).join('')}
+                ${transactions.length === 0 ? '<tr><td colspan="5"><div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions yet</p></div></td></tr>' : transactions.map(function(t) {
+      return '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '"><td><strong>' + t.invoice + "</strong></td><td>" + Utils.escapeHtml(t.customer) + "</td><td><strong>" + Utils.formatCurrency(t.amount) + '</strong></td><td><span class="status-badge status-badge--' + t.status + '">' + Utils.escapeHtml(t.status.charAt(0).toUpperCase() + t.status.slice(1)) + "</span></td><td>" + Utils.formatShortDate(t.date) + "</td></tr>";
+    }).join("")}
               </tbody>
             </table>
           </div>
@@ -184,7 +174,6 @@ const DashboardPage = (function () {
       </div>
     `;
   }
-
   function renderTrafficSection() {
     return `
       <div class="card">
@@ -201,7 +190,6 @@ const DashboardPage = (function () {
       </div>
     `;
   }
-
   function renderQuickActions() {
     return `
       <div class="card quick-actions-card">
@@ -249,10 +237,9 @@ const DashboardPage = (function () {
       </div>
     `;
   }
-
   function renderActivitySection() {
     var activities = ActivityLog.getRecent(5);
-    var iconMap = { user: 'user-plus', delete: 'trash-2', edit: 'edit-3', export: 'download', theme: 'sun', create: 'user-plus', undo: 'rotate-ccw', redo: 'rotate-cw', auth: 'log-in', info: 'info' };
+    var iconMap = { user: "user-plus", delete: "trash-2", edit: "edit-3", export: "download", theme: "sun", create: "user-plus", undo: "rotate-ccw", redo: "rotate-cw", auth: "log-in", info: "info" };
     return `
       <div class="card">
         <div class="card__header">
@@ -264,26 +251,16 @@ const DashboardPage = (function () {
         </div>
         <div class="card__body">
           <div class="activity-feed">
-            ${activities.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--text-tertiary);font-size:var(--font-sm)">No recent activity</div>' :
-              activities.map(function (a) {
-                return '<div class="activity-item">' +
-                  '<div class="activity-item__icon activity-item__icon--' + a.type + '">' +
-                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                  '</div>' +
-                  '<div class="activity-item__content">' +
-                    '<div class="activity-item__text"><strong>' + a.action + '</strong> ' + a.detail + '</div>' +
-                    '<div class="activity-item__time">' + ActivityLog.formatDate(a.timestamp) + '</div>' +
-                  '</div>' +
-                '</div>';
-              }).join('')}
+            ${activities.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--text-tertiary);font-size:var(--font-sm)">No recent activity</div>' : activities.map(function(a) {
+      return '<div class="activity-item"><div class="activity-item__icon activity-item__icon--' + a.type + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-item__content"><div class="activity-item__text"><strong>' + a.action + "</strong> " + a.detail + '</div><div class="activity-item__time">' + ActivityLog.formatDate(a.timestamp) + "</div></div></div>";
+    }).join("")}
           </div>
         </div>
       </div>
     `;
   }
-
   function renderRecentUsers() {
-    var users = AppStore.getState('users').slice(0, 5);
+    var users = AppStore.getState("users").slice(0, 5);
     return `
       <div class="card">
         <div class="card__header">
@@ -294,160 +271,167 @@ const DashboardPage = (function () {
           <a class="card__link" onclick="Router.navigate('users')">View All</a>
         </div>
         <div class="card__body" style="padding-top:var(--space-sm)">
-          ${users.length === 0 ? '<div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><p class="empty-state__text">No users yet</p></div>' :
-            users.map(function (u) {
-            var initials = u.name.split(' ').map(function (n) { return n[0]; }).join('').slice(0, 2);
-            var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : '#6366f1';
-            return '<div class="activity-item">' +
-              '<div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div>' +
-              '<div class="activity-item__content">' +
-                '<div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div>' +
-                '<div class="activity-item__time">' + Utils.escapeHtml(u.role + ' - ' + u.plan + ' Plan') + '</div>' +
-              '</div>' +
-              '<span class="status-badge status-badge--' + u.status + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + '</span>' +
-            '</div>';
-          }).join('')}
+          ${users.length === 0 ? '<div class="empty-state" style="padding:var(--space-3xl)"><div class="empty-state__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><p class="empty-state__text">No users yet</p></div>' : users.map(function(u) {
+      var initials = u.name.split(" ").map(function(n) {
+        return n[0];
+      }).join("").slice(0, 2);
+      var avatarColor = Utils.stringToColor ? Utils.stringToColor(u.name) : "#6366f1";
+      return '<div class="activity-item"><div class="user-avatar-sm" style="width:36px;height:36px;font-size:12px;margin-top:2px;background:' + avatarColor + '">' + initials + '</div><div class="activity-item__content"><div class="activity-item__text"><strong>' + Utils.escapeHtml(u.name) + '</strong></div><div class="activity-item__time">' + Utils.escapeHtml(u.role + " - " + u.plan + " Plan") + '</div></div><span class="status-badge status-badge--' + u.status + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></div>";
+    }).join("")}
         </div>
       </div>
     `;
   }
-
   function init() {
     var stats = AppStore.getDashboardStats();
     animateStats(stats);
-    requestAnimationFrame(function () { drawCharts(); });
+    requestAnimationFrame(function() {
+      drawCharts();
+    });
     startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();
-
-    document.getElementById('exportDashboardBtn').addEventListener('click', function () {
+    document.getElementById("exportDashboardBtn").addEventListener("click", function() {
       ExportManager.exportDashboard();
-      ToastSystem.success(__('toast.dashboard.exported'));
+      ToastSystem.success(__("toast.dashboard.exported"));
     });
-
-    return function cleanup() { cancelAnimationFrames(); stopRealtimeUpdates(); };
+    return function cleanup() {
+      cancelAnimationFrames();
+      stopRealtimeUpdates();
+    };
   }
-
   function animateStats(stats) {
-    Utils.animateValue(document.getElementById('statRevenue'), 0, stats.revenue.value, 1200);
-    Utils.animateValue(document.getElementById('statUsers'), 0, stats.users.value, 1200);
-    Utils.animateValue(document.getElementById('statSubscribers'), 0, stats.subscribers.value, 1200);
-    Utils.animatePercent(document.getElementById('statChurn'), 0, stats.churn.value, 1200);
+    Utils.animateValue(document.getElementById("statRevenue"), 0, stats.revenue.value, 1200);
+    Utils.animateValue(document.getElementById("statUsers"), 0, stats.users.value, 1200);
+    Utils.animateValue(document.getElementById("statSubscribers"), 0, stats.subscribers.value, 1200);
+    Utils.animatePercent(document.getElementById("statChurn"), 0, stats.churn.value, 1200);
   }
-
   var realtimeInterval = null;
   var realtimeStopped = false;
-
   function generateRealtimeData() {
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var base = Date.now() / 10000;
-    return months.map(function (m, i) {
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var base = Date.now() / 1e4;
+    return months.map(function(m, i) {
       var sinShift = Math.sin(i * 0.8 + base);
-      return { month: m, value: Math.max(5000, 18000 + i * 1400 + Math.round(sinShift * 3000 + 1000)) };
+      return { month: m, value: Math.max(5e3, 18e3 + i * 1400 + Math.round(sinShift * 3e3 + 1e3)) };
     });
   }
-
   function generateRealtimeUserData() {
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var base = Date.now() / 12000;
-    return months.map(function (m, i) {
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var base = Date.now() / 12e3;
+    return months.map(function(m, i) {
       return { month: m, value: Math.max(50, 110 + i * 18 + Math.round(Math.sin(i * 1.3 + base) * 30 + 15)) };
     });
   }
-
   function startRealtimeUpdates() {
     if (realtimeInterval) clearInterval(realtimeInterval);
     realtimeStopped = false;
-    realtimeInterval = setInterval(function () {
-      if (realtimeStopped) { stopRealtimeUpdates(); return; }
-      var revChart = document.getElementById('dashRevenueChart');
-      var userChart = document.getElementById('dashUserChart');
+    realtimeInterval = setInterval(function() {
+      if (realtimeStopped) {
+        stopRealtimeUpdates();
+        return;
+      }
+      var revChart = document.getElementById("dashRevenueChart");
+      var userChart = document.getElementById("dashUserChart");
       if (!revChart || !userChart) return;
       var revenueData = generateRealtimeData();
       var userData = generateRealtimeUserData();
-      ChartEngine.drawLineChart('dashRevenueChart', revenueData, { height: 280, prefix: '$', divisor: 1000, suffix: 'k', animate: true });
-      ChartEngine.drawBarChart('dashUserChart', userData, { height: 280, animate: true });
-    }, 5000);
+      ChartEngine.drawLineChart("dashRevenueChart", revenueData, { height: 280, prefix: "$", divisor: 1e3, suffix: "k", animate: true });
+      ChartEngine.drawBarChart("dashUserChart", userData, { height: 280, animate: true });
+    }, 5e3);
   }
-
   function stopRealtimeUpdates() {
     realtimeStopped = true;
-    if (realtimeInterval) { clearInterval(realtimeInterval); realtimeInterval = null; }
+    if (realtimeInterval) {
+      clearInterval(realtimeInterval);
+      realtimeInterval = null;
+    }
   }
-
   function drawCharts() {
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var base = Date.now() / 10000;
-    var revenueData = months.map(function (m, i) {
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var base = Date.now() / 1e4;
+    var revenueData = months.map(function(m, i) {
       var sinShift = Math.sin(i * 0.8 + base);
-      return { month: m, value: Math.max(5000, 18000 + i * 1400 + Math.round(sinShift * 3000 + 1000)) };
+      return { month: m, value: Math.max(5e3, 18e3 + i * 1400 + Math.round(sinShift * 3e3 + 1e3)) };
     });
-    var userData = months.map(function (m, i) {
+    var userData = months.map(function(m, i) {
       return { month: m, value: Math.max(50, 110 + i * 18 + Math.round(Math.sin(i * 1.3 + base) * 30 + 15)) };
     });
     var trafficData = [
-      { label: 'Organic', value: 42, color: '#6366f1' },
-      { label: 'Social', value: 26, color: '#10b981' },
-      { label: 'Direct', value: 18, color: '#f59e0b' },
-      { label: 'Referral', value: 10, color: '#8b5cf6' },
-      { label: 'Email', value: 4, color: '#ef4444' }
+      { label: "Organic", value: 42, color: "#6366f1" },
+      { label: "Social", value: 26, color: "#10b981" },
+      { label: "Direct", value: 18, color: "#f59e0b" },
+      { label: "Referral", value: 10, color: "#8b5cf6" },
+      { label: "Email", value: 4, color: "#ef4444" }
     ];
-
-    if (document.getElementById('dashRevenueChart')) ChartEngine.drawLineChart('dashRevenueChart', revenueData, { height: 280, prefix: '$', divisor: 1000, suffix: 'k' });
-    if (document.getElementById('dashUserChart')) ChartEngine.drawBarChart('dashUserChart', userData, { height: 280 });
-    if (document.getElementById('dashTrafficChart')) {
-      ChartEngine.drawDonutChart('dashTrafficChart', trafficData, {
+    if (document.getElementById("dashRevenueChart")) ChartEngine.drawLineChart("dashRevenueChart", revenueData, { height: 280, prefix: "$", divisor: 1e3, suffix: "k" });
+    if (document.getElementById("dashUserChart")) ChartEngine.drawBarChart("dashUserChart", userData, { height: 280 });
+    if (document.getElementById("dashTrafficChart")) {
+      ChartEngine.drawDonutChart("dashTrafficChart", trafficData, {
         size: 180,
-        renderLegend: function (data) {
-          var el = document.getElementById('dashTrafficLegend');
-          if (el) el.innerHTML = data.map(function (d) { return '<div class="legend-item"><span class="legend-item__dot" style="background:' + d.color + '"></span>' + d.label + '<span class="legend-item__value">' + d.value + '%</span></div>'; }).join('');
+        renderLegend: function(data) {
+          var el = document.getElementById("dashTrafficLegend");
+          if (el) el.innerHTML = data.map(function(d) {
+            return '<div class="legend-item"><span class="legend-item__dot" style="background:' + d.color + '"></span>' + d.label + '<span class="legend-item__value">' + d.value + "%</span></div>";
+          }).join("");
         }
       });
     }
   }
-
   function setupWidgetConfig() {
-    var configBtn = document.getElementById('widgetConfigBtn');
-    var config = document.getElementById('widgetConfig');
-    var closeBtn = document.getElementById('widgetConfigClose');
+    var configBtn = document.getElementById("widgetConfigBtn");
+    var config = document.getElementById("widgetConfig");
+    var closeBtn = document.getElementById("widgetConfigClose");
     if (!configBtn || !config || !closeBtn) return;
-
-    configBtn.addEventListener('click', function () { config.style.display = config.style.display === 'none' ? 'block' : 'none'; });
-    closeBtn.addEventListener('click', function () { config.style.display = 'none'; });
-
-    config.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
-      cb.addEventListener('change', function () {
+    configBtn.addEventListener("click", function() {
+      config.style.display = config.style.display === "none" ? "block" : "none";
+    });
+    closeBtn.addEventListener("click", function() {
+      config.style.display = "none";
+    });
+    config.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+      cb.addEventListener("change", function() {
         var id = this.dataset.widget;
         var hide = !this.checked;
-        if (hide) { if (hiddenWidgets.indexOf(id) === -1) hiddenWidgets.push(id); }
-        else { hiddenWidgets = hiddenWidgets.filter(function (h) { return h !== id; }); }
+        if (hide) {
+          if (hiddenWidgets.indexOf(id) === -1) hiddenWidgets.push(id);
+        } else {
+          hiddenWidgets = hiddenWidgets.filter(function(h) {
+            return h !== id;
+          });
+        }
         saveHiddenWidgets();
         var widget = document.querySelector('[data-widget-id="' + id + '"]');
         if (widget) {
-          widget.style.display = hide ? 'none' : '';
-          if (!hide && (id === 'charts' || id === 'traffic')) {
-            requestAnimationFrame(function () { drawCharts(); });
+          widget.style.display = hide ? "none" : "";
+          if (!hide && (id === "charts" || id === "traffic")) {
+            requestAnimationFrame(function() {
+              drawCharts();
+            });
           }
         }
       });
     });
   }
-
   function setupDragReorder() {
-    var container = document.getElementById('dashboardWidgets');
+    var container = document.getElementById("dashboardWidgets");
     if (!container) return;
-    var items = container.querySelectorAll('.widget');
-    items.forEach(function (item) {
-      item.setAttribute('draggable', 'true');
-      item.addEventListener('dragstart', function (e) {
-        e.dataTransfer.setData('text/plain', this.dataset.widgetId);
-        this.classList.add('dragging');
+    var items = container.querySelectorAll(".widget");
+    items.forEach(function(item) {
+      item.setAttribute("draggable", "true");
+      item.addEventListener("dragstart", function(e) {
+        e.dataTransfer.setData("text/plain", this.dataset.widgetId);
+        this.classList.add("dragging");
       });
-      item.addEventListener('dragend', function () { this.classList.remove('dragging'); });
-      item.addEventListener('dragover', function (e) { e.preventDefault(); });
-      item.addEventListener('drop', function (e) {
+      item.addEventListener("dragend", function() {
+        this.classList.remove("dragging");
+      });
+      item.addEventListener("dragover", function(e) {
         e.preventDefault();
-        var id = e.dataTransfer.getData('text/plain');
+      });
+      item.addEventListener("drop", function(e) {
+        e.preventDefault();
+        var id = e.dataTransfer.getData("text/plain");
         var fromIdx = widgetOrder.indexOf(id);
         var toIdx = widgetOrder.indexOf(this.dataset.widgetId);
         if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
@@ -459,42 +443,36 @@ const DashboardPage = (function () {
       });
     });
   }
-
   function loadWidgetOrder() {
-    return SafeStorage.getObject('saas_widget_order') || [];
+    return SafeStorage.getObject("saas_widget_order") || [];
   }
-
   function saveWidgetOrder() {
-    SafeStorage.setObject('saas_widget_order', widgetOrder);
+    SafeStorage.setObject("saas_widget_order", widgetOrder);
   }
-
   function getHiddenWidgets() {
-    return SafeStorage.getObject('saas_hidden_widgets') || [];
+    return SafeStorage.getObject("saas_hidden_widgets") || [];
   }
-
   function saveHiddenWidgets() {
-    SafeStorage.setObject('saas_hidden_widgets', hiddenWidgets);
+    SafeStorage.setObject("saas_hidden_widgets", hiddenWidgets);
   }
-
   var animFrameIds = [];
   function cancelAnimationFrames() {
-    animFrameIds.forEach(function (id) { cancelAnimationFrame(id); });
+    animFrameIds.forEach(function(id) {
+      cancelAnimationFrame(id);
+    });
     animFrameIds = [];
   }
-
   function refresh() {
-    var contentEl = document.getElementById('appContent');
+    var contentEl = document.getElementById("appContent");
     if (!contentEl) return;
-    var statsSection = contentEl.querySelector('.stats');
+    var statsSection = contentEl.querySelector(".stats");
     if (statsSection) {
       statsSection.outerHTML = renderStatsSection();
     }
     reinitCharts();
   }
-
   function reinitCharts() {
-    if (document.getElementById('dashRevenueChart')) drawCharts();
+    if (document.getElementById("dashRevenueChart")) drawCharts();
   }
-
-  return { render: render, init: init, refresh: refresh, reinitCharts: reinitCharts, startRealtimeUpdates: startRealtimeUpdates, stopRealtimeUpdates: stopRealtimeUpdates };
+  return { render, init, refresh, reinitCharts, startRealtimeUpdates, stopRealtimeUpdates };
 })();

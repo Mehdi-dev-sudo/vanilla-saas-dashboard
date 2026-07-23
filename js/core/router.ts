@@ -48,6 +48,11 @@ const Router = (function () {
         currentCleanup = null;
       }
 
+      if (typeof ChartEngine !== 'undefined' && ChartEngine.clearCache) ChartEngine.clearCache();
+      if (typeof ModalSystem !== 'undefined' && ModalSystem.close) ModalSystem.close();
+      if (typeof ContextMenuManager !== 'undefined' && ContextMenuManager.hide) ContextMenuManager.hide();
+      if (typeof SidebarManager !== 'undefined' && SidebarManager.closeMobile) SidebarManager.closeMobile();
+
       previousRoute = currentRoute;
       currentRoute = name;
       if (name !== 'login') location.hash = name;
@@ -67,9 +72,14 @@ const Router = (function () {
           var handler = routes[name];
           if (handler && typeof handler.render === 'function') {
             contentEl.innerHTML = '<div class="page-wrapper">' + renderBreadcrumbs(name) + handler.render() + '</div>';
-            requestAnimationFrame(function () { hideLoader(); });
+            requestAnimationFrame(function () { if (gen === navGeneration) hideLoader(); });
             if (typeof handler.init === 'function') {
-              currentCleanup = handler.init();
+              try {
+                currentCleanup = handler.init() || null;
+              } catch (initErr) {
+                console.error('Page init error:', initErr);
+                currentCleanup = null;
+              }
             }
             updateSidebar(name);
             updatePageMeta(name);
