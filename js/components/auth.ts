@@ -187,7 +187,7 @@ const AuthManager = (function () {
     if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      errorEl.style.display = 'none';
+      if (errorEl) errorEl.style.display = 'none';
 
       var usernameEl = document.getElementById('loginUsername');
       var passwordEl = document.getElementById('loginPassword');
