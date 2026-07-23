@@ -233,13 +233,14 @@
       ToastSystem.info('All notifications marked as read');
     });
 
-    document.addEventListener('click', function (e) {
+    var notifOutsideClick = function (e) {
       if (!dropdown.contains(e.target) && e.target !== notifBtn) {
         dropdown.classList.remove('open');
       }
-    });
+    };
+    document.addEventListener('click', notifOutsideClick);
 
-    AppStore.subscribe('notifications', function (count) {
+    var notifUnsub = AppStore.subscribe('notifications', function (count) {
       var unreadCount = typeof count === 'number' ? count : (count && count.length ? count.length : 0);
       badge.textContent = unreadCount;
       badge.style.display = unreadCount > 0 ? 'flex' : 'none';
