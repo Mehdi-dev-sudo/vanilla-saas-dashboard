@@ -97,7 +97,7 @@ const Router = (function () {
           }
         } catch (e) {
           console.error('Render error:', e);
-          if (contentEl) contentEl.innerHTML = '<div class="page-wrapper"><div class="empty-state"><div class="empty-state__icon">!</div><div class="empty-state__title">Something went wrong</div><div class="empty-state__desc">' + (e.message || 'Unknown error') + '</div><button class="btn btn--primary" onclick="location.reload()">Reload</button></div></div>';
+          if (contentEl) contentEl.innerHTML = '<div class="page-wrapper"><div class="empty-state"><div class="empty-state__icon">!</div><div class="empty-state__title">Something went wrong</div><div class="empty-state__desc">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(e.message || 'Unknown error') : (e.message || 'Unknown error')) + '</div><button class="btn btn--primary" onclick="location.reload()">Reload</button></div></div>';
           hideLoader();
         }
       });

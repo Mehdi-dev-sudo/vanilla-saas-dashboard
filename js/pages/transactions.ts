@@ -85,24 +85,30 @@ const TransactionsPage = (function () {
 
     renderTransactions();
 
-    document.getElementById('transactionSearch').addEventListener('input', Utils.debounce(function () {
+    var searchInput = document.getElementById('transactionSearch');
+    if (searchInput) searchInput.addEventListener('input', Utils.debounce(function () {
       currentSearch = this.value;
       currentPage = 1;
-      document.getElementById('transactionsTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var tbody = document.getElementById('transactionsTableBody');
+      if (tbody) tbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     }, 300));
 
-    document.getElementById('transactionStatusFilter').addEventListener('change', function () {
+    var statusFilter = document.getElementById('transactionStatusFilter');
+    if (statusFilter) statusFilter.addEventListener('change', function () {
       currentStatus = this.value;
       currentPage = 1;
-      document.getElementById('transactionsTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var tbody = document.getElementById('transactionsTableBody');
+      if (tbody) tbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     });
 
-    document.getElementById('transactionMethodFilter').addEventListener('change', function () {
+    var methodFilter = document.getElementById('transactionMethodFilter');
+    if (methodFilter) methodFilter.addEventListener('change', function () {
       currentMethod = this.value;
       currentPage = 1;
-      document.getElementById('transactionsTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
+      var tbody = document.getElementById('transactionsTableBody');
+      if (tbody) tbody.innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderTransactions();
     });
 
@@ -119,10 +125,11 @@ const TransactionsPage = (function () {
       });
     });
 
-    document.getElementById('exportCsvBtn').addEventListener('click', function () {
+    var exportBtn = document.getElementById('exportCsvBtn');
+    if (exportBtn) exportBtn.addEventListener('click', function () {
       const allTransactions = AppStore.getState('transactions');
       AppStore.exportTransactionsCSV(allTransactions);
-      ToastSystem.success('CSV file exported successfully');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('CSV file exported successfully');
     });
 
     return function cleanup() {};
