@@ -1,3 +1,7 @@
+/**
+ * ChartEngine — Canvas-based chart rendering with DPR scaling and animation.
+ * @module ChartEngine
+ */
 const ChartEngine = (function () {
   let dpr = 1;
   let animFrames = [];
