@@ -57,6 +57,7 @@ const ModalSystem = (function () {
   }
 
   function close() {
+    if (!overlay) return;
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
     isOpen = false;
