@@ -96,7 +96,8 @@ const Router = (function () {
   }
 
   function renderLogin() {
-    if (typeof AuthManager !== 'undefined' && AuthManager.getLoginPage && contentEl) {
+    if (!contentEl) { hideLoader(); return; }
+    if (typeof AuthManager !== 'undefined' && AuthManager.getLoginPage) {
       contentEl.innerHTML = AuthManager.getLoginPage();
       hideLoader();
       if (typeof AuthManager.initLoginPage === 'function') {
