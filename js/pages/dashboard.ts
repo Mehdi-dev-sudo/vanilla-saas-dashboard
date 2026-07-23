@@ -336,6 +336,7 @@ const DashboardPage = (function () {
   }
 
   var realtimeInterval = null;
+  var realtimeStopped = false;
 
   function generateRealtimeData() {
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -356,7 +357,9 @@ const DashboardPage = (function () {
 
   function startRealtimeUpdates() {
     if (realtimeInterval) clearInterval(realtimeInterval);
+    realtimeStopped = false;
     realtimeInterval = setInterval(function () {
+      if (realtimeStopped) { stopRealtimeUpdates(); return; }
       var revChart = document.getElementById('dashRevenueChart');
       var userChart = document.getElementById('dashUserChart');
       if (!revChart || !userChart) return;
@@ -368,6 +371,7 @@ const DashboardPage = (function () {
   }
 
   function stopRealtimeUpdates() {
+    realtimeStopped = true;
     if (realtimeInterval) { clearInterval(realtimeInterval); realtimeInterval = null; }
   }
 

@@ -24,6 +24,7 @@ const ThemeManager = (function () {
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     SafeStorage.setItem(STORAGE_KEY, theme);
+    if (typeof ChartEngine !== 'undefined' && ChartEngine.clearCache) ChartEngine.clearCache();
     var toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   }
@@ -32,6 +33,9 @@ const ThemeManager = (function () {
     const current = getCurrent();
     const next = current === 'light' ? 'dark' : 'light';
     setTheme(next);
+    if (typeof ChartEngine !== 'undefined' && ChartEngine.clearCache) ChartEngine.clearCache();
+    if (typeof DashboardPage !== 'undefined') DashboardPage.reinitCharts();
+    if (typeof AnalyticsPage !== 'undefined') AnalyticsPage.reinitCharts();
     if (typeof ActivityLog !== 'undefined') ActivityLog.add('theme', 'Theme changed to ' + next, 'theme');
   }
 
