@@ -1,3 +1,7 @@
+/**
+ * ModalSystem — Accessible modal dialog with focus trapping and confirm/form helpers.
+ * @module ModalSystem
+ */
 const ModalSystem = (function () {
   const overlay = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
@@ -5,6 +9,7 @@ const ModalSystem = (function () {
   var lastFocused = null;
 
   function init() {
+    if (!overlay || !content) { console.warn('ModalSystem: overlay or content missing'); return; }
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) close();
     });
