@@ -177,11 +177,14 @@ const AuthManager = (function () {
     var rememberToggle = document.getElementById('rememberToggle');
 
     var remember = false;
-    rememberToggle.addEventListener('click', function () {
-      remember = !remember;
-      this.classList.toggle('active', remember);
-    });
+    if (rememberToggle) {
+      rememberToggle.addEventListener('click', function () {
+        remember = !remember;
+        this.classList.toggle('active', remember);
+      });
+    }
 
+    if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       errorEl.style.display = 'none';
