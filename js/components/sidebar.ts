@@ -39,6 +39,7 @@ const SidebarManager = (function () {
   }
 
   function toggleCollapse() {
+    if (!sidebar) return;
     sidebar.classList.toggle('collapsed');
     SafeStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
     setTimeout(function () {
