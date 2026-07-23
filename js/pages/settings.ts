@@ -162,32 +162,40 @@ const SettingsPage = (function () {
       });
     });
 
-    document.getElementById('toggleThemeBtn').addEventListener('click', function () {
+    var toggleThemeBtn = document.getElementById('toggleThemeBtn');
+    if (toggleThemeBtn) toggleThemeBtn.addEventListener('click', function () {
       ThemeManager.toggle();
-      document.getElementById('themeStatus').textContent = ThemeManager.getCurrent() === 'dark' ? 'Dark' : 'Light';
+      var themeStatus = document.getElementById('themeStatus');
+      if (themeStatus) themeStatus.textContent = ThemeManager.getCurrent() === 'dark' ? 'Dark' : 'Light';
       ActivityLog.add('theme', 'Theme changed to ' + ThemeManager.getCurrent(), 'theme');
       setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 350);
     });
 
-    document.getElementById('exportSettingsBtn').addEventListener('click', function () {
+    var exportSettingsBtn = document.getElementById('exportSettingsBtn');
+    if (exportSettingsBtn) exportSettingsBtn.addEventListener('click', function () {
       ExportManager.exportSettings();
     });
 
-    document.getElementById('importSettingsBtn').addEventListener('click', function () {
-      document.getElementById('importSettingsFile').click();
+    var importSettingsBtn = document.getElementById('importSettingsBtn');
+    if (importSettingsBtn) importSettingsBtn.addEventListener('click', function () {
+      var importFile = document.getElementById('importSettingsFile');
+      if (importFile) importFile.click();
     });
 
-    document.getElementById('importSettingsFile').addEventListener('change', function () {
+    var importSettingsFile = document.getElementById('importSettingsFile');
+    if (importSettingsFile) importSettingsFile.addEventListener('change', function () {
       if (this.files && this.files[0]) ExportManager.importSettings(this.files[0]);
       this.value = '';
     });
 
-    document.getElementById('saveSettingsBtn').addEventListener('click', function () {
-      ToastSystem.success('Settings saved successfully');
+    var saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', function () {
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success('Settings saved successfully');
       ActivityLog.add('edit', 'Settings updated', 'edit');
     });
 
-    document.getElementById('resetSettingsBtn').addEventListener('click', function () {
+    var resetSettingsBtn = document.getElementById('resetSettingsBtn');
+    if (resetSettingsBtn) resetSettingsBtn.addEventListener('click', function () {
       ModalSystem.confirm('Reset Settings', 'Are you sure you want to reset all settings to their default values?', 'Reset', 'Cancel', function () {
         AppStore.updateState('settings', {
           emailNotifications: true, pushNotifications: false, weeklyDigest: true,

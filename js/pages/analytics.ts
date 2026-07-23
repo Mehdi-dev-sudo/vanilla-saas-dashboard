@@ -99,13 +99,15 @@ const AnalyticsPage = (function () {
 
     requestAnimationFrame(function () { drawCharts(); });
 
-    document.getElementById('analyticsExportBtn').addEventListener('click', function () {
+    var analyticsExportBtn = document.getElementById('analyticsExportBtn');
+    if (analyticsExportBtn) analyticsExportBtn.addEventListener('click', function () {
       ExportManager.exportAnalytics();
-      ToastSystem.success(__('toast.analytics.exported'));
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success(__('toast.analytics.exported'));
     });
 
-    document.getElementById('analyticsRefreshBtn').addEventListener('click', function () {
-      ToastSystem.info('Data refreshed successfully');
+    var analyticsRefreshBtn = document.getElementById('analyticsRefreshBtn');
+    if (analyticsRefreshBtn) analyticsRefreshBtn.addEventListener('click', function () {
+      if (typeof ToastSystem !== 'undefined') ToastSystem.info('Data refreshed successfully');
     });
 
     document.querySelectorAll('.chart-tab').forEach(tab => {

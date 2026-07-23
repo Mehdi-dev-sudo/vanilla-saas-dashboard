@@ -123,25 +123,27 @@ const UsersPage = (function () {
     var batchActions = document.getElementById('batchActions');
     var selectedCount = document.getElementById('selectedCount');
 
-    selectAll.addEventListener('change', function () {
+    if (selectAll) selectAll.addEventListener('change', function () {
       document.querySelectorAll('.user-checkbox').forEach(function (cb) { cb.checked = selectAll.checked; });
       updateBatchVisibility();
     });
 
-    document.getElementById('batchDeleteBtn').addEventListener('click', function () {
+    var batchDeleteBtn = document.getElementById('batchDeleteBtn');
+    if (batchDeleteBtn) batchDeleteBtn.addEventListener('click', function () {
       var selected = getSelectedUsers();
       if (selected.length === 0) return;
       ModalSystem.confirm('Delete Users', 'Are you sure you want to delete ' + selected.length + ' selected user(s)?', 'Delete', 'Cancel', function () {
         selected.forEach(function (id) { AppStore.deleteUser(id); });
-        ToastSystem.success(selected.length + ' user(s) deleted');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success(selected.length + ' user(s) deleted');
         renderUsers();
       });
     });
 
-    document.getElementById('batchExportBtn').addEventListener('click', function () {
+    var batchExportBtn = document.getElementById('batchExportBtn');
+    if (batchExportBtn) batchExportBtn.addEventListener('click', function () {
       var selected = getSelectedUsers();
       if (selected.length === 0) return;
-      ToastSystem.success(selected.length + ' user(s) exported');
+      if (typeof ToastSystem !== 'undefined') ToastSystem.success(selected.length + ' user(s) exported');
     });
   }
 
