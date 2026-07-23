@@ -432,7 +432,7 @@ const DashboardPage = (function () {
         if (widget) {
           widget.style.display = hide ? 'none' : '';
           if (!hide && (id === 'charts' || id === 'traffic')) {
-            requestAnimationFrame(function () { drawCharts(); });
+    _trackAnimFrame(requestAnimationFrame(function () { drawCharts(); }));
           }
         }
       });
@@ -482,10 +482,11 @@ const DashboardPage = (function () {
     SafeStorage.setObject('saas_hidden_widgets', hiddenWidgets);
   }
 
-  var animFrameIds = [];
+  var _animFrameIds = [];
+  function _trackAnimFrame(id) { if (id) _animFrameIds.push(id); }
   function cancelAnimationFrames() {
-    animFrameIds.forEach(function (id) { cancelAnimationFrame(id); });
-    animFrameIds = [];
+    _animFrameIds.forEach(function (id) { cancelAnimationFrame(id); });
+    _animFrameIds = [];
   }
 
   function refresh() {
