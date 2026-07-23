@@ -21,6 +21,7 @@ const ModalSystem = (function () {
   }
 
   function open(html) {
+    if (!overlay || !content) return;
     lastFocused = document.activeElement;
     content.innerHTML = html;
     overlay.classList.add('open');
