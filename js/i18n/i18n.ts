@@ -33,8 +33,9 @@ const I18n = (function () {
   function getLocale() { return locale; }
 
   function __(key, params) {
+    if (!key) return '';
     var parts = key.split('.');
-    var val = translations[locale];
+    var val = translations[locale] || translations[fallback];
     var i;
     for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
     if (val === undefined && locale !== fallback) {
