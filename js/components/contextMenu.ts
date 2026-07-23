@@ -68,7 +68,7 @@ const ContextMenuManager = (function () {
       }
       var el = document.createElement('button');
       el.className = 'context-menu__item' + (item.danger ? ' context-menu__item--danger' : '');
-      el.innerHTML = getIcon(item.icon) + '<span>' + item.label + '</span>';
+      el.innerHTML = getIcon(item.icon) + '<span>' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(item.label) : item.label) + '</span>';
       el.addEventListener('click', function () {
         item.action();
         hide();
