@@ -86,28 +86,31 @@ const UsersPage = (function () {
     renderUsers();
 
     const searchInput = document.getElementById('userSearch');
-    searchInput.addEventListener('input', Utils.debounce(function () {
+    if (searchInput) searchInput.addEventListener('input', Utils.debounce(function () {
       currentSearch = this.value;
       currentPage = 1;
       document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     }, 300));
 
-    document.getElementById('userStatusFilter').addEventListener('change', function () {
+    var statusFilter = document.getElementById('userStatusFilter');
+    if (statusFilter) statusFilter.addEventListener('change', function () {
       currentStatus = this.value;
       currentPage = 1;
       document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
-    document.getElementById('userRoleFilter').addEventListener('change', function () {
+    var roleFilter = document.getElementById('userRoleFilter');
+    if (roleFilter) roleFilter.addEventListener('change', function () {
       currentRole = this.value;
       currentPage = 1;
       document.getElementById('usersTableBody').innerHTML = SkeletonLoader.getTableSkeleton(5);
       renderUsers();
     });
 
-    document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
+    var addBtn = document.getElementById('addUserBtn');
+    if (addBtn) addBtn.addEventListener('click', showAddUserModal);
     setupMultiSelect();
 
     return function cleanup() {
@@ -161,7 +164,7 @@ const UsersPage = (function () {
   }
 
   function renderUsers() {
-    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage);
+    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage) || { items: [], total: 0, totalPages: 0, page: 1 };
     const tbody = document.getElementById('usersTableBody');
     const totalInfo = document.getElementById('userTotalInfo');
     const pagination = document.getElementById('usersPagination');
