@@ -76,6 +76,9 @@
       clearInterval(window.__updatedInterval);
       if (typeof DashboardPage !== 'undefined' && DashboardPage.stopRealtimeUpdates) DashboardPage.stopRealtimeUpdates();
     } else {
+      if (window.__clockInterval) clearInterval(window.__clockInterval);
+      if (window.__onlineInterval) clearInterval(window.__onlineInterval);
+      if (window.__updatedInterval) clearInterval(window.__updatedInterval);
       window.__clockInterval = setInterval(updateClock, 1000);
       window.__onlineInterval = setInterval(updateOnline, 8000);
       window.__updatedInterval = setInterval(updateLastUpdated, 30000);
