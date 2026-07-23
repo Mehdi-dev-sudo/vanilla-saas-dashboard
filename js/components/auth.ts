@@ -1,3 +1,7 @@
+/**
+ * AuthManager — Authentication with login/logout, session management, and user state.
+ * @module AuthManager
+ */
 const AuthManager = (function () {
   var SESSION_KEY = 'saas_auth_session';
   var REMEMBER_KEY = 'saas_auth_remember';

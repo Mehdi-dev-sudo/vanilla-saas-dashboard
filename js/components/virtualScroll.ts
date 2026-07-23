@@ -1,3 +1,7 @@
+/**
+ * VirtualScroll — Virtual scrolling for large lists with recycling DOM nodes.
+ * @module VirtualScroll
+ */
 const VirtualScroll = (function () {
 
   function createTable(container, items, rowHeight, renderRow, buffer) {
