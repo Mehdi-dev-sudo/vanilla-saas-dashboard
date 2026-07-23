@@ -1,3 +1,7 @@
+/**
+ * ContextMenuManager — Right-click context menu for table rows with keyboard nav.
+ * @module ContextMenuManager
+ */
 const ContextMenuManager = (function () {
   let menu = null;
   let targetRow = null;
