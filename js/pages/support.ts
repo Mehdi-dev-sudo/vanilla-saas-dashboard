@@ -94,7 +94,8 @@ const SupportPage = (function () {
   }
 
   function toggleFaq(e) {
-    var item = this.closest('.faq-item');
+    var item = this && this.closest ? this.closest('.faq-item') : null;
+    if (!item) return;
     var isOpen = item.classList.contains('open');
     var question = item.querySelector('.faq-item__question');
 
