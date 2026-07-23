@@ -281,8 +281,10 @@
     return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || type === 'search' || type === 'text' || type === 'email' || type === 'password';
   }
 
+  var _kbNavHandler, _escapeHandler;
+
   function setupKeyboardNavigation() {
-    document.addEventListener('keydown', function (e) {
+    _kbNavHandler = function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key === '/' ) {
         e.preventDefault();
         showKeyboardHelp();
@@ -292,7 +294,7 @@
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        ToastSystem.success('Changes saved');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.success('Changes saved');
         ActivityLog.add('edit', 'Quick save triggered', 'edit');
       }
 
@@ -305,9 +307,10 @@
         if (gotoBuffer === 'gs') { Router.navigate('settings'); gotoBuffer = ''; }
         resetGotoBufferTimeout();
       }
-    });
+    };
+    document.addEventListener('keydown', _kbNavHandler);
 
-    document.addEventListener('keydown', function (e) {
+    _escapeHandler = function (e) {
       if (e.key === 'Escape') {
         var openCmd = document.querySelector('.cmd-palette-overlay.open');
         if (openCmd) return;
@@ -316,37 +319,44 @@
           ModalSystem.close();
         }
       }
-    });
+    };
+    document.addEventListener('keydown', _escapeHandler);
   }
 
+  var _onlineHandler, _offlineHandler;
+
   function setupConnectivityListeners() {
-    window.addEventListener('online', function () {
+    _onlineHandler = function () {
       var statusEl = document.getElementById('apiStatus');
       if (statusEl) {
         statusEl.textContent = 'API ???';
         statusEl.className = 'header__api-status header__api-status--online';
       }
       if (typeof ToastSystem !== 'undefined') ToastSystem.success('Connection restored');
-    });
-    window.addEventListener('offline', function () {
+    };
+    window.addEventListener('online', _onlineHandler);
+
+    _offlineHandler = function () {
       var statusEl = document.getElementById('apiStatus');
       if (statusEl) {
         statusEl.textContent = 'Offline';
         statusEl.className = 'header__api-status header__api-status--offline';
       }
       if (typeof ToastSystem !== 'undefined') ToastSystem.warning('You are offline');
-    });
+    };
+    window.addEventListener('offline', _offlineHandler);
   }
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function () { /* SW registration requires HTTPS */ });
   }
 
-  window.addEventListener('error', function (e) {
+  var _globalErrorHandler = function (e) {
     console.error('Global error:', e.error || e.message);
     var loader = document.getElementById('pageLoader');
     if (loader) loader.style.display = 'none';
-  });
+  };
+  window.addEventListener('error', _globalErrorHandler);
 
   // Debug overlay for errors (visible when live server running)
   var _origOnError = window.onerror;
