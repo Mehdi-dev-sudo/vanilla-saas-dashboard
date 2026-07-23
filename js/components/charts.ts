@@ -294,6 +294,8 @@ function setupCanvas(canvas, width, height) {
   }
 
   function startAnimation(canvas, drawFrame) {
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) { drawFrame(1); return; }
     const duration = 900;
     const startTime = performance.now();
     var canvasFrames = canvas._animFrames || [];
