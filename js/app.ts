@@ -194,10 +194,10 @@
     var unreadCount = notifs.filter(function (n) { return n.unread; }).length;
     list.innerHTML = notifs.map(function (n) {
       return '<div class="notif-dropdown__item' + (n.unread ? ' notif-dropdown__item--unread' : '') + '">' +
-        '<div class="notif-dropdown__item-icon notif-dropdown__item-icon--' + n.type + '"></div>' +
+        '<div class="notif-dropdown__item-icon notif-dropdown__item-icon--' + Utils.escapeHtml(n.type) + '"></div>' +
         '<div class="notif-dropdown__item-content">' +
-          '<div class="notif-dropdown__item-text">' + n.text + '</div>' +
-          '<div class="notif-dropdown__item-time">' + n.time + '</div>' +
+          '<div class="notif-dropdown__item-text">' + Utils.escapeHtml(n.text) + '</div>' +
+          '<div class="notif-dropdown__item-time">' + Utils.escapeHtml(n.time) + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
