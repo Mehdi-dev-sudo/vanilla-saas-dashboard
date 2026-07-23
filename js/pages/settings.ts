@@ -138,7 +138,7 @@ const SettingsPage = (function () {
         if (key === 'animations') document.documentElement.classList.toggle('no-animations', !isActive);
         if (key === 'reducedMotion') document.documentElement.classList.toggle('reduced-motion', isActive);
         if (key === 'compactView') document.documentElement.classList.toggle('compact-view', isActive);
-        if (key === 'sidebarCollapsed') document.querySelector('.sidebar').classList.toggle('collapsed', isActive);
+        if (key === 'sidebarCollapsed') { var sb = document.querySelector('.sidebar'); if (sb) sb.classList.toggle('collapsed', isActive); }
       }
       toggle.addEventListener('click', toggleActive);
       toggle.addEventListener('keydown', function (e) {
