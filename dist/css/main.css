@@ -997,7 +997,7 @@ body { scrollbar-width: thin; scrollbar-color: var(--border-color) transparent; 
 /* ----- 23. Page Loader ----- */
 .page-loader {
   display: none; flex-direction: column; gap: var(--space-xl);
-  padding: var(--space-xl); width: 100%;
+  padding: var(--space-xl); width: 100%; flex: 1;
 }
 .spinner {
   width: 36px; height: 36px; border: 3px solid var(--border-color);

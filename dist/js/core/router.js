@@ -80,7 +80,12 @@ const Router = (function() {
               if (gen === navGeneration) hideLoader();
             });
             if (typeof handler.init === "function") {
-              currentCleanup = handler.init();
+              try {
+                currentCleanup = handler.init() || null;
+              } catch (initErr) {
+                console.error("Page init error:", initErr);
+                currentCleanup = null;
+              }
             }
             updateSidebar(name);
             updatePageMeta(name);
