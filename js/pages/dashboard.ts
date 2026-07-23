@@ -428,7 +428,7 @@ const DashboardPage = (function () {
         if (hide) { if (hiddenWidgets.indexOf(id) === -1) hiddenWidgets.push(id); }
         else { hiddenWidgets = hiddenWidgets.filter(function (h) { return h !== id; }); }
         saveHiddenWidgets();
-        var widget = document.querySelector('[data-widget-id="' + id + '"]');
+        var widget = document.querySelector('[data-widget-id="' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(id) : id) + '"]');
         if (widget) {
           widget.style.display = hide ? 'none' : '';
           if (!hide && (id === 'charts' || id === 'traffic')) {
