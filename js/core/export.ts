@@ -51,7 +51,7 @@ const ExportManager = {
       ActivityLog.add('export', 'Dashboard report exported', 'export');
     } catch (e) {
       console.error('Export error:', e);
-      if (typeof ToastSystem !== 'undefined') ToastSystem.error('Export failed: ' + e.message);
+      if (typeof ToastSystem !== 'undefined') ToastSystem.error('Export failed: ' + (e && e.message ? e.message : 'Unknown error'));
     }
   },
 
@@ -88,11 +88,11 @@ const ExportManager = {
         var data = JSON.parse(e.target.result);
         if (data && typeof data === 'object') {
           AppStore.updateState('settings', data);
-          ToastSystem.success('Settings imported successfully');
+          if (typeof ToastSystem !== 'undefined') ToastSystem.success('Settings imported successfully');
           ActivityLog.add('import', 'Settings imported from file', 'import');
         }
       } catch (err) {
-        ToastSystem.error('Invalid settings file');
+        if (typeof ToastSystem !== 'undefined') ToastSystem.error('Invalid settings file');
       }
     };
     reader.readAsText(file);

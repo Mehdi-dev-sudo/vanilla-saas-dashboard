@@ -117,6 +117,7 @@ const Utils = {
   },
 
   copyToClipboard(text) {
+    if (typeof text !== 'string') return;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
         if (typeof ToastSystem !== 'undefined') ToastSystem.success('Copied: ' + text);
