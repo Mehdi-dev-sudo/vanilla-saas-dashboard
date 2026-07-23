@@ -52,18 +52,23 @@ const ExportManager = {
   },
 
   exportAnalytics() {
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var now = new Date();
-    var headers = ['Month', 'Revenue', 'Users', 'Refunds'];
-    var rows = months.map(function (m, i) {
-      return [m,
-        Math.round(18000 + i * 1400 + Math.sin(i) * 2000),
-        Math.round(110 + i * 18 + Math.sin(i * 1.3) * 25),
-        Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15)
-      ];
-    });
-    this.downloadCSV('analytics-' + now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '.csv', headers, rows);
-    ActivityLog.add('export', 'Analytics report exported', 'export');
+    try {
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var now = new Date();
+      var headers = ['Month', 'Revenue', 'Users', 'Refunds'];
+      var rows = months.map(function (m, i) {
+        return [m,
+          Math.round(18000 + i * 1400 + Math.sin(i) * 2000),
+          Math.round(110 + i * 18 + Math.sin(i * 1.3) * 25),
+          Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15)
+        ];
+      });
+      this.downloadCSV('analytics-' + now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '.csv', headers, rows);
+      ActivityLog.add('export', 'Analytics report exported', 'export');
+    } catch (e) {
+      console.error('Export analytics error:', e);
+      if (typeof ToastSystem !== 'undefined') ToastSystem.error('Analytics export failed');
+    }
   },
 
   exportSettings() {
