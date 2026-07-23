@@ -53,12 +53,12 @@ const CommandPalette = (function () {
   function buildCommands() {
     commands = [
       // Navigation
-      { id: 'nav-dashboard', category: 'Navigation', label: 'Go to Dashboard', keywords: 'gd home', icon: 'grid', action: function () { Router.navigate('dashboard'); close(); } },
-      { id: 'nav-analytics', category: 'Navigation', label: 'Go to Analytics', keywords: 'ga', icon: 'bar-chart', action: function () { Router.navigate('analytics'); close(); } },
-      { id: 'nav-users', category: 'Navigation', label: 'Go to Users', keywords: 'gu', icon: 'users', action: function () { Router.navigate('users'); close(); } },
-      { id: 'nav-transactions', category: 'Navigation', label: 'Go to Transactions', keywords: 'gt', icon: 'credit-card', action: function () { Router.navigate('transactions'); close(); } },
-      { id: 'nav-settings', category: 'Navigation', label: 'Go to Settings', keywords: 'gs', icon: 'settings', action: function () { Router.navigate('settings'); close(); } },
-      { id: 'nav-support', category: 'Navigation', label: 'Go to Support', keywords: 'gsh', icon: 'help-circle', action: function () { Router.navigate('support'); close(); } },
+      { id: 'nav-dashboard', category: 'Navigation', label: 'Go to Dashboard', keywords: 'gd home', icon: 'grid', action: function () { close(); Router.navigate('dashboard'); } },
+      { id: 'nav-analytics', category: 'Navigation', label: 'Go to Analytics', keywords: 'ga', icon: 'bar-chart', action: function () { close(); Router.navigate('analytics'); } },
+      { id: 'nav-users', category: 'Navigation', label: 'Go to Users', keywords: 'gu', icon: 'users', action: function () { close(); Router.navigate('users'); } },
+      { id: 'nav-transactions', category: 'Navigation', label: 'Go to Transactions', keywords: 'gt', icon: 'credit-card', action: function () { close(); Router.navigate('transactions'); } },
+      { id: 'nav-settings', category: 'Navigation', label: 'Go to Settings', keywords: 'gs', icon: 'settings', action: function () { close(); Router.navigate('settings'); } },
+      { id: 'nav-support', category: 'Navigation', label: 'Go to Support', keywords: 'gsh', icon: 'help-circle', action: function () { close(); Router.navigate('support'); } },
 
       // Actions
       { id: 'act-adduser', category: 'Actions', label: 'Create User', keywords: 'new user add', icon: 'user-plus', action: function () { close(); Router.navigate('users'); setTimeout(function () { var btn = document.getElementById('addUserBtn'); if (btn) btn.click(); }, 150); } },
@@ -72,11 +72,11 @@ const CommandPalette = (function () {
       { id: 'act-logout', category: 'Actions', label: 'Logout', keywords: 'sign out exit', icon: 'log-out', action: function () { close(); setTimeout(function () { AuthManager.logout(); }, 100); } },
 
       // Pages
-      { id: 'pg-dashboard', category: 'Pages', label: 'Dashboard', keywords: 'home', icon: 'grid', action: function () { Router.navigate('dashboard'); close(); } },
-      { id: 'pg-analytics', category: 'Pages', label: 'Analytics', keywords: 'stats', icon: 'bar-chart', action: function () { Router.navigate('analytics'); close(); } },
-      { id: 'pg-users', category: 'Pages', label: 'Users', keywords: 'people team', icon: 'users', action: function () { Router.navigate('users'); close(); } },
-      { id: 'pg-transactions', category: 'Pages', label: 'Transactions', keywords: 'payments billing', icon: 'credit-card', action: function () { Router.navigate('transactions'); close(); } },
-      { id: 'pg-settings', category: 'Pages', label: 'Settings', keywords: 'preferences config', icon: 'settings', action: function () { Router.navigate('settings'); close(); } },
+      { id: 'pg-dashboard', category: 'Pages', label: 'Dashboard', keywords: 'home', icon: 'grid', action: function () { close(); Router.navigate('dashboard'); } },
+      { id: 'pg-analytics', category: 'Pages', label: 'Analytics', keywords: 'stats', icon: 'bar-chart', action: function () { close(); Router.navigate('analytics'); } },
+      { id: 'pg-users', category: 'Pages', label: 'Users', keywords: 'people team', icon: 'users', action: function () { close(); Router.navigate('users'); } },
+      { id: 'pg-transactions', category: 'Pages', label: 'Transactions', keywords: 'payments billing', icon: 'credit-card', action: function () { close(); Router.navigate('transactions'); } },
+      { id: 'pg-settings', category: 'Pages', label: 'Settings', keywords: 'preferences config', icon: 'settings', action: function () { close(); Router.navigate('settings'); } },
 
       // Recent (from history)
     ];
