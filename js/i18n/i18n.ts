@@ -33,10 +33,11 @@ const I18n = (function () {
     var val = translations[locale];
     var i;
     for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
-    if (val === undefined) {
+    if (val === undefined && locale !== fallback) {
       val = translations[fallback];
       for (i = 0; val && i < parts.length; i++) val = val[parts[i]];
     }
+    if (val === undefined) val = key;
     if (val === undefined) return key;
     if (params) {
       for (var p in params) {
