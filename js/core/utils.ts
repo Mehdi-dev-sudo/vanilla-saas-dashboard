@@ -73,6 +73,7 @@ const Utils = {
 
   animateValue(el, start, end, duration) {
     if (!el) return;
+    if (!el.offsetParent) { el.textContent = end; return; }
     duration = duration || 1000;
     const range = end - start;
     const startTime = performance.now();
@@ -93,6 +94,7 @@ const Utils = {
 
   animatePercent(el, start, end, duration, suffix) {
     if (!el) return;
+    if (!el.offsetParent) { el.textContent = end + '%'; return; }
     suffix = suffix || '%';
     duration = duration || 1000;
     const range = end - start;
