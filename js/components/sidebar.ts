@@ -48,6 +48,7 @@ const SidebarManager = (function () {
   }
 
   function openMobile() {
+    if (!sidebar || !overlay) return;
     sidebar.classList.add('open');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
