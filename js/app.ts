@@ -79,9 +79,12 @@
       if (window.__clockInterval) clearInterval(window.__clockInterval);
       if (window.__onlineInterval) clearInterval(window.__onlineInterval);
       if (window.__updatedInterval) clearInterval(window.__updatedInterval);
-      window.__clockInterval = setInterval(updateClock, 1000);
-      window.__onlineInterval = setInterval(updateOnline, 8000);
-      window.__updatedInterval = setInterval(updateLastUpdated, 30000);
+    if (window.__clockInterval) clearInterval(window.__clockInterval);
+    window.__clockInterval = setInterval(updateClock, 1000);
+    if (window.__onlineInterval) clearInterval(window.__onlineInterval);
+    window.__onlineInterval = setInterval(updateOnline, 8000);
+    if (window.__updatedInterval) clearInterval(window.__updatedInterval);
+    window.__updatedInterval = setInterval(updateLastUpdated, 30000);
       if (typeof DashboardPage !== 'undefined' && DashboardPage.startRealtimeUpdates && Router.getCurrentRoute() === 'dashboard') {
         DashboardPage.startRealtimeUpdates();
       }
@@ -242,8 +245,10 @@
 
     var notifUnsub = AppStore.subscribe('notifications', function (count) {
       var unreadCount = typeof count === 'number' ? count : (count && count.length ? count.length : 0);
-      badge.textContent = unreadCount;
-      badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+      if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+      }
     });
   }
 
