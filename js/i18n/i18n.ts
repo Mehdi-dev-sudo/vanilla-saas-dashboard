@@ -1,3 +1,7 @@
+/**
+ * I18n — Internationalization with locale detection, pluralization, and __() helper.
+ * @module I18n
+ */
 const I18n = (function () {
   var locale = 'en';
   var fallback = 'en';

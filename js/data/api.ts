@@ -1,3 +1,7 @@
+/**
+ * ApiClient — Simulated API client with caching, retry, and error handling.
+ * @module ApiClient
+ */
 const ApiClient = (function () {
   var cache = {};
   var retryCount = {};

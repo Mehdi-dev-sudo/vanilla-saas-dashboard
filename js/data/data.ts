@@ -1,3 +1,7 @@
+/**
+ * AppStore — Central state management with CRUD for users, transactions, settings.
+ * @module AppStore
+ */
 const AppStore = (function () {
   let state = loadState();
 
