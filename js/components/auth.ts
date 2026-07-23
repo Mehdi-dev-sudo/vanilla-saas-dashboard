@@ -189,8 +189,11 @@ const AuthManager = (function () {
       e.preventDefault();
       errorEl.style.display = 'none';
 
-      var username = document.getElementById('loginUsername').value.trim();
-      var password = document.getElementById('loginPassword').value;
+      var usernameEl = document.getElementById('loginUsername');
+      var passwordEl = document.getElementById('loginPassword');
+      if (!usernameEl || !passwordEl) return;
+      var username = usernameEl.value.trim();
+      var password = passwordEl.value;
 
       var result = login(username, password, remember);
       if (result.success) {
