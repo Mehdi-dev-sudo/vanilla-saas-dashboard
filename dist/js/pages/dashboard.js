@@ -1,6 +1,8 @@
 const DashboardPage = /* @__PURE__ */ (function() {
   var widgetOrder = [];
   var hiddenWidgets = [];
+  var sectionStates = {};
+  var dashboardInited = false;
   function render() {
     var settings = AppStore.getState("settings");
     var savedOrder = loadWidgetOrder();
@@ -283,11 +285,20 @@ const DashboardPage = /* @__PURE__ */ (function() {
     `;
   }
   function init() {
+    dashboardInited = true;
+    sectionStates = {};
     var stats = AppStore.getDashboardStats();
-    animateStats(stats);
-    requestAnimationFrame(function() {
-      drawCharts();
-    });
+    if (stats && stats.revenue) {
+      animateStats(stats);
+      requestAnimationFrame(function() {
+        drawCharts();
+      });
+    } else {
+      var statsContainer = document.getElementById("statsContainer");
+      if (statsContainer && typeof StateRenderer !== "undefined") {
+        statsContainer.innerHTML = StateRenderer.error("Could not load metrics", null);
+      }
+    }
     startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();

@@ -95,7 +95,7 @@ const AnalyticsPage = /* @__PURE__ */ (function() {
     var analyticsExportBtn = document.getElementById("analyticsExportBtn");
     if (analyticsExportBtn) analyticsExportBtn.addEventListener("click", function() {
       ExportManager.exportAnalytics();
-      if (typeof ToastSystem !== "undefined") ToastSystem.success(__("toast.analytics.exported"));
+      if (typeof ToastSystem !== "undefined") ToastSystem.success("Analytics report exported");
     });
     var analyticsRefreshBtn = document.getElementById("analyticsRefreshBtn");
     if (analyticsRefreshBtn) analyticsRefreshBtn.addEventListener("click", function() {

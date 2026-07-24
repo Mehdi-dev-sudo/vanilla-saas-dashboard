@@ -7,12 +7,16 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:e2e": "node build.mjs && npx playwright test --reporter=line",
+    "test:e2e:ui": "node build.mjs && npx playwright test --headed --reporter=line",
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "esbuild": "^0.28.1",
+    "http-server": "^14.1.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.4.1",
     "typescript": "^7.0.2"
