@@ -37,6 +37,7 @@
     setupNotifications();
     setupKeyboardNavigation();
     setupConnectivityListeners();
+    setupScrollToTop();
 
     initApiData();
   }
@@ -251,6 +252,16 @@
         badge.style.display = unreadCount > 0 ? 'flex' : 'none';
       }
     });
+  }
+
+  function setupScrollToTop() {
+    var btn = document.getElementById('scrollTopBtn');
+    if (!btn) return;
+    var toggle = function () {
+      btn.classList.toggle('visible', window.scrollY > 300);
+    };
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
   }
 
   function showKeyboardHelp() {

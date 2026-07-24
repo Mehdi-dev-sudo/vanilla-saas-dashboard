@@ -844,7 +844,21 @@ body { scrollbar-width: thin; scrollbar-color: var(--border-color) transparent; 
 .toast--info { border-left: 3px solid var(--clr-info); }
 .toast--info .toast__icon { color: var(--clr-info); }
 
-/* ----- 15. Page Transitions ----- */
+/* ----- 15. Scroll-to-Top ----- */
+.scroll-top-btn {
+  position: fixed; bottom: 24px; right: 24px; z-index: 100;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--clr-primary); color: white; border: none;
+  cursor: pointer; box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base), transform var(--transition-base);
+  transform: translateY(10px);
+}
+.scroll-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.scroll-top-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(99,102,241,0.5); }
+
+/* ----- 16. Page Transitions ----- */
 #mainContent { animation: pageFadeIn 0.25s ease-out; }
 @keyframes pageFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .reduced-motion #mainContent { animation: none; }
