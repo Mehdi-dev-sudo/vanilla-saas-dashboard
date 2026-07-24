@@ -511,6 +511,15 @@ hr { border: none; border-top: 1px solid var(--border-light); margin: var(--spac
 .hidden { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
+.skip-link {
+  position: absolute; top: -100%; left: 8px; z-index: 600;
+  padding: 8px 16px; background: var(--clr-primary); color: white;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  font-size: var(--font-sm); font-weight: 500;
+  transition: top var(--transition-fast);
+}
+.skip-link:focus { top: 0; }
+
 @media print {
   .sidebar, .header, .toast-container, .header__notif-wrapper { display: none !important; }
   .content { margin-left: 0 !important; }
