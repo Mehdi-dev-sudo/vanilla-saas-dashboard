@@ -27,7 +27,8 @@ const Router = (function() {
     }, icon: "help-circle", parent: null },
     error: { title: function() {
       return __("route.error");
-    }, icon: "alert-triangle", parent: null }
+    }, icon: "alert-triangle", parent: null },
+    "design-system": { title: "Design System", icon: "book", parent: null }
   };
   function renderBreadcrumbs(route) {
     var m = routeMeta[route];
