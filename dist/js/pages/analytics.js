@@ -15,7 +15,7 @@ const AnalyticsPage = (function() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
             Export Report
           </button>
-          <button class="btn btn--primary" id="analyticsRefreshBtn">
+          <button class="btn btn--primary" id="analyticsRefreshBtn" aria-label="Refresh analytics data">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             Refresh
           </button>
@@ -85,6 +85,11 @@ const AnalyticsPage = (function() {
     `;
   }
   function init() {
+    var revView = StateRenderer.createDataView("analyticsRevenue", {});
+    revView.loading();
+    setTimeout(function() {
+      revView.loaded();
+    }, 600);
     const data = AppStore.getAnalyticsStats();
     Utils.animateValue(document.getElementById("analyticsRevenue"), 0, data.totalRevenue, 1200);
     Utils.animateValue(document.getElementById("analyticsAvgOrder"), 0, data.avgOrder, 1200);

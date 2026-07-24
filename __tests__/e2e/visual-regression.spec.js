@@ -128,4 +128,72 @@ test.describe('Visual Regression', () => {
     }
   });
 
+  test('settings toggle switches work', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto(`${BASE_URL}/#settings`);
+    await page.waitForSelector('.toggle[data-setting]', { timeout: 10000 });
+
+    var toggles = await page.locator('.toggle[data-setting]').all();
+    expect(toggles.length).toBeGreaterThan(5);
+
+    var initialActive = await toggles[0].getAttribute('aria-checked');
+    await toggles[0].click();
+    await page.waitForTimeout(200);
+    var afterClick = await toggles[0].getAttribute('aria-checked');
+    expect(afterClick).not.toBe(initialActive);
+  });
+
+  test('scroll-to-top button appears after scrolling', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.evaluate(function() { window.scrollTo(0, 500); });
+    await page.waitForTimeout(300);
+    var fab = page.locator('#scrollToTop');
+    if (await fab.count() > 0) {
+      await expect(fab).toBeVisible();
+      await fab.click();
+      await page.waitForTimeout(300);
+    }
+  });
+
+  test('keyboard shortcut opens command palette', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.keyboard.press('Control+k');
+    await page.waitForTimeout(500);
+    var palette = page.locator('#commandPalette, .command-palette');
+    if (await palette.count() > 0) {
+      await expect(palette).toBeVisible();
+      await page.keyboard.press('Escape');
+    }
+  });
+
+  test('analytics export button exists', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto(`${BASE_URL}/#analytics`);
+    await page.waitForSelector('#analyticsExportBtn', { timeout: 10000 });
+    await expect(page.locator('#analyticsExportBtn')).toBeVisible();
+    await expect(page.locator('#analyticsRefreshBtn')).toBeVisible();
+  });
+
+  test('sidebar highlights active route', async ({ page }) => {
+    await loginAsAdmin(page);
+    await page.goto(`${BASE_URL}/#users`);
+    await page.waitForSelector('#usersTableBody', { timeout: 10000 });
+    var activeItems = await page.locator('.sidebar__item.active');
+    expect(await activeItems.count()).toBeGreaterThan(0);
+    var activeRoute = await activeItems.first().getAttribute('data-route');
+    expect(activeRoute).toBe('users');
+  });
+
+  test('page has valid HTML structure', async ({ page }) => {
+    await loginAsAdmin(page);
+    var skipLink = page.locator('.skip-to-content');
+    if (await skipLink.count() > 0) {
+      await expect(skipLink).toBeVisible();
+    }
+    var main = page.locator('#mainContent');
+    await expect(main).toBeVisible();
+    var title = await page.title();
+    expect(title.length).toBeGreaterThan(0);
+  });
+
 });

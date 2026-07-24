@@ -84,7 +84,7 @@ const SettingsPage = (function () {
             <div class="settings-row__label">Plan</div>
             <div class="settings-row__desc">Enterprise Plan</div>
           </div>
-          <button class="btn btn--sm btn--primary">Upgrade</button>
+          <button class="btn btn--sm btn--primary" aria-label="Upgrade your plan">Upgrade</button>
         </div>
       </div>
 
