@@ -16,6 +16,9 @@ const DesignSystemPage = (function() {
     { id: "tables", title: "Tables", icon: "grid" },
     { id: "pagination", title: "Pagination", icon: "chevrons-right" },
     { id: "skeletons", title: "Skeletons", icon: "loader" },
+    { id: "border", title: "Border & Radius", icon: "square" },
+    { id: "opacity", title: "Opacity", icon: "eye" },
+    { id: "zindex", title: "Z-Index", icon: "layers" },
     { id: "emptystates", title: "Empty States", icon: "inbox" },
     { id: "states", title: "States", icon: "activity" },
     { id: "playground", title: "Playground", icon: "zap" }
@@ -160,6 +163,43 @@ const DesignSystemPage = (function() {
   function renderSkeletonsSection() {
     return '<div class="ds-section" id="ds-section-skeletons"><h2 class="ds-section__title">Skeleton Loaders</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Loading placeholders for various content types</p><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--ds-space-4)"><div><h3 style="font-size:var(--ds-typography-size-sm);font-weight:600;margin-bottom:var(--ds-space-2)">Card Skeleton</h3>' + SkeletonLoader.getCardSkeleton() + '</div><div><h3 style="font-size:var(--ds-typography-size-sm);font-weight:600;margin-bottom:var(--ds-space-2)">Chart Skeleton</h3>' + SkeletonLoader.getChartSkeleton() + '</div><div><h3 style="font-size:var(--ds-typography-size-sm);font-weight:600;margin-bottom:var(--ds-space-2)">Stats Skeleton</h3>' + SkeletonLoader.getStatsSkeleton() + '</div></div><div style="margin-top:var(--ds-space-4)"><h3 style="font-size:var(--ds-typography-size-sm);font-weight:600;margin-bottom:var(--ds-space-2)">Text Skeleton Variants</h3><div style="display:flex;flex-direction:column;gap:var(--ds-space-2);padding:var(--ds-space-4);background:var(--ds-color-surface-card);border-radius:var(--ds-radius-md);border:1px solid var(--ds-color-border-light)"><div class="skeleton skeleton--text skeleton--w-60"></div><div class="skeleton skeleton--text skeleton--w-40"></div><div class="skeleton skeleton--text skeleton--w-25"></div><div class="skeleton skeleton--title skeleton--w-35" style="margin-top:var(--ds-space-2)"></div></div></div></div>';
   }
+  function renderBorderSection() {
+    function cp(name) {
+      return "var(--ds-" + name + ")";
+    }
+    var radii = [
+      { token: "border-radius-sm", label: "Small (4px)" },
+      { token: "border-radius-md", label: "Medium (6px)" },
+      { token: "border-radius-lg", label: "Large (12px)" },
+      { token: "border-radius-xl", label: "XL (16px)" },
+      { token: "border-radius-full", label: "Full (9999px)" }
+    ];
+    return '<div class="ds-section" id="ds-section-border"><h2 class="ds-section__title">Border & Radius</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Border radius tokens for UI surfaces</p><div style="display:flex;flex-wrap:wrap;gap:var(--ds-space-4)">' + radii.map(function(r) {
+      return '<div style="width:160px;text-align:center"><div style="width:80px;height:80px;margin:0 auto var(--ds-space-2);background:var(--ds-color-brand-primary);border-radius:' + cp(r.token) + ';display:flex;align-items:center;justify-content:center;color:white;font-size:var(--ds-typography-size-xs)"></div><span style="font-size:var(--ds-typography-size-sm);font-weight:500">' + r.label + '</span><br><span style="font-size:var(--ds-typography-size-xs);color:var(--ds-color-text-secondary)">' + cp(r.token) + "</span></div>";
+    }).join("") + "</div></div>";
+  }
+  function renderOpacitySection() {
+    var opacities = ["invisible", "subtle", "light", "medium", "heavy", "solid"];
+    return '<div class="ds-section" id="ds-section-opacity"><h2 class="ds-section__title">Opacity</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Opacity tokens for overlays and surfaces</p><div style="display:flex;flex-wrap:wrap;gap:var(--ds-space-4)">' + opacities.map(function(o) {
+      var val = "var(--ds-opacity-" + o + ")";
+      return '<div style="width:120px;text-align:center"><div style="width:80px;height:60px;margin:0 auto var(--ds-space-2);background:var(--ds-color-brand-primary);opacity:' + val + ';border-radius:var(--ds-radius-md)"></div><span style="font-size:var(--ds-typography-size-sm);font-weight:500">' + o + '</span><br><span style="font-size:var(--ds-typography-size-xs);color:var(--ds-color-text-secondary)">' + val + "</span></div>";
+    }).join("") + "</div></div>";
+  }
+  function renderZindexSection() {
+    var layers = [
+      { label: "Dropdown", val: "var(--ds-zindex-dropdown)" },
+      { label: "Sticky", val: "var(--ds-zindex-sticky)" },
+      { label: "Sidebar", val: "var(--ds-zindex-sidebar)" },
+      { label: "Modal", val: "var(--ds-zindex-modal)" },
+      { label: "Toast", val: "var(--ds-zindex-toast)" },
+      { label: "Tooltip", val: "var(--ds-zindex-tooltip)" }
+    ];
+    return '<div class="ds-section" id="ds-section-zindex"><h2 class="ds-section__title">Z-Index Scale</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Z-index tokens for layered UI elements</p><div style="display:flex;flex-direction:column;gap:var(--ds-space-3);max-width:400px">' + layers.slice().reverse().map(function(l, i) {
+      var z = parseInt(l.val.replace("var(--ds-zindex-", "").replace(")", ""));
+      var h = 30 + i * 12;
+      return '<div style="display:flex;align-items:center;gap:var(--ds-space-3);padding:var(--ds-space-2) var(--ds-space-3);background:var(--ds-color-surface-card);border:1px solid var(--ds-color-border-light);border-radius:var(--ds-radius-md);z-index:' + l.val + ';position:relative"><span style="width:24px;height:24px;border-radius:4px;background:var(--ds-color-brand-primary);opacity:0.8;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:600">' + (6 - i) + '</span><span style="flex:1;font-size:var(--ds-typography-size-sm)">' + l.label + '</span><span style="font-size:var(--ds-typography-size-xs);color:var(--ds-color-text-secondary)">' + l.val + "</span></div>";
+    }).join("") + "</div></div>";
+  }
   function renderEmptyStatesSection() {
     return '<div class="ds-section" id="ds-section-emptystates"><h2 class="ds-section__title">Empty States</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Empty state patterns for data views</p><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--ds-space-4)"><div class="card"><div class="card__body">' + SkeletonLoader.getEmptyState(
       '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
@@ -212,6 +252,9 @@ const DesignSystemPage = (function() {
     tables: renderTablesSection,
     pagination: renderPaginationSection,
     skeletons: renderSkeletonsSection,
+    border: renderBorderSection,
+    opacity: renderOpacitySection,
+    zindex: renderZindexSection,
     emptystates: renderEmptyStatesSection,
     states: renderStatesSection,
     playground: renderPlaygroundSection
