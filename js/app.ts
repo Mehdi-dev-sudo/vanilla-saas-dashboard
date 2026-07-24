@@ -12,6 +12,7 @@
       Router.register('settings', SettingsPage);
       Router.register('support', SupportPage);
       Router.register('error', ErrorPage);
+      Router.register('design-system', DesignSystemPage);
 
       I18n.init();
       HistoryManager.init();

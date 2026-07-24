@@ -2,6 +2,7 @@ import * as esbuild from 'esbuild';
 import { readdirSync, statSync, cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { spawnSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const srcRoot = join(__dirname, 'js');
@@ -23,6 +24,9 @@ function collectFiles(dir) {
 }
 
 async function build() {
+  // Step 0: Compile design tokens
+  spawnSync('node', [join(__dirname, 'tokens', 'compile-tokens.mjs')], { stdio: 'inherit' });
+
   const entryPoints = collectFiles(srcRoot);
   await esbuild.build({
     entryPoints,
@@ -45,10 +49,11 @@ async function build() {
   const distHtml = htmlContent.replace(/(src|href)="dist\//g, '$1="');
   writeFileSync(join(__dirname, 'dist', 'index.html'), distHtml);
 
-  // Copy manifest.json and sw.js
+  // Copy non-TypeScript JS assets
   for (const f of ['manifest.json', 'sw.js']) {
     try { cpSync(join(__dirname, f), join(__dirname, 'dist', f)); } catch (e) {}
   }
+  try { cpSync(join(__dirname, 'js', 'tokens.js'), join(__dirname, 'dist', 'js', 'tokens.js')); } catch (e) {}
 
   console.log('Build complete: dist/');
 }
