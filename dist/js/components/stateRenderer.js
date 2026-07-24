@@ -35,7 +35,7 @@ const StateRenderer = (function() {
   function error(message, onRetryId, colspan) {
     colspan = colspan || 8;
     var retryHtml = onRetryId ? '<button class="btn btn--primary mt-md" data-retry="' + onRetryId + '">Retry</button>' : "";
-    return '<tr><td colspan="' + colspan + '"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--clr-danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><p class="empty-state__text">Failed to load data</p><p class="empty-state__hint">' + (message || "An unexpected error occurred") + "</p>" + retryHtml + "</div></td></tr>";
+    return '<tr><td colspan="' + colspan + '"><div class="empty-state" role="alert"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--clr-danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><p class="empty-state__text">Failed to load data</p><p class="empty-state__hint">' + (message || "An unexpected error occurred") + "</p>" + retryHtml + "</div></td></tr>";
   }
   function createDataView(config) {
     var state = ASYNC_STATES.IDLE;

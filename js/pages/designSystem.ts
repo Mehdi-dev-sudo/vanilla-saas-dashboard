@@ -404,14 +404,14 @@ const DesignSystemPage = (function () {
       '<h2 class="ds-section__title">Pagination</h2>' +
       '<p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Pagination controls for tables and lists</p>' +
       '<div class="card"><div class="card__body" style="display:flex;justify-content:center;padding:var(--ds-space-6)"><div class="pagination">' +
-        '<button class="pagination__btn" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>' +
+        '<button class="pagination__btn" disabled aria-label="Previous page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>' +
         '<span class="pagination__info">Page 1 of 5</span>' +
         '<button class="pagination__btn active">1</button>' +
         '<button class="pagination__btn">2</button>' +
         '<button class="pagination__btn">3</button>' +
         '<button class="pagination__btn">4</button>' +
         '<button class="pagination__btn">5</button>' +
-        '<button class="pagination__btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>' +
+        '<button class="pagination__btn" aria-label="Next page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>' +
       '</div></div></div>' +
     '</div>';
   }

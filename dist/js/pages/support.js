@@ -40,12 +40,12 @@ const SupportPage = /* @__PURE__ */ (function() {
               <div class="form-group">
                 <label class="form-label" for="contactName">Full Name <span class="form-label__required">*</span></label>
                 <input type="text" class="form-input" id="contactName" name="name" placeholder="Your name" required>
-                <span class="form-error" id="contactNameError" style="display:none"></span>
+                <span class="form-error" id="contactNameError" role="alert" style="display:none"></span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="contactEmail">Email <span class="form-label__required">*</span></label>
                 <input type="email" class="form-input" id="contactEmail" name="email" placeholder="your@email.com" required>
-                <span class="form-error" id="contactEmailError" style="display:none"></span>
+                <span class="form-error" id="contactEmailError" role="alert" style="display:none"></span>
               </div>
             </div>
             <div class="form-group">
@@ -58,12 +58,12 @@ const SupportPage = /* @__PURE__ */ (function() {
                 <option value="feature">Feature Request</option>
                 <option value="other">Other</option>
               </select>
-              <span class="form-error" id="contactSubjectError" style="display:none"></span>
+              <span class="form-error" id="contactSubjectError" role="alert" style="display:none"></span>
             </div>
             <div class="form-group">
               <label class="form-label" for="contactMessage">Message <span class="form-label__required">*</span></label>
               <textarea class="form-textarea" id="contactMessage" name="message" placeholder="Describe your issue in detail..." rows="5" required></textarea>
-              <span class="form-error" id="contactMessageError" style="display:none"></span>
+              <span class="form-error" id="contactMessageError" role="alert" style="display:none"></span>
             </div>
             <div class="flex items-center justify-between" style="flex-wrap:wrap;gap:var(--space-md)">
               <span style="font-size:var(--font-sm);color:var(--text-tertiary)">We typically respond within 24 hours</span>

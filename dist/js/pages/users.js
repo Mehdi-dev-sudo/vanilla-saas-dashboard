@@ -224,11 +224,11 @@ const UsersPage = (function() {
       return;
     }
     let html = "";
-    html += '<button class="pagination__btn" id="prevPage" ' + (result.page <= 1 ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button><span class="pagination__info">Page ' + result.page + " of " + result.totalPages + "</span>";
+    html += '<button class="pagination__btn" id="prevPage" aria-label="Previous page" ' + (result.page <= 1 ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button><span class="pagination__info">Page ' + result.page + " of " + result.totalPages + "</span>";
     for (let i = 1; i <= result.totalPages; i++) {
       html += '<button class="pagination__btn' + (i === result.page ? " active" : "") + '" data-page="' + i + '">' + i + "</button>";
     }
-    html += '<button class="pagination__btn" id="nextPage" ' + (result.page >= result.totalPages ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>';
+    html += '<button class="pagination__btn" id="nextPage" aria-label="Next page" ' + (result.page >= result.totalPages ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>';
     container.innerHTML = html;
     container.querySelectorAll("[data-page]").forEach((btn) => {
       btn.addEventListener("click", function() {
