@@ -234,5 +234,5 @@ const TransactionsPage = (function () {
     });
   }
 
-  return { render, init };
+  return typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : { render: render, init: init };
 })();

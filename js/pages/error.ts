@@ -4,7 +4,7 @@
  */
 const ErrorPage = (function () {
 
-  function render(type) {
+  function render(state, type) {
     type = type || '404';
     var pages = {
       '404': {
@@ -48,5 +48,5 @@ const ErrorPage = (function () {
     return function cleanup() {};
   }
 
-  return { render, init };
+  return typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : { render: render, init: init };
 })();

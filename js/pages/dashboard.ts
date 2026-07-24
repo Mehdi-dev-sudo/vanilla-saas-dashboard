@@ -516,5 +516,13 @@ const DashboardPage = (function () {
     if (document.getElementById('dashRevenueChart')) drawCharts();
   }
 
+  var _bc = typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : null;
+  if (_bc) {
+    _bc.refresh = refresh;
+    _bc.reinitCharts = reinitCharts;
+    _bc.startRealtimeUpdates = startRealtimeUpdates;
+    _bc.stopRealtimeUpdates = stopRealtimeUpdates;
+    return _bc;
+  }
   return { render: render, init: init, refresh: refresh, reinitCharts: reinitCharts, startRealtimeUpdates: startRealtimeUpdates, stopRealtimeUpdates: stopRealtimeUpdates };
 })();

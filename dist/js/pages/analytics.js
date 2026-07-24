@@ -1,4 +1,4 @@
-const AnalyticsPage = /* @__PURE__ */ (function() {
+const AnalyticsPage = (function() {
   function render() {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const revenueData = months.map((m, i) => ({ month: m, value: 18e3 + i * 1400 + Math.round(Math.sin(i) * 2e3) }));
@@ -132,6 +132,11 @@ const AnalyticsPage = /* @__PURE__ */ (function() {
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       ChartEngine.drawLineChart("analyticsRefundChart", months.map((m, i) => ({ month: m, value: Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15) })), { height: 250 });
     }
+  }
+  var _bc = typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : null;
+  if (_bc) {
+    _bc.reinitCharts = reinitCharts;
+    return _bc;
   }
   return { render, init, reinitCharts };
 })();

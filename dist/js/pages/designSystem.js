@@ -294,5 +294,5 @@ const DesignSystemPage = (function() {
       if (typeof ToastSystem !== "undefined") ToastSystem.info("Copied: var(" + name + ")");
     }
   };
-  return { render, init };
+  return typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : { render, init };
 })();

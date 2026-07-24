@@ -1,4 +1,4 @@
-const DashboardPage = /* @__PURE__ */ (function() {
+const DashboardPage = (function() {
   var widgetOrder = [];
   var hiddenWidgets = [];
   var sectionStates = {};
@@ -489,6 +489,14 @@ const DashboardPage = /* @__PURE__ */ (function() {
   }
   function reinitCharts() {
     if (document.getElementById("dashRevenueChart")) drawCharts();
+  }
+  var _bc = typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : null;
+  if (_bc) {
+    _bc.refresh = refresh;
+    _bc.reinitCharts = reinitCharts;
+    _bc.startRealtimeUpdates = startRealtimeUpdates;
+    _bc.stopRealtimeUpdates = stopRealtimeUpdates;
+    return _bc;
   }
   return { render, init, refresh, reinitCharts, startRealtimeUpdates, stopRealtimeUpdates };
 })();

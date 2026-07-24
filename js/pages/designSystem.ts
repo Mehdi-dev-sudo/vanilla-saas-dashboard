@@ -640,5 +640,5 @@ const DesignSystemPage = (function () {
     }
   };
 
-  return { render: render, init: init };
+  return typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : { render: render, init: init };
 })();

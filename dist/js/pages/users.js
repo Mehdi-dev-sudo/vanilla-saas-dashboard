@@ -330,5 +330,5 @@ const UsersPage = (function() {
       }
     );
   }
-  return { render, init };
+  return typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : { render, init };
 })();

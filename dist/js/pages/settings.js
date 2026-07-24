@@ -1,4 +1,4 @@
-const SettingsPage = /* @__PURE__ */ (function() {
+const SettingsPage = (function() {
   function render() {
     var settings = AppStore.getState("settings");
     return `
@@ -265,5 +265,5 @@ const SettingsPage = /* @__PURE__ */ (function() {
       content.style.gap = d.gap;
     }
   }
-  return { render, init };
+  return typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : { render, init };
 })();

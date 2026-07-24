@@ -1,5 +1,5 @@
-const ErrorPage = /* @__PURE__ */ (function() {
-  function render(type) {
+const ErrorPage = (function() {
+  function render(state, type) {
     type = type || "404";
     var pages = {
       "404": {
@@ -41,5 +41,5 @@ const ErrorPage = /* @__PURE__ */ (function() {
     return function cleanup() {
     };
   }
-  return { render, init };
+  return typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : { render, init };
 })();

@@ -255,5 +255,5 @@ const SettingsPage = (function () {
     if (content) { content.style.padding = d.content; content.style.gap = d.gap; }
   }
 
-  return { render: render, init: init };
+  return typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : { render: render, init: init };
 })();

@@ -146,5 +146,7 @@ const AnalyticsPage = (function () {
     }
   }
 
-  return { render, init, reinitCharts };
+  var _bc = typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : null;
+  if (_bc) { _bc.reinitCharts = reinitCharts; return _bc; }
+  return { render: render, init: init, reinitCharts: reinitCharts };
 })();
