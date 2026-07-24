@@ -95,5 +95,13 @@ const StateRenderer = (function () {
     return { load: load, retry: retry, destroy: destroy, getState: function () { return state; }, getData: function () { return data; } };
   }
 
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-retry]');
+    if (btn) {
+      var retryFn = window[btn.getAttribute('data-retry')];
+      if (typeof retryFn === 'function') retryFn();
+    }
+  });
+
   return { ASYNC_STATES: ASYNC_STATES, loading: loading, empty: empty, filteredEmpty: filteredEmpty, error: error, createDataView: createDataView };
 })();

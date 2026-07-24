@@ -23,6 +23,7 @@ const DesignSystemPage = (function () {
     { id: 'pagination', title: 'Pagination', icon: 'chevrons-right' },
     { id: 'skeletons', title: 'Skeletons', icon: 'loader' },
     { id: 'emptystates', title: 'Empty States', icon: 'inbox' },
+    { id: 'states', title: 'States', icon: 'activity' },
     { id: 'playground', title: 'Playground', icon: 'zap' }
   ];
 
@@ -454,6 +455,33 @@ const DesignSystemPage = (function () {
   }
 
   function renderPlaygroundSection() {
+  function renderStatesSection() {
+    var states = typeof StateRenderer !== 'undefined' ? [
+      { label: 'Loading (table)', html: StateRenderer.loading('table') },
+      { label: 'Loading (card)', html: StateRenderer.loading('card') },
+      { label: 'Loading (row)', html: StateRenderer.loading('row') },
+      { label: 'Empty', html: '<table style="width:100%"><tbody>' + StateRenderer.empty(6) + '</tbody></table>' },
+      { label: 'Filtered Empty', html: '<table style="width:100%"><tbody>' + StateRenderer.filteredEmpty('search term', 'active', 6) + '</tbody></table>' },
+      { label: 'Error', html: '<table style="width:100%"><tbody>' + StateRenderer.error('Something went wrong while fetching data', 'retryDemo', 6) + '</tbody></table>' }
+    ] : [];
+
+    var html = '<div class="ds-section" id="ds-section-states">' +
+      '<h2 class="ds-section__title">State Coverage</h2>' +
+      '<p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">All async data views follow the same lifecycle: Loading → Loaded | Empty | Error</p>' +
+      '<div style="display:grid;gap:var(--ds-space-6);grid-template-columns:repeat(auto-fill,minmax(400px,1fr))">';
+
+    states.forEach(function (s) {
+      html += '<div style="background:var(--ds-color-surface-card);border-radius:var(--ds-radius-lg);border:1px solid var(--ds-color-border-light);overflow:hidden">' +
+        '<div style="padding:var(--ds-space-3) var(--ds-space-4);border-bottom:1px solid var(--ds-color-border-light);font-size:var(--ds-typography-size-xs);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ds-color-text-secondary)">' + s.label + '</div>' +
+        '<div style="padding:var(--ds-space-3)">' + s.html + '</div></div>';
+    });
+
+    html += '</div></div>';
+    return html;
+  }
+
+  window.retryDemo = function () { alert('Retry triggered! In a real app this would re-fetch data.'); };
+
     return '<div class="ds-section" id="ds-section-playground">' +
       '<h2 class="ds-section__title">Component Playground</h2>' +
       '<p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Interactive sandbox to test components live</p>' +
@@ -495,6 +523,7 @@ const DesignSystemPage = (function () {
     pagination: renderPaginationSection,
     skeletons: renderSkeletonsSection,
     emptystates: renderEmptyStatesSection,
+    states: renderStatesSection,
     playground: renderPlaygroundSection
   };
 
