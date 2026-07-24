@@ -38,10 +38,20 @@ async function build() {
     allowOverwrite: true,
   });
 
-  // Copy CSS
+  // Concat CSS
+  const cssSrc = join(__dirname, 'css');
   const cssDst = join(__dirname, 'dist', 'css');
   if (!existsSync(cssDst)) mkdirSync(cssDst, { recursive: true });
-  cpSync(join(__dirname, 'css'), cssDst, { recursive: true });
+
+  const cssOrder = ['tokens.css', 'base.css', 'layout.css', 'components.css', 'utilities.css', 'responsive.css', 'main.css'];
+  const concatCss = [];
+  const cssFiles = readdirSync(cssSrc);
+  for (const name of cssOrder) {
+    if (cssFiles.includes(name)) {
+      concatCss.push(`/* ---- ${name} ---- */\n` + readFileSync(join(cssSrc, name), 'utf8'));
+    }
+  }
+  writeFileSync(join(cssDst, 'main.css'), concatCss.join('\n\n'));
 
   // Copy index.html, stripping "dist/" prefix from paths for dist/ serving
   const htmlPath = join(__dirname, 'index.html');

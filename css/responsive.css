@@ -1,0 +1,31 @@
+/* ==========================================================
+   Responsive — Mobile and tablet overrides
+   ========================================================== */
+
+@media (max-width: 1200px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 1024px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); width: 280px !important; }
+  .sidebar.open { transform: translateX(0); }
+  .content { margin-left: 0 !important; }
+  .header { padding: 0 var(--space-md); }
+  .main { padding: var(--space-md); }
+  .stats-grid { grid-template-columns: 1fr; }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .page-header__actions { width: 100%; }
+  .page-header__actions .btn { flex: 1; justify-content: center; }
+  .toast { min-width: unset; max-width: calc(100vw - 32px); }
+  .settings-actions .btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .header__search:focus-within { width: calc(100% - 60px); padding: 0 var(--space-md); position: absolute; left: 44px; z-index: 60; }
+  .header__search:focus-within .header__search-input { display: block; }
+}
