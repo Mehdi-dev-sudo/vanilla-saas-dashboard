@@ -96,7 +96,27 @@ const DesignTokens = (function () {
   "--ds-layout-breakpoint-tablet": "768px",
   "--ds-layout-breakpoint-desktop": "1024px",
   "--ds-layout-breakpoint-wide": "1200px",
-  "--ds-layout-breakpoint-ultrawide": "1440px"
+  "--ds-layout-breakpoint-ultrawide": "1440px",
+  "--ds-border-radius-sm": "4px",
+  "--ds-border-radius-md": "6px",
+  "--ds-border-radius-lg": "12px",
+  "--ds-border-radius-xl": "16px",
+  "--ds-border-radius-full": "9999px",
+  "--ds-border-width-none": "0",
+  "--ds-border-width-thin": "1px",
+  "--ds-border-width-thick": "2px",
+  "--ds-opacity-invisible": "0",
+  "--ds-opacity-subtle": "0.06",
+  "--ds-opacity-light": "0.12",
+  "--ds-opacity-medium": "0.5",
+  "--ds-opacity-heavy": "0.8",
+  "--ds-opacity-solid": "1",
+  "--ds-zindex-dropdown": "100",
+  "--ds-zindex-sticky": "200",
+  "--ds-zindex-sidebar": "300",
+  "--ds-zindex-modal": "400",
+  "--ds-zindex-toast": "500",
+  "--ds-zindex-tooltip": "600"
 };
 
   function get(name) {
@@ -660,6 +680,126 @@ const DesignTokens = (function () {
     "value": "1440px",
     "dark": null,
     "description": ""
+  },
+  {
+    "name": "--ds-border-radius-sm",
+    "value": "4px",
+    "dark": null,
+    "description": "Small border radius for compact elements"
+  },
+  {
+    "name": "--ds-border-radius-md",
+    "value": "6px",
+    "dark": null,
+    "description": "Medium border radius for standard elements"
+  },
+  {
+    "name": "--ds-border-radius-lg",
+    "value": "12px",
+    "dark": null,
+    "description": "Large border radius for cards and containers"
+  },
+  {
+    "name": "--ds-border-radius-xl",
+    "value": "16px",
+    "dark": null,
+    "description": "Extra large border radius for dialogs"
+  },
+  {
+    "name": "--ds-border-radius-full",
+    "value": "9999px",
+    "dark": null,
+    "description": "Full/rounded border radius for pills and badges"
+  },
+  {
+    "name": "--ds-border-width-none",
+    "value": "0",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-border-width-thin",
+    "value": "1px",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-border-width-thick",
+    "value": "2px",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-opacity-invisible",
+    "value": "0",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-opacity-subtle",
+    "value": "0.06",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-opacity-light",
+    "value": "0.12",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-opacity-medium",
+    "value": "0.5",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-opacity-heavy",
+    "value": "0.8",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-opacity-solid",
+    "value": "1",
+    "dark": null,
+    "description": ""
+  },
+  {
+    "name": "--ds-zindex-dropdown",
+    "value": "100",
+    "dark": null,
+    "description": "Dropdown menus"
+  },
+  {
+    "name": "--ds-zindex-sticky",
+    "value": "200",
+    "dark": null,
+    "description": "Sticky headers"
+  },
+  {
+    "name": "--ds-zindex-sidebar",
+    "value": "300",
+    "dark": null,
+    "description": "Sidebar overlay"
+  },
+  {
+    "name": "--ds-zindex-modal",
+    "value": "400",
+    "dark": null,
+    "description": "Modal dialogs"
+  },
+  {
+    "name": "--ds-zindex-toast",
+    "value": "500",
+    "dark": null,
+    "description": "Toast notifications"
+  },
+  {
+    "name": "--ds-zindex-tooltip",
+    "value": "600",
+    "dark": null,
+    "description": "Tooltips"
   }
 ];
   }
