@@ -557,6 +557,10 @@ body { scrollbar-width: thin; scrollbar-color: var(--border-color) transparent; 
 .btn--sm { padding: 5px 12px; font-size: var(--font-sm); }
 .btn--lg { padding: 10px 24px; font-size: var(--font-md); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn--loading { position: relative; pointer-events: none; }
+.btn--loading::after { content: ''; position: absolute; width: 14px; height: 14px; border: 2px solid transparent; border-top-color: currentColor; border-radius: 50%; animation: btn-spin 0.6s linear infinite; top: calc(50% - 7px); left: calc(50% - 7px); }
+.btn--loading .btn__text { visibility: hidden; }
+@keyframes btn-spin { to { transform: rotate(360deg); } }
 
 /* ----- 8. Cards ----- */
 .card {

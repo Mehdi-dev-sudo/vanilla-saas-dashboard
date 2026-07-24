@@ -233,8 +233,12 @@ const DesignSystemPage = (function () {
           '<span class="ds-state-label">Disabled</span>' +
         '</div>' +
         '<div class="ds-state-card" data-state-name="loading">' +
-          '<div class="ds-state-preview"><button class="btn btn--primary" disabled><span class="ds-spinner-sm"></span> Loading</button></div>' +
+          '<div class="ds-state-preview"><button class="btn btn--primary btn--loading"><span class="btn__text">Loading</span></button></div>' +
           '<span class="ds-state-label">Loading</span>' +
+        '</div>' +
+        '<div class="ds-state-card" data-state-name="interactive">' +
+          '<div class="ds-state-preview"><button class="btn btn--primary" id="dsLoadingDemoBtn" onclick="var b=this;b.classList.add(\'btn--loading\');b.disabled=true;setTimeout(function(){b.classList.remove(\'btn--loading\');b.disabled=false},2000)"><span class="btn__text">Click me</span></button></div>' +
+          '<span class="ds-state-label">Interactive (2s)</span>' +
         '</div>' +
       '</div>' +
 
@@ -243,17 +247,18 @@ const DesignSystemPage = (function () {
         '<table class="ds-matrix-table">' +
           '<thead><tr><th>State</th><th>Primary</th><th>Secondary</th><th>Ghost</th><th>Danger</th></tr></thead>' +
           '<tbody>' +
-            ['Default', 'Hover', 'Focus', 'Active', 'Disabled'].map(function (state) {
+            ['Default', 'Hover', 'Focus', 'Active', 'Disabled', 'Loading'].map(function (state) {
               var hoverClass = state === 'Hover' ? ' ds-sim-hover' : '';
               var focusStyle = state === 'Focus' ? ' style="outline:2px solid var(--ds-color-brand-primary);outline-offset:2px"' : '';
               var activeStyle = state === 'Active' ? ' style="transform:scale(0.97)"' : '';
-              var disabledAttr = state === 'Disabled' ? ' disabled' : '';
+              var disabledAttr = state === 'Disabled' || state === 'Loading' ? ' disabled' : '';
+              var loadingClass = state === 'Loading' ? ' btn--loading' : '';
               return '<tr>' +
                 '<td><span style="font-size:var(--ds-typography-size-sm);font-weight:500">' + state + '</span></td>' +
-                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--primary btn--sm"' + focusStyle + activeStyle + disabledAttr + '>Button</button></div></td>' +
-                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--secondary btn--sm"' + focusStyle + activeStyle + disabledAttr + '>Button</button></div></td>' +
-                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--ghost btn--sm"' + focusStyle + activeStyle + disabledAttr + '>Button</button></div></td>' +
-                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--danger btn--sm"' + focusStyle + activeStyle + disabledAttr + '>Button</button></div></td>' +
+                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--primary btn--sm' + loadingClass + '"' + focusStyle + activeStyle + disabledAttr + '>' + (state === 'Loading' ? '<span class="btn__text">Button</span>' : 'Button') + '</button></div></td>' +
+                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--secondary btn--sm' + loadingClass + '"' + focusStyle + activeStyle + disabledAttr + '>' + (state === 'Loading' ? '<span class="btn__text">Button</span>' : 'Button') + '</button></div></td>' +
+                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--ghost btn--sm' + loadingClass + '"' + focusStyle + activeStyle + disabledAttr + '>' + (state === 'Loading' ? '<span class="btn__text">Button</span>' : 'Button') + '</button></div></td>' +
+                '<td><div class="ds-state-preview' + hoverClass + '"><button class="btn btn--danger btn--sm' + loadingClass + '"' + focusStyle + activeStyle + disabledAttr + '>' + (state === 'Loading' ? '<span class="btn__text">Button</span>' : 'Button') + '</button></div></td>' +
               '</tr>';
             }).join('') +
           '</tbody>' +
