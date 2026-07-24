@@ -20,9 +20,9 @@ module.exports = defineConfig({
     }
   ],
   webServer: {
-    command: 'npx http-server dist/ -p 3000 --cors -s',
+    command: 'npx serve dist/ -s -l 3000 --no-clipboard',
     port: 3000,
-    timeout: 10000,
-    reuseExistingServer: true
+    timeout: 15000,
+    reuseExistingServer: false
   }
 });

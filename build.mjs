@@ -46,7 +46,9 @@ async function build() {
   // Copy index.html, stripping "dist/" prefix from paths for dist/ serving
   const htmlPath = join(__dirname, 'index.html');
   const htmlContent = readFileSync(htmlPath, 'utf8');
-  const distHtml = htmlContent.replace(/(src|href)="dist\//g, '$1="');
+  const distHtml = htmlContent
+    .replace(/(src|href)="dist\//g, '$1="')
+    .replace(/\?v=\d+/g, '');
   writeFileSync(join(__dirname, 'dist', 'index.html'), distHtml);
 
   // Copy non-TypeScript JS assets

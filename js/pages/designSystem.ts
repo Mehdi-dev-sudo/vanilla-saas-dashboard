@@ -454,7 +454,6 @@ const DesignSystemPage = (function () {
     '</div>';
   }
 
-  function renderPlaygroundSection() {
   function renderStatesSection() {
     var states = typeof StateRenderer !== 'undefined' ? [
       { label: 'Loading (table)', html: StateRenderer.loading('table') },
@@ -482,6 +481,7 @@ const DesignSystemPage = (function () {
 
   window.retryDemo = function () { alert('Retry triggered! In a real app this would re-fetch data.'); };
 
+  function renderPlaygroundSection() {
     return '<div class="ds-section" id="ds-section-playground">' +
       '<h2 class="ds-section__title">Component Playground</h2>' +
       '<p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Interactive sandbox to test components live</p>' +

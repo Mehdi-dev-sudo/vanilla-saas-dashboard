@@ -175,26 +175,26 @@ const DesignSystemPage = (function() {
       { label: "Retry" }
     ) + "</div></div></div></div>";
   }
+  function renderStatesSection() {
+    var states = typeof StateRenderer !== "undefined" ? [
+      { label: "Loading (table)", html: StateRenderer.loading("table") },
+      { label: "Loading (card)", html: StateRenderer.loading("card") },
+      { label: "Loading (row)", html: StateRenderer.loading("row") },
+      { label: "Empty", html: '<table style="width:100%"><tbody>' + StateRenderer.empty(6) + "</tbody></table>" },
+      { label: "Filtered Empty", html: '<table style="width:100%"><tbody>' + StateRenderer.filteredEmpty("search term", "active", 6) + "</tbody></table>" },
+      { label: "Error", html: '<table style="width:100%"><tbody>' + StateRenderer.error("Something went wrong while fetching data", "retryDemo", 6) + "</tbody></table>" }
+    ] : [];
+    var html = '<div class="ds-section" id="ds-section-states"><h2 class="ds-section__title">State Coverage</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">All async data views follow the same lifecycle: Loading \u2192 Loaded | Empty | Error</p><div style="display:grid;gap:var(--ds-space-6);grid-template-columns:repeat(auto-fill,minmax(400px,1fr))">';
+    states.forEach(function(s) {
+      html += '<div style="background:var(--ds-color-surface-card);border-radius:var(--ds-radius-lg);border:1px solid var(--ds-color-border-light);overflow:hidden"><div style="padding:var(--ds-space-3) var(--ds-space-4);border-bottom:1px solid var(--ds-color-border-light);font-size:var(--ds-typography-size-xs);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ds-color-text-secondary)">' + s.label + '</div><div style="padding:var(--ds-space-3)">' + s.html + "</div></div>";
+    });
+    html += "</div></div>";
+    return html;
+  }
+  window.retryDemo = function() {
+    alert("Retry triggered! In a real app this would re-fetch data.");
+  };
   function renderPlaygroundSection() {
-    function renderStatesSection2() {
-      var states = typeof StateRenderer !== "undefined" ? [
-        { label: "Loading (table)", html: StateRenderer.loading("table") },
-        { label: "Loading (card)", html: StateRenderer.loading("card") },
-        { label: "Loading (row)", html: StateRenderer.loading("row") },
-        { label: "Empty", html: '<table style="width:100%"><tbody>' + StateRenderer.empty(6) + "</tbody></table>" },
-        { label: "Filtered Empty", html: '<table style="width:100%"><tbody>' + StateRenderer.filteredEmpty("search term", "active", 6) + "</tbody></table>" },
-        { label: "Error", html: '<table style="width:100%"><tbody>' + StateRenderer.error("Something went wrong while fetching data", "retryDemo", 6) + "</tbody></table>" }
-      ] : [];
-      var html = '<div class="ds-section" id="ds-section-states"><h2 class="ds-section__title">State Coverage</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">All async data views follow the same lifecycle: Loading \u2192 Loaded | Empty | Error</p><div style="display:grid;gap:var(--ds-space-6);grid-template-columns:repeat(auto-fill,minmax(400px,1fr))">';
-      states.forEach(function(s) {
-        html += '<div style="background:var(--ds-color-surface-card);border-radius:var(--ds-radius-lg);border:1px solid var(--ds-color-border-light);overflow:hidden"><div style="padding:var(--ds-space-3) var(--ds-space-4);border-bottom:1px solid var(--ds-color-border-light);font-size:var(--ds-typography-size-xs);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ds-color-text-secondary)">' + s.label + '</div><div style="padding:var(--ds-space-3)">' + s.html + "</div></div>";
-      });
-      html += "</div></div>";
-      return html;
-    }
-    window.retryDemo = function() {
-      alert("Retry triggered! In a real app this would re-fetch data.");
-    };
     return `<div class="ds-section" id="ds-section-playground"><h2 class="ds-section__title">Component Playground</h2><p class="ds-section__desc" style="color:var(--ds-color-text-secondary);margin-bottom:var(--ds-space-6)">Interactive sandbox to test components live</p><div style="display:grid;grid-template-columns:200px 1fr;gap:var(--ds-space-6);background:var(--ds-color-surface-card);border-radius:var(--ds-radius-lg);border:1px solid var(--ds-color-border-light);padding:var(--ds-space-5);min-height:300px"><div><h3 style="font-size:var(--ds-typography-size-sm);font-weight:600;margin-bottom:var(--ds-space-3)">Controls</h3><div style="display:flex;flex-direction:column;gap:var(--ds-space-2)"><label style="display:flex;align-items:center;gap:var(--ds-space-2);font-size:var(--ds-typography-size-sm);cursor:pointer"><input type="checkbox" id="pgHover" onchange="document.querySelectorAll('.pg-preview').forEach(function(e){e.classList.toggle('ds-sim-hover',this.checked)},this)"> Simulate Hover</label><label style="display:flex;align-items:center;gap:var(--ds-space-2);font-size:var(--ds-typography-size-sm);cursor:pointer"><input type="checkbox" id="pgDisabled" onchange="document.querySelectorAll('.pg-preview button,.pg-preview input').forEach(function(e){e.disabled=this.checked},this)"> Disabled</label><label style="display:flex;align-items:center;gap:var(--ds-space-2);font-size:var(--ds-typography-size-sm);cursor:pointer"><input type="checkbox" id="pgDark" onchange="ThemeManager.toggle()"> Toggle Dark</label></div></div><div class="pg-preview" style="display:flex;flex-direction:column;gap:var(--ds-space-4)"><div style="display:flex;gap:var(--ds-space-2);flex-wrap:wrap"><button class="btn btn--primary">Primary</button><button class="btn btn--secondary">Secondary</button><button class="btn btn--danger">Danger</button></div><div><input type="text" class="form-input" placeholder="Type something..." style="width:100%"></div><div class="toggle active"><div class="toggle__track"></div><span>Toggle me</span></div><div><span class="status-badge status-badge--active">Active</span> <span class="status-badge status-badge--pending">Pending</span> <span class="status-badge status-badge--failed">Failed</span></div></div></div></div>`;
   }
   var sectionRenderers = {
