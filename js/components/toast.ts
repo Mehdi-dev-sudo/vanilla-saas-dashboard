@@ -21,6 +21,7 @@ const ToastSystem = (function () {
 
     var el = document.createElement('div');
     el.className = 'toast toast--' + type;
+    if (type === 'error') el.setAttribute('role', 'alert');
     el.innerHTML =
       (icons[type] || icons.info) +
       '<span class="toast__message">' + (typeof Utils !== 'undefined' ? Utils.escapeHtml(message) : message) + '</span>' +

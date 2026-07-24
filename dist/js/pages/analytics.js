@@ -1,4 +1,4 @@
-const AnalyticsPage = /* @__PURE__ */ (function() {
+const AnalyticsPage = (function() {
   function render() {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const revenueData = months.map((m, i) => ({ month: m, value: 18e3 + i * 1400 + Math.round(Math.sin(i) * 2e3) }));
@@ -15,7 +15,7 @@ const AnalyticsPage = /* @__PURE__ */ (function() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
             Export Report
           </button>
-          <button class="btn btn--primary" id="analyticsRefreshBtn">
+          <button class="btn btn--primary" id="analyticsRefreshBtn" aria-label="Refresh analytics data">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             Refresh
           </button>
@@ -85,6 +85,11 @@ const AnalyticsPage = /* @__PURE__ */ (function() {
     `;
   }
   function init() {
+    var revView = StateRenderer.createDataView("analyticsRevenue", {});
+    revView.loading();
+    setTimeout(function() {
+      revView.loaded();
+    }, 600);
     const data = AppStore.getAnalyticsStats();
     Utils.animateValue(document.getElementById("analyticsRevenue"), 0, data.totalRevenue, 1200);
     Utils.animateValue(document.getElementById("analyticsAvgOrder"), 0, data.avgOrder, 1200);
@@ -95,7 +100,7 @@ const AnalyticsPage = /* @__PURE__ */ (function() {
     var analyticsExportBtn = document.getElementById("analyticsExportBtn");
     if (analyticsExportBtn) analyticsExportBtn.addEventListener("click", function() {
       ExportManager.exportAnalytics();
-      if (typeof ToastSystem !== "undefined") ToastSystem.success(__("toast.analytics.exported"));
+      if (typeof ToastSystem !== "undefined") ToastSystem.success("Analytics report exported");
     });
     var analyticsRefreshBtn = document.getElementById("analyticsRefreshBtn");
     if (analyticsRefreshBtn) analyticsRefreshBtn.addEventListener("click", function() {
@@ -132,6 +137,11 @@ const AnalyticsPage = /* @__PURE__ */ (function() {
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       ChartEngine.drawLineChart("analyticsRefundChart", months.map((m, i) => ({ month: m, value: Math.round(200 + Math.sin(i * 0.8) * 120 + i * 15) })), { height: 250 });
     }
+  }
+  var _bc = typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : null;
+  if (_bc) {
+    _bc.reinitCharts = reinitCharts;
+    return _bc;
   }
   return { render, init, reinitCharts };
 })();

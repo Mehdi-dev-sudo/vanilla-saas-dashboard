@@ -8,6 +8,7 @@
       Router.register("settings", SettingsPage);
       Router.register("support", SupportPage);
       Router.register("error", ErrorPage);
+      Router.register("design-system", DesignSystemPage);
       I18n.init();
       HistoryManager.init();
       AuthManager.init();
@@ -30,6 +31,7 @@
     setupNotifications();
     setupKeyboardNavigation();
     setupConnectivityListeners();
+    setupScrollToTop();
     initApiData();
   }
   function initApiData() {
@@ -260,6 +262,15 @@
         badge.style.display = unreadCount > 0 ? "flex" : "none";
       }
     });
+  }
+  function setupScrollToTop() {
+    var btn = document.getElementById("scrollTopBtn");
+    if (!btn) return;
+    var toggle = function() {
+      btn.classList.toggle("visible", window.scrollY > 300);
+    };
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
   }
   function showKeyboardHelp() {
     ModalSystem.open(

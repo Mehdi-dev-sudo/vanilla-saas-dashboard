@@ -18,7 +18,8 @@ const Router = (function () {
     transactions: { title: function () { return __('route.transactions'); }, icon: 'credit-card', parent: null },
     settings: { title: function () { return __('route.settings'); }, icon: 'settings', parent: null },
     support: { title: function () { return __('route.support'); }, icon: 'help-circle', parent: null },
-    error: { title: function () { return __('route.error'); }, icon: 'alert-triangle', parent: null }
+    error: { title: function () { return __('route.error'); }, icon: 'alert-triangle', parent: null },
+    'design-system': { title: 'Design System', icon: 'book', parent: null }
   };
 
   function renderBreadcrumbs(route) {

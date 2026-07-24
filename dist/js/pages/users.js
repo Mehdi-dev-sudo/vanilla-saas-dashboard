@@ -1,8 +1,10 @@
-const UsersPage = /* @__PURE__ */ (function() {
+const UsersPage = (function() {
   let currentPage = 1;
   let currentSearch = "";
   let currentStatus = "all";
   let currentRole = "all";
+  let loadError = false;
+  let errorMessage = "";
   const perPage = 5;
   function render() {
     return `
@@ -159,12 +161,24 @@ const UsersPage = /* @__PURE__ */ (function() {
     }
   }
   function renderUsers() {
-    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage) || { items: [], total: 0, totalPages: 0, page: 1 };
     const tbody = document.getElementById("usersTableBody");
     const totalInfo = document.getElementById("userTotalInfo");
     const pagination = document.getElementById("usersPagination");
+    if (!tbody) return;
+    if (loadError) {
+      tbody.innerHTML = typeof StateRenderer !== "undefined" ? StateRenderer.error(errorMessage, "retryUsers") : '<tr><td colspan="8">Error loading data</td></tr>';
+      if (totalInfo) totalInfo.textContent = "Failed to load";
+      if (pagination) pagination.innerHTML = "";
+      return;
+    }
+    const result = AppStore.getFilteredUsers(currentSearch, currentStatus, currentRole, currentPage, perPage) || { items: [], total: 0, totalPages: 0, page: 1 };
     if (result.items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><p class="empty-state__text">No users found</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
+      var hasActiveFilters = currentSearch || currentStatus !== "all" || currentRole !== "all";
+      if (hasActiveFilters) {
+        tbody.innerHTML = typeof StateRenderer !== "undefined" ? StateRenderer.filteredEmpty(currentSearch, currentStatus !== "all" ? currentStatus : null) : '<tr><td colspan="8">No results found</td></tr>';
+      } else {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><p class="empty-state__text">No users yet</p><p class="empty-state__hint">Get started by adding your first user</p><button class="btn btn--primary mt-md" onclick="document.getElementById('addUserBtn') && document.getElementById('addUserBtn').click()">Add User</button></div></td></tr>`;
+      }
     } else {
       tbody.innerHTML = result.items.map((u) => {
         const initials = u.name.split(" ").map((n) => n[0]).join("").slice(0, 2);
@@ -172,9 +186,13 @@ const UsersPage = /* @__PURE__ */ (function() {
         return '<tr data-context="user" data-id="' + u.id + '" data-email="' + Utils.escapeHtml(u.email) + '"><td><input type="checkbox" class="user-checkbox" data-id="' + u.id + '" aria-label="Select ' + Utils.escapeHtml(u.name) + '"></td><td><div class="flex items-center gap-sm"><span class="user-avatar-sm" style="background:' + avatarColor + '">' + initials + "</span> <strong>" + Utils.escapeHtml(u.name) + "</strong></div></td><td>" + Utils.escapeHtml(u.email) + "</td><td>" + Utils.escapeHtml(u.role) + "</td><td>" + Utils.escapeHtml(u.plan) + '</td><td><span class="status-badge status-badge--' + Utils.escapeHtml(u.status) + '">' + Utils.escapeHtml(u.status.charAt(0).toUpperCase() + u.status.slice(1)) + "</span></td><td><strong>" + Utils.formatCurrency(u.revenue) + '</strong></td><td><div class="flex gap-sm"><button class="btn btn--sm btn--ghost edit-user-btn" data-id="' + u.id + '">Edit</button><button class="btn btn--sm btn--ghost delete-user-btn" data-id="' + u.id + '" style="color:var(--clr-danger)">Delete</button></div></td></tr>';
       }).join("");
     }
-    totalInfo.textContent = result.total + " user" + (result.total !== 1 ? "s" : "");
-    if (currentSearch && result.total > 0) {
-      totalInfo.textContent = result.total + " result" + (result.total !== 1 ? "s" : "") + ' for "' + Utils.escapeHtml(currentSearch) + '"';
+    if (loadError) {
+      if (totalInfo) totalInfo.textContent = "Error loading users";
+    } else {
+      totalInfo.textContent = result.total + " user" + (result.total !== 1 ? "s" : "");
+      if (currentSearch && result.total > 0) {
+        totalInfo.textContent = result.total + " result" + (result.total !== 1 ? "s" : "") + ' for "' + Utils.escapeHtml(currentSearch) + '"';
+      }
     }
     renderPagination(pagination, result);
     tbody.querySelectorAll(".edit-user-btn").forEach((btn) => {
@@ -193,17 +211,24 @@ const UsersPage = /* @__PURE__ */ (function() {
       });
     });
   }
+  window.retryUsers = function() {
+    loadError = false;
+    errorMessage = "";
+    var tbody = document.getElementById("usersTableBody");
+    if (tbody) tbody.innerHTML = typeof StateRenderer !== "undefined" ? StateRenderer.loading("table") : "";
+    renderUsers();
+  };
   function renderPagination(container, result) {
     if (result.totalPages <= 1) {
       container.innerHTML = "";
       return;
     }
     let html = "";
-    html += '<button class="pagination__btn" id="prevPage" ' + (result.page <= 1 ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button><span class="pagination__info">Page ' + result.page + " of " + result.totalPages + "</span>";
+    html += '<button class="pagination__btn" id="prevPage" aria-label="Previous page" ' + (result.page <= 1 ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button><span class="pagination__info">Page ' + result.page + " of " + result.totalPages + "</span>";
     for (let i = 1; i <= result.totalPages; i++) {
       html += '<button class="pagination__btn' + (i === result.page ? " active" : "") + '" data-page="' + i + '">' + i + "</button>";
     }
-    html += '<button class="pagination__btn" id="nextPage" ' + (result.page >= result.totalPages ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>';
+    html += '<button class="pagination__btn" id="nextPage" aria-label="Next page" ' + (result.page >= result.totalPages ? "disabled" : "") + '><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>';
     container.innerHTML = html;
     container.querySelectorAll("[data-page]").forEach((btn) => {
       btn.addEventListener("click", function() {
@@ -305,5 +330,5 @@ const UsersPage = /* @__PURE__ */ (function() {
       }
     );
   }
-  return { render, init };
+  return typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : { render, init };
 })();

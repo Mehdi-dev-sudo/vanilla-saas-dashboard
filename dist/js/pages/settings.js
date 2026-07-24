@@ -1,4 +1,4 @@
-const SettingsPage = /* @__PURE__ */ (function() {
+const SettingsPage = (function() {
   function render() {
     var settings = AppStore.getState("settings");
     return `
@@ -78,7 +78,7 @@ const SettingsPage = /* @__PURE__ */ (function() {
             <div class="settings-row__label">Plan</div>
             <div class="settings-row__desc">Enterprise Plan</div>
           </div>
-          <button class="btn btn--sm btn--primary">Upgrade</button>
+          <button class="btn btn--sm btn--primary" aria-label="Upgrade your plan">Upgrade</button>
         </div>
       </div>
 
@@ -265,5 +265,5 @@ const SettingsPage = /* @__PURE__ */ (function() {
       content.style.gap = d.gap;
     }
   }
-  return { render, init };
+  return typeof BaseComponent !== "undefined" ? BaseComponent.create({ render, init }) : { render, init };
 })();

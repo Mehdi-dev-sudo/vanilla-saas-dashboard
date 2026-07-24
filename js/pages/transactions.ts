@@ -9,6 +9,8 @@ const TransactionsPage = (function () {
   let currentMethod = 'all';
   let sortBy = 'date';
   let sortDir = 'desc';
+  let loadError = false;
+  let errorMessage = '';
   const perPage = 5;
 
   function render() {
@@ -136,13 +138,27 @@ const TransactionsPage = (function () {
   }
 
   function renderTransactions() {
-    const result = AppStore.getFilteredTransactions(currentSearch, currentStatus, sortBy, sortDir, currentPage, perPage, currentMethod);
     const tbody = document.getElementById('transactionsTableBody');
     const totalInfo = document.getElementById('transactionTotalInfo');
     const pagination = document.getElementById('transactionsPagination');
+    if (!tbody) return;
+
+    if (loadError) {
+      tbody.innerHTML = typeof StateRenderer !== 'undefined' ? StateRenderer.error(errorMessage, 'retryTransactions', 6) : '<tr><td colspan="6">Error loading data</td></tr>';
+      if (totalInfo) totalInfo.textContent = 'Failed to load';
+      if (pagination) pagination.innerHTML = '';
+      return;
+    }
+
+    const result = AppStore.getFilteredTransactions(currentSearch, currentStatus, sortBy, sortDir, currentPage, perPage, currentMethod);
 
     if (result.items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions found</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
+      var hasActiveFilters = currentSearch || currentStatus !== 'all' || currentMethod !== 'all';
+      if (hasActiveFilters) {
+        tbody.innerHTML = typeof StateRenderer !== 'undefined' ? StateRenderer.filteredEmpty(currentSearch, currentStatus !== 'all' ? currentStatus : null, 6) : '<tr><td colspan="6">No results found</td></tr>';
+      } else {
+        tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><p class="empty-state__text">No transactions yet</p><p class="empty-state__hint">Transactions will appear here once customers start making payments</p></div></td></tr>';
+      }
     } else {
       tbody.innerHTML = result.items.map(t =>
         '<tr data-context="transaction" data-id="' + t.id + '" data-invoice="' + t.invoice + '">' +
@@ -171,6 +187,14 @@ const TransactionsPage = (function () {
     renderPagination(pagination, result);
   }
 
+  window.retryTransactions = function () {
+    loadError = false;
+    errorMessage = '';
+    var tbody = document.getElementById('transactionsTableBody');
+    if (tbody) tbody.innerHTML = typeof StateRenderer !== 'undefined' ? StateRenderer.loading('table') : '';
+    renderTransactions();
+  };
+
   function renderPagination(container, result) {
     if (result.totalPages <= 1) {
       container.innerHTML = '';
@@ -178,7 +202,7 @@ const TransactionsPage = (function () {
     }
 
     let html = '';
-    html += '<button class="pagination__btn" id="prevTxPage" ' + (result.page <= 1 ? 'disabled' : '') + '>' +
+    html += '<button class="pagination__btn" id="prevTxPage" aria-label="Previous page" ' + (result.page <= 1 ? 'disabled' : '') + '>' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>' +
     '</button><span class="pagination__info">Page ' + result.page + ' of ' + result.totalPages + '</span>';
 
@@ -186,7 +210,7 @@ const TransactionsPage = (function () {
       html += '<button class="pagination__btn' + (i === result.page ? ' active' : '') + '" data-tx-page="' + i + '">' + i + '</button>';
     }
 
-    html += '<button class="pagination__btn" id="nextTxPage" ' + (result.page >= result.totalPages ? 'disabled' : '') + '>' +
+    html += '<button class="pagination__btn" id="nextTxPage" aria-label="Next page" ' + (result.page >= result.totalPages ? 'disabled' : '') + '>' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' +
     '</button>';
 
@@ -210,5 +234,5 @@ const TransactionsPage = (function () {
     });
   }
 
-  return { render, init };
+  return typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : { render: render, init: init };
 })();

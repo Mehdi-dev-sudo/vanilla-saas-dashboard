@@ -5,6 +5,8 @@
 const DashboardPage = (function () {
   var widgetOrder = [];
   var hiddenWidgets = [];
+  var sectionStates = {};
+  var dashboardInited = false;
 
   function render() {
     var settings = AppStore.getState('settings');
@@ -317,9 +319,20 @@ const DashboardPage = (function () {
   }
 
   function init() {
+    dashboardInited = true;
+    sectionStates = {};
     var stats = AppStore.getDashboardStats();
-    animateStats(stats);
-    requestAnimationFrame(function () { drawCharts(); });
+
+    if (stats && stats.revenue) {
+      animateStats(stats);
+      requestAnimationFrame(function () { drawCharts(); });
+    } else {
+      var statsContainer = document.getElementById('statsContainer');
+      if (statsContainer && typeof StateRenderer !== 'undefined') {
+        statsContainer.innerHTML = StateRenderer.error('Could not load metrics', null);
+      }
+    }
+
     startRealtimeUpdates();
     setupWidgetConfig();
     setupDragReorder();
@@ -503,5 +516,13 @@ const DashboardPage = (function () {
     if (document.getElementById('dashRevenueChart')) drawCharts();
   }
 
+  var _bc = typeof BaseComponent !== 'undefined' ? BaseComponent.create({ render: render, init: init }) : null;
+  if (_bc) {
+    _bc.refresh = refresh;
+    _bc.reinitCharts = reinitCharts;
+    _bc.startRealtimeUpdates = startRealtimeUpdates;
+    _bc.stopRealtimeUpdates = stopRealtimeUpdates;
+    return _bc;
+  }
   return { render: render, init: init, refresh: refresh, reinitCharts: reinitCharts, startRealtimeUpdates: startRealtimeUpdates, stopRealtimeUpdates: stopRealtimeUpdates };
 })();
