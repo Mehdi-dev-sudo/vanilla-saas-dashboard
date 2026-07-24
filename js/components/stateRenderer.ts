@@ -28,15 +28,17 @@ const StateRenderer = (function () {
     return SkeletonLoader.getEmptyState(icon, title, desc, action);
   }
 
-  function filteredEmpty(searchTerm, filterLabel) {
-    var filterMsg = filterLabel ? ' with filter "' + filterLabel + '"' : '';
+  function filteredEmpty(searchTerm, filterLabel, colspan) {
+    colspan = colspan || 8;
+    var filterMsg = filterLabel ? ' with the current filter' : '';
     var searchMsg = searchTerm ? ' for "' + searchTerm + '"' : '';
-    return '<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><p class="empty-state__text">No results found' + searchMsg + filterMsg + '</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
+    return '<tr><td colspan="' + colspan + '"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><p class="empty-state__text">No results found' + searchMsg + filterMsg + '</p><p class="empty-state__hint">Try adjusting your search or filter criteria</p></div></td></tr>';
   }
 
-  function error(message, onRetryId) {
+  function error(message, onRetryId, colspan) {
+    colspan = colspan || 8;
     var retryHtml = onRetryId ? '<button class="btn btn--primary mt-md" data-retry="' + onRetryId + '">Retry</button>' : '';
-    return '<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--clr-danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><p class="empty-state__text">Failed to load data</p><p class="empty-state__hint">' + (message || 'An unexpected error occurred') + '</p>' + retryHtml + '</div></td></tr>';
+    return '<tr><td colspan="' + colspan + '"><div class="empty-state"><div class="empty-state__icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--clr-danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><p class="empty-state__text">Failed to load data</p><p class="empty-state__hint">' + (message || 'An unexpected error occurred') + '</p>' + retryHtml + '</div></td></tr>';
   }
 
   function createDataView(config) {
